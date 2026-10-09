@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISRI - Sistem Informasi Sekolah Rakyat Indonesia</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #a93437; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); width: 380px; text-align: center; box-sizing: border-box; }
+        .logo-container { width: 160px; height: 120px; margin: 0 auto 20px auto; background-image: url('https://i.postimg.cc/Pq2W5xZq/Logo-SR.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        h2 { color: #8b0000; margin-bottom: 5px; font-size: 24px; font-weight: bold; }
+        p.subtitle { color: #555; font-size: 13px; margin-top: 0; margin-bottom: 5px; line-height: 1.4; }
+        p.address { color: #555; font-size: 13px; margin-top: 0; margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #333; }
+        input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 10px; border: 1px solid #aaa; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #8b0000; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; margin-top: 15px; font-weight: bold; transition: background-color 0.2s ease; }
+        button:hover { background-color: #660000; }
+        button.toggle-btn { background-color: transparent; color: #8b0000; text-decoration: underline; cursor: pointer; margin-top: 20px; width: auto; font-size: 14px; font-weight: bold; padding: 8px 16px; border-radius: 4px; transition: all 0.2s ease; }
+        button.toggle-btn:hover, button.toggle-btn:active, button.toggle-btn:focus { background-color: #8b0000 !important; color: white !important; text-decoration: none; }
+        .hidden { display: none; }
+        #messageBox { margin-top: 20px; padding: 10px; border-radius: 4px; font-size: 14px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .loading { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="registerSection" class="hidden">
+        <div class="logo-container"></div>
+        <h2>Daftar SISRI</h2>
+        <p class="subtitle">Sistem Informasi Sekolah Rakyat Indonesia</p>
+        <p class="address">SRT 6 Kota Bogor</p>
+        <div class="form-group"><label>Username</label><input type="text" id="regUsername" required></div>
+        <div class="form-group"><label>Email Aktif</label><input type="email" id="regEmail" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPassword" required></div>
+        <div class="form-group"><label>Level Akses</label>
+            <select id="regLevel">
+                <option value="Operator Sekolah">Operator Sekolah</option>
+                <option value="Kepala Sekolah">Kepala Sekolah</option>
+                <option value="Wakasek Kurikulum">Wakasek Kurikulum</option>
+                <option value="Wakasek Kesiswaan">Wakasek Kesiswaan</option>
+                <option value="Wakasek Sarpras">Wakasek Sarpras</option>
+                <option value="Operator Keuangan">Operator Keuangan</option>
+                <option value="Guru">Guru</option>
+                <option value="Wali Asuh">Wali Asuh</option>
+                <option value="Wali Asrama">Wali Asrama</option>
+            </select>
+        </div>
+        <button id="btnRegister" onclick="submitRegistration()">Kirim Pendaftaran</button>
+        <button class="toggle-btn" onclick="toggleView('login')">Kembali ke Login</button>
+    </div>
+
+    <div id="loginSection">
+        <div class="logo-container"></div>
+        <h2>Login SISRI</h2>
+        <p class="subtitle">Sistem Informasi Sekolah Rakyat Indonesia</p>
+        <p class="address">SRT 6 Kota Bogor</p>
+        <div class="form-group"><label>Username</label><input type="text" id="logUsername" required></div>
+        <div class="form-group"><label>Password</label><input type="password" id="logPassword" required></div>
+        <button id="btnLogin" onclick="submitLogin()">Masuk Dashboard</button>
+        <button class="toggle-btn" onclick="toggleView('register')">Belum punya akses? Daftar Akun</button>
+    </div>
+
+    <div id="messageBox" class="hidden"></div>
+</div>
+
+<script>
+    // MASUKKAN URL APPS SCRIPT ANDA DI SINI
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzp41rOKzyfqwNxRkb-LwJy-Of-cCqM7XP9qOmHFB0reOtES7NO8dEoTLz9BvpjPw/exec";
+
+    function toggleView(view) {
+        document.getElementById('registerSection').classList.add('hidden');
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('messageBox').classList.add('hidden');
+        if(view === 'register') {
+            document.getElementById('registerSection').classList.remove('hidden');
+            document.getElementById('logUsername').value = ""; document.getElementById('logPassword').value = "";
+        } else {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('regUsername').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPassword').value = "";
+        }
+    }
+
+    function showMessage(msg, type) {
+        const msgBox = document.getElementById('messageBox');
+        msgBox.innerHTML = msg; msgBox.className = type; msgBox.classList.remove('hidden');
+    }
+
+    function submitRegistration() {
+        const user = document.getElementById('regUsername').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPassword').value;
+        const level = document.getElementById('regLevel').value;
+        const btn = document.getElementById('btnRegister');
+
+        if(!user || !email || !pass) {
+            showMessage("Harap isi semua kolom pendaftaran.", "error"); return;
+        }
+
+        showMessage("Menyimpan data ke database...", "loading");
+        btn.disabled = true; btn.innerHTML = "Memproses...";
+
+        // Menyiapkan paket data
+        const payload = { username: user, email: email, password: pass, level: level };
+
+        // Mengirim data ke API Apps Script (Metode Fetch)
+        fetch(scriptURL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" }, // Hindari error CORS Google
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran";
+            if(data.status === "berhasil") {
+                showMessage(data.pesan, "success");
+                document.getElementById('regUsername').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPassword').value = "";
+            } else { showMessage(data.pesan, "error"); }
+        })
+        .catch(error => {
+            btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran";
+            showMessage("Terjadi kesalahan sistem. Coba lagi.", "error");
+            console.error("Error!", error.message);
+        });
+    }
+
+    function submitLogin() { showMessage("Fitur verifikasi login sedang dibangun...", "loading"); }
+</script>
+
+</body>
+</html>
