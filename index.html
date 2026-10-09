@@ -4,83 +4,384 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SISRI - Sistem Informasi Sekolah Rakyat Indonesia</title>
+    
+    <!-- MENGGUNAKAN FONT 'INTER' DARI GOOGLE FONTS AGAR TEGAS & MODERN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #a93437; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); width: 380px; text-align: center; box-sizing: border-box; }
-        .logo-container { width: 160px; height: 120px; margin: 0 auto 20px auto; background-image: url('https://i.postimg.cc/Pq2W5xZq/Logo-SR.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
-        h2 { color: #8b0000; margin-bottom: 5px; font-size: 24px; font-weight: bold; }
-        p.subtitle { color: #555; font-size: 13px; margin-top: 0; margin-bottom: 5px; line-height: 1.4; }
-        p.address { color: #555; font-size: 13px; margin-top: 0; margin-bottom: 25px; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #333; }
-        input[type="text"], input[type="email"], input[type="password"], select { width: 100%; padding: 10px; border: 1px solid #aaa; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-        button { width: 100%; padding: 12px; background-color: #8b0000; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 15px; margin-top: 15px; font-weight: bold; transition: background-color 0.2s ease; }
-        button:hover { background-color: #660000; }
-        button.toggle-btn { background-color: transparent; color: #8b0000; text-decoration: underline; cursor: pointer; margin-top: 20px; width: auto; font-size: 14px; font-weight: bold; padding: 8px 16px; border-radius: 4px; transition: all 0.2s ease; }
-        button.toggle-btn:hover, button.toggle-btn:active, button.toggle-btn:focus { background-color: #8b0000 !important; color: white !important; text-decoration: none; }
-        .hidden { display: none; }
-        #messageBox { margin-top: 20px; padding: 10px; border-radius: 4px; font-size: 14px; }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .loading { background-color: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        /* VARIABEL WARNA UTAMA AGAR KONSISTEN */
+        :root {
+            --primary: #a93437; /* Merah Bata (Utama) */
+            --primary-dark: #8b0000; /* Merah Gelap (Aksen) */
+            --primary-light: #fce8e8; /* Merah Sangat Pudar (Hover) */
+            --bg-body: #f4f7f6; /* Latar Belakang Abu-abu Sangat Terang */
+            --bg-surface: #ffffff; /* Latar Belakang Kotak/Putih */
+            --text-main: #1f2937; /* Teks Hitam Tegas */
+            --text-muted: #6b7280; /* Teks Abu-abu Halus */
+            --border: #e5e7eb; /* Garis Tepi Lembut */
+        }
+
+        /* RESET & TIPOGRAFI UMUM */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--primary); /* Latar belakang luar (khusus halaman login) */
+            color: var(--text-main);
+            margin: 0; 
+            padding: 0; 
+            -webkit-font-smoothing: antialiased; /* Teks lebih tajam di layar */
+        }
+        
+        .hidden { display: none !important; }
+        
+        /* ---------------------------------------------------
+           AREA LOGIN & DAFTAR (TAMPILAN ELEGAN)
+           --------------------------------------------------- */
+        .login-wrapper { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { 
+            background-color: var(--bg-surface); 
+            padding: 40px 48px; 
+            border-radius: 12px; /* Lengkungan elegan */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Bayangan lembut */
+            width: 400px; 
+            text-align: center; 
+            box-sizing: border-box; 
+        }
+        .logo-container { 
+            width: 140px; 
+            height: 100px; 
+            margin: 0 auto 24px auto; 
+            background-image: url('https://i.postimg.cc/Pq2W5xZq/Logo-SR.png'); 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center; 
+        }
+        h2 { color: var(--primary-dark); margin: 0 0 8px 0; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        p.subtitle { color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0; line-height: 1.5; font-weight: 500; }
+        p.address { color: var(--text-muted); font-size: 12px; margin: 0 0 30px 0; }
+        
+        .form-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Desain Kolom Input yang Rapi */
+        input, select { 
+            width: 100%; 
+            padding: 12px 14px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 14px; 
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: #f9fafb;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: var(--bg-surface);
+            box-shadow: 0 0 0 3px rgba(169, 52, 55, 0.15); /* Glow merah bata saat diklik */
+        }
+        
+        /* Tombol Elegan */
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 15px; 
+            margin-top: 10px; 
+            font-weight: 600; 
+            letter-spacing: 0.3px;
+            transition: background-color 0.2s ease, transform 0.1s ease; 
+        }
+        button:hover { background-color: var(--primary-dark); }
+        button:active { transform: translateY(1px); }
+        
+        button.toggle-btn { background-color: transparent; color: var(--primary); margin-top: 16px; width: auto; font-size: 13px; padding: 8px 16px; box-shadow: none; text-decoration: none;}
+        button.toggle-btn:hover { background-color: var(--primary-light); color: var(--primary-dark); }
+        
+        #messageBox { margin-top: 20px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 500; }
+        .success { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .error { background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .loading { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+
+        /* ---------------------------------------------------
+           AREA DASHBOARD UTAMA (TAMPILAN BERSIH & MODERN)
+           --------------------------------------------------- */
+        .dashboard-wrapper { display: flex; height: 100vh; background-color: var(--bg-body); }
+        
+        /* Sidebar Kiri */
+        .sidebar { 
+            width: 280px; 
+            background-color: var(--bg-surface); 
+            border-right: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto;
+        }
+        
+        .sidebar-header { 
+            padding: 24px 20px; 
+            border-bottom: 1px solid var(--border); 
+            text-align: left; 
+        }
+        .sidebar-header h3 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
+        .sidebar-header p { margin: 4px 0 0 0; font-size: 12px; font-weight: 500; color: var(--primary); }
+        
+        .menu-list { list-style: none; padding: 16px 12px; margin: 0; }
+        
+        /* Gaya Menu List (Floating Pills) */
+        .menu-item { 
+            padding: 10px 16px; 
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer; 
+            font-size: 14px;
+            font-weight: 600; 
+            color: var(--text-muted); 
+            transition: all 0.2s ease; 
+        }
+        .menu-item:hover, .menu-item.active { 
+            background-color: var(--primary-light); 
+            color: var(--primary-dark); 
+        }
+        
+        /* Submenu & Sub-submenu */
+        .submenu { list-style: none; padding-left: 12px; display: none; margin-top: 4px; }
+        .sub-submenu { list-style: none; padding-left: 16px; display: none; border-left: 2px solid var(--border); margin-left: 8px; margin-top: 4px;}
+        
+        .submenu li, .sub-submenu li { 
+            padding: 8px 16px; 
+            border-radius: 6px;
+            margin-bottom: 2px;
+            font-size: 13px; 
+            font-weight: 500; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            transition: all 0.2s;
+        }
+        .submenu li:hover, .sub-submenu li:hover { 
+            color: var(--primary); 
+            background-color: rgba(169, 52, 55, 0.05);
+        }
+        
+        .menu-item.active > .submenu { display: block; }
+        .submenu li.active > .sub-submenu { display: block; }
+
+        /* Tombol Logout di Sidebar Bawah */
+        .logout-btn { 
+            margin-top: auto; 
+            margin-bottom: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 12px; 
+            background-color: #f3f4f6; 
+            color: var(--text-main); 
+            border-radius: 8px;
+            text-align: center; 
+            cursor: pointer; 
+            font-size: 14px;
+            font-weight: 600; 
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { background-color: #e5e7eb; color: var(--primary-dark); }
+
+        /* Konten Utama Kanan */
+        .main-content { 
+            flex: 1; 
+            padding: 40px; 
+            overflow-y: auto; 
+            background-color: var(--bg-body);
+        }
+        
+        /* Card Konten */
+        .content-card {
+            background-color: var(--bg-surface);
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border);
+            min-height: 400px;
+        }
+
+        .content-header { 
+            border-bottom: 2px solid var(--bg-body); 
+            padding-bottom: 16px; 
+            margin-top: 0;
+            margin-bottom: 24px; 
+            color: var(--text-main); 
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        #contentBody p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="registerSection" class="hidden">
-        <div class="logo-container"></div>
-        <h2>Daftar SISRI</h2>
-        <p class="subtitle">Sistem Informasi Sekolah Rakyat Indonesia</p>
-        <p class="address">SRT 6 Kota Bogor</p>
-        <div class="form-group"><label>Username</label><input type="text" id="regUsername" required></div>
-        <div class="form-group"><label>Email Aktif</label><input type="email" id="regEmail" required></div>
-        <div class="form-group"><label>Password</label><input type="password" id="regPassword" required></div>
-        <div class="form-group"><label>Level Akses</label>
-            <select id="regLevel">
-                <option value="Operator Sekolah">Operator Sekolah</option>
-                <option value="Kepala Sekolah">Kepala Sekolah</option>
-                <option value="Wakasek Kurikulum">Wakasek Kurikulum</option>
-                <option value="Wakasek Kesiswaan">Wakasek Kesiswaan</option>
-                <option value="Wakasek Sarpras">Wakasek Sarpras</option>
-                <option value="Operator Keuangan">Operator Keuangan</option>
-                <option value="Guru">Guru</option>
-                <option value="Wali Asuh">Wali Asuh</option>
-                <option value="Wali Asrama">Wali Asrama</option>
-            </select>
+<!-- AREA LOGIN & DAFTAR -->
+<div id="authArea" class="login-wrapper">
+    <div class="container">
+        
+        <!-- Form Login -->
+        <div id="loginSection">
+            <div class="logo-container"></div>
+            <h2>Login SISRI</h2>
+            <p class="subtitle">Sistem Informasi Sekolah Rakyat Indonesia</p>
+            <p class="address">SRT 6 Kota Bogor</p>
+            <div class="form-group"><label>Username</label><input type="text" id="logUsername" placeholder="Masukkan username" required></div>
+            <div class="form-group"><label>Password</label><input type="password" id="logPassword" placeholder="Masukkan password" required></div>
+            <button id="btnLogin" onclick="submitLogin()">Masuk Dashboard</button>
+            <button class="toggle-btn" onclick="toggleView('register')">Belum punya akses? Daftar Akun</button>
         </div>
-        <button id="btnRegister" onclick="submitRegistration()">Kirim Pendaftaran</button>
-        <button class="toggle-btn" onclick="toggleView('login')">Kembali ke Login</button>
+
+        <!-- Form Daftar -->
+        <div id="registerSection" class="hidden">
+            <div class="logo-container"></div>
+            <h2>Daftar SISRI</h2>
+            <p class="subtitle">Buat akun akses baru</p>
+            <div class="form-group"><label>Username</label><input type="text" id="regUsername" placeholder="Buat username" required></div>
+            <div class="form-group"><label>Email Aktif</label><input type="email" id="regEmail" placeholder="contoh@email.com" required></div>
+            <div class="form-group"><label>Password</label><input type="password" id="regPassword" placeholder="Buat password sandi" required></div>
+            <div class="form-group"><label>Level Akses</label>
+                <select id="regLevel">
+                    <option value="Operator Sekolah">Operator Sekolah</option>
+                    <option value="Kepala Sekolah">Kepala Sekolah</option>
+                    <option value="Wakasek Kurikulum">Wakasek Kurikulum</option>
+                    <option value="Wakasek Kesiswaan">Wakasek Kesiswaan</option>
+                    <option value="Wakasek Sarpras">Wakasek Sarpras</option>
+                    <option value="Operator Keuangan">Operator Keuangan</option>
+                    <option value="Guru">Guru</option>
+                    <option value="Wali Asuh">Wali Asuh</option>
+                    <option value="Wali Asrama">Wali Asrama</option>
+                </select>
+            </div>
+            <button id="btnRegister" onclick="submitRegistration()">Kirim Pendaftaran</button>
+            <button class="toggle-btn" onclick="toggleView('login')">Kembali ke Login</button>
+        </div>
+        
+        <div id="messageBox" class="hidden"></div>
+    </div>
+</div>
+
+
+<!-- AREA DASHBOARD UTAMA -->
+<div id="dashboardArea" class="dashboard-wrapper hidden">
+    <!-- Sidebar Kiri -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 id="displayName">Nama User</h3>
+            <p id="displayLevel">Level Akses</p>
+        </div>
+
+        <ul class="menu-list" id="mainMenu">
+            
+            <!-- 1. Sarana & Prasarana -->
+            <li class="menu-item" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" onclick="toggleMenu(this, event)">
+                Sarana & Prasarana
+                <ul class="submenu">
+                    <li onclick="openContent('Aset (Non Ops)', event)">Non Ops (Aset)</li>
+                    <li onclick="openContent('Barang Habis Pakai (Ops)', event)">Ops (Barang habis pakai)</li>
+                    <li onclick="toggleSubMenu(this, event)">Sistem Pemeliharaan
+                        <ul class="sub-submenu">
+                            <li onclick="openContent('Pengajuan Perbaikan', event)">Pengajuan Perbaikan</li>
+                            <li onclick="openContent('Daftar Barang Rusak', event)">Daftar Barang Rusak</li>
+                            <li onclick="openContent('Daftar Pemeliharaan Barang', event)">Daftar Pemeliharaan</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- 2. Sistem Otomasi Surat -->
+            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+                Sistem Otomasi Surat
+                <ul class="submenu">
+                    <li onclick="openContent('Pengajuan Surat', event)">Pengajuan Surat</li>
+                    <li onclick="openContent('Monitoring Surat', event)">Monitoring Surat</li>
+                    <li onclick="openContent('Template Surat', event)">Template Surat</li>
+                    <li onclick="openContent('Disposisi Surat', event)">Disposisi Surat</li>
+                </ul>
+            </li>
+
+            <!-- 3. Asesmen Siswa -->
+            <li class="menu-item" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru" onclick="toggleMenu(this, event)">
+                Asesmen Siswa
+                <ul class="submenu">
+                    <li onclick="openContent('Asesmen Rutin', event)">Asesmen Rutin</li>
+                    <li onclick="openContent('Asesmen Insidentil', event)">Asesmen Insidentil</li>
+                </ul>
+            </li>
+
+            <!-- 4. Kesiswaan -->
+            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+                Kesiswaan
+                <ul class="submenu">
+                    <li onclick="toggleSubMenu(this, event)">Data Siswa
+                        <ul class="sub-submenu">
+                            <li onclick="openContent('Data Siswa SRMP', event)">Siswa SRMP</li>
+                            <li onclick="openContent('Data Siswa SRMA', event)">Siswa SRMA</li>
+                        </ul>
+                    </li>
+                    <li onclick="openContent('Data Ekstrakurikuler', event)">Ekstrakurikuler</li>
+                    <li onclick="openContent('Pengajuan Program Kesiswaan', event)">Pengajuan Program</li>
+                </ul>
+            </li>
+
+            <!-- 5. Pengajuan Penggunaan Ruangan -->
+            <li class="menu-item" data-role="Seluruh" onclick="openContent('Pengajuan Penggunaan Ruangan', event)">
+                Pengajuan Ruangan
+            </li>
+
+            <!-- 6. Keuangan -->
+            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+                Keuangan
+                <ul class="submenu">
+                    <li onclick="openContent('Pengajuan Anggaran', event)">Pengajuan Anggaran</li>
+                    <li onclick="openContent('Realisasi Anggaran', event)">Realisasi Anggaran</li>
+                    <li onclick="openContent('Pencairan Anggaran', event)">Pencairan Anggaran</li>
+                </ul>
+            </li>
+
+        </ul>
+
+        <div class="logout-btn" onclick="logout()">Log Out</div>
     </div>
 
-    <div id="loginSection">
-        <div class="logo-container"></div>
-        <h2>Login SISRI</h2>
-        <p class="subtitle">Sistem Informasi Sekolah Rakyat Indonesia</p>
-        <p class="address">SRT 6 Kota Bogor</p>
-        <div class="form-group"><label>Username</label><input type="text" id="logUsername" required></div>
-        <div class="form-group"><label>Password</label><input type="password" id="logPassword" required></div>
-        <button id="btnLogin" onclick="submitLogin()">Masuk Dashboard</button>
-        <button class="toggle-btn" onclick="toggleView('register')">Belum punya akses? Daftar Akun</button>
+    <!-- Konten Kanan -->
+    <div class="main-content">
+        <div class="content-card">
+            <h1 class="content-header" id="contentTitle">Dashboard Utama</h1>
+            <div id="contentBody">
+                <p>Selamat datang di <b>Sistem Informasi Sekolah Rakyat Indonesia (SISRI)</b>.</p>
+                <p>Silakan pilih menu navigasi di panel sebelah kiri untuk mulai mengelola data dan aktivitas sekolah. Antarmuka ini dirancang untuk kemudahan dan efisiensi operasional.</p>
+            </div>
+        </div>
     </div>
-
-    <div id="messageBox" class="hidden"></div>
 </div>
 
 <script>
     // MASUKKAN URL APPS SCRIPT ANDA DI SINI
     const scriptURL = "https://script.google.com/macros/s/AKfycbzp41rOKzyfqwNxRkb-LwJy-Of-cCqM7XP9qOmHFB0reOtES7NO8dEoTLz9BvpjPw/exec";
 
+    // Fungsi Navigasi Login/Daftar
     function toggleView(view) {
         document.getElementById('registerSection').classList.add('hidden');
         document.getElementById('loginSection').classList.add('hidden');
         document.getElementById('messageBox').classList.add('hidden');
         if(view === 'register') {
             document.getElementById('registerSection').classList.remove('hidden');
-            document.getElementById('logUsername').value = ""; document.getElementById('logPassword').value = "";
         } else {
             document.getElementById('loginSection').classList.remove('hidden');
-            document.getElementById('regUsername').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPassword').value = "";
         }
     }
 
@@ -89,6 +390,7 @@
         msgBox.innerHTML = msg; msgBox.className = type; msgBox.classList.remove('hidden');
     }
 
+    // Fungsi Pendaftaran
     function submitRegistration() {
         const user = document.getElementById('regUsername').value;
         const email = document.getElementById('regEmail').value;
@@ -96,39 +398,115 @@
         const level = document.getElementById('regLevel').value;
         const btn = document.getElementById('btnRegister');
 
-        if(!user || !email || !pass) {
-            showMessage("Harap isi semua kolom pendaftaran.", "error"); return;
-        }
-
-        showMessage("Menyimpan data ke database...", "loading");
+        if(!user || !email || !pass) { showMessage("Isi semua kolom pendaftaran.", "error"); return; }
+        
+        showMessage("Menyimpan data...", "loading");
         btn.disabled = true; btn.innerHTML = "Memproses...";
 
-        // Menyiapkan paket data
-        const payload = { username: user, email: email, password: pass, level: level };
-
-        // Mengirim data ke API Apps Script (Metode Fetch)
         fetch(scriptURL, {
             method: "POST",
-            headers: { "Content-Type": "text/plain;charset=utf-8" }, // Hindari error CORS Google
-            body: JSON.stringify(payload)
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "register", username: user, email: email, password: pass, level: level })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran";
-            if(data.status === "berhasil") {
-                showMessage(data.pesan, "success");
-                document.getElementById('regUsername').value = ""; document.getElementById('regEmail').value = ""; document.getElementById('regPassword').value = "";
-            } else { showMessage(data.pesan, "error"); }
-        })
-        .catch(error => {
+            if(data.status === "berhasil") { showMessage(data.pesan, "success"); } 
+            else { showMessage(data.pesan, "error"); }
+        }).catch(err => {
             btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran";
-            showMessage("Terjadi kesalahan sistem. Coba lagi.", "error");
-            console.error("Error!", error.message);
+            showMessage("Terjadi kesalahan koneksi.", "error");
         });
     }
 
-    function submitLogin() { showMessage("Fitur verifikasi login sedang dibangun...", "loading"); }
-</script>
+    // Fungsi Login
+    function submitLogin() {
+        const user = document.getElementById('logUsername').value;
+        const pass = document.getElementById('logPassword').value;
+        const btn = document.getElementById('btnLogin');
 
+        if(!user || !pass) { showMessage("Masukkan username dan password.", "error"); return; }
+
+        showMessage("Memverifikasi akun...", "loading");
+        btn.disabled = true; btn.innerHTML = "Mengecek...";
+
+        fetch(scriptURL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "login", username: user, password: pass })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false; btn.innerHTML = "Masuk Dashboard";
+            if(data.status === "berhasil") {
+                // Sembunyikan Body Login
+                document.body.style.backgroundColor = "var(--bg-body)";
+                document.getElementById('authArea').classList.add('hidden');
+                document.getElementById('dashboardArea').classList.remove('hidden');
+                
+                document.getElementById('displayName').innerText = data.username;
+                document.getElementById('displayLevel').innerText = data.level;
+                aturHakAksesMenu(data.level);
+            } else {
+                showMessage(data.pesan, "error");
+            }
+        }).catch(err => {
+            btn.disabled = false; btn.innerHTML = "Masuk Dashboard";
+            showMessage("Gagal terhubung ke server.", "error");
+        });
+    }
+
+    // FILTER MENU (RBAC)
+    function aturHakAksesMenu(userLevel) {
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(menu => {
+            const allowedRoles = menu.getAttribute('data-role');
+            if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) {
+                menu.style.display = "block";
+            } else {
+                menu.style.display = "none";
+            }
+        });
+    }
+
+    // Interaksi Sidebar
+    function toggleMenu(element, event) {
+        // Matikan active di menu lain agar hanya 1 yang terbuka
+        document.querySelectorAll('.menu-item').forEach(m => {
+            if(m !== element) m.classList.remove('active');
+        });
+        element.classList.toggle('active');
+    }
+    
+    function toggleSubMenu(element, event) {
+        event.stopPropagation();
+        element.classList.toggle('active');
+    }
+
+    function openContent(menuName, event) {
+        event.stopPropagation();
+        
+        // Membersihkan efek bold pada semua submenu
+        document.querySelectorAll('.submenu li, .sub-submenu li').forEach(li => {
+            li.style.fontWeight = "500";
+            li.style.color = "var(--text-muted)";
+        });
+        
+        // Memberikan efek terpilih pada yang diklik
+        event.target.style.fontWeight = "600";
+        event.target.style.color = "var(--primary-dark)";
+
+        document.getElementById('contentTitle').innerText = menuName;
+        document.getElementById('contentBody').innerHTML = "<p>Ini adalah ruang kerja untuk modul pengelola <b>" + menuName + "</b>.</p><p>Formulir input data dan tabel rekapitulasi akan ditampilkan di area ini.</p>";
+    }
+
+    function logout() {
+        document.body.style.backgroundColor = "var(--primary)";
+        document.getElementById('authArea').classList.remove('hidden');
+        document.getElementById('dashboardArea').classList.add('hidden');
+        document.getElementById('logPassword').value = '';
+        showMessage("Anda telah berhasil keluar.", "success");
+    }
+</script>
 </body>
 </html>
