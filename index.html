@@ -759,15 +759,18 @@
         closeSidebarMobile();
     }
 
-    // Fungsi Khusus Buka Modul Aset (Non Ops)
+    // Fungsi Khusus Buka Modul Aset (Non Ops & Ops)
     function openModule(modulName, event) {
         event.stopPropagation();
         bersihkanSorotanMenu();
         event.currentTarget.classList.add('selected');
         
+        // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU
         document.getElementById('defaultContent').classList.add('hidden');
         document.getElementById('modul_nonops').classList.add('hidden');
+        document.getElementById('modul_ops').classList.add('hidden'); // Ini yang sebelumnya tertinggal
         
+        // 2. TAMPILKAN HANYA YANG DIPILIH
         if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             muatDataNonOps(); 
