@@ -2,228 +2,130 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SISRI - Sistem Informasi Sekolah Rakyat Indonesia</title>
     
-    <!-- MENGGUNAKAN FONT 'INTER' DARI GOOGLE FONTS AGAR TEGAS & MODERN -->
+    <!-- FONT INTER & GOOGLE MATERIAL ICONS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
     
     <style>
-        /* VARIABEL WARNA UTAMA AGAR KONSISTEN */
         :root {
-            --primary: #a93437; /* Merah Bata (Utama) */
-            --primary-dark: #8b0000; /* Merah Gelap (Aksen) */
-            --primary-light: #fce8e8; /* Merah Sangat Pudar (Hover) */
-            --bg-body: #f4f7f6; /* Latar Belakang Abu-abu Sangat Terang */
-            --bg-surface: #ffffff; /* Latar Belakang Kotak/Putih */
-            --text-main: #1f2937; /* Teks Hitam Tegas */
-            --text-muted: #6b7280; /* Teks Abu-abu Halus */
-            --border: #e5e7eb; /* Garis Tepi Lembut */
+            --primary: #a93437; 
+            --primary-dark: #8b0000; 
+            --primary-light: #fce8e8; 
+            --bg-body: #f4f7f6; 
+            --bg-surface: #ffffff; 
+            --text-main: #1f2937; 
+            --text-muted: #6b7280; 
+            --border: #e5e7eb; 
         }
 
-        /* RESET & TIPOGRAFI UMUM */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--primary); /* Latar belakang luar (khusus halaman login) */
-            color: var(--text-main);
-            margin: 0; 
-            padding: 0; 
-            -webkit-font-smoothing: antialiased; /* Teks lebih tajam di layar */
-        }
-        
+        body { font-family: 'Inter', sans-serif; background-color: var(--primary); color: var(--text-main); margin: 0; padding: 0; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         .hidden { display: none !important; }
         
-        /* ---------------------------------------------------
-           AREA LOGIN & DAFTAR (TAMPILAN ELEGAN)
-           --------------------------------------------------- */
-        .login-wrapper { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .container { 
-            background-color: var(--bg-surface); 
-            padding: 40px 48px; 
-            border-radius: 12px; /* Lengkungan elegan */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Bayangan lembut */
-            width: 400px; 
-            text-align: center; 
-            box-sizing: border-box; 
-        }
-        .logo-container { 
-            width: 140px; 
-            height: 100px; 
-            margin: 0 auto 24px auto; 
-            background-image: url('https://i.postimg.cc/Pq2W5xZq/Logo-SR.png'); 
-            background-size: contain; 
-            background-repeat: no-repeat; 
-            background-position: center; 
-        }
-        h2 { color: var(--primary-dark); margin: 0 0 8px 0; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        p.subtitle { color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0; line-height: 1.5; font-weight: 500; }
-        p.address { color: var(--text-muted); font-size: 12px; margin: 0 0 30px 0; }
+        /* --- KOTAK LOGIN & DAFTAR --- */
+        .login-wrapper { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .container { background-color: var(--bg-surface); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); width: 100%; max-width: 400px; text-align: center; box-sizing: border-box; }
+        .logo-container { width: 120px; height: 90px; margin: 0 auto 24px auto; background-image: url('https://i.postimg.cc/Pq2W5xZq/Logo-SR.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+        h2 { color: var(--primary-dark); margin: 0 0 8px 0; font-size: 22px; font-weight: 700; }
+        p.subtitle { color: var(--text-muted); font-size: 13px; margin: 0 0 4px 0; font-weight: 500; }
+        p.address { color: var(--text-muted); font-size: 12px; margin: 0 0 24px 0; }
         
-        .form-group { margin-bottom: 18px; text-align: left; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 12px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 12px; color: var(--text-main); text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 14px; font-family: 'Inter', sans-serif; background-color: #f9fafb; outline: none; transition: all 0.2s; }
+        input:focus, select:focus { border-color: var(--primary); background-color: var(--bg-surface); box-shadow: 0 0 0 3px rgba(169, 52, 55, 0.15); }
         
-        /* Desain Kolom Input yang Rapi */
-        input, select { 
-            width: 100%; 
-            padding: 12px 14px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 14px; 
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            background-color: #f9fafb;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-        input:focus, select:focus {
-            border-color: var(--primary);
-            background-color: var(--bg-surface);
-            box-shadow: 0 0 0 3px rgba(169, 52, 55, 0.15); /* Glow merah bata saat diklik */
-        }
-        
-        /* Tombol Elegan */
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background-color: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 15px; 
-            margin-top: 10px; 
-            font-weight: 600; 
-            letter-spacing: 0.3px;
-            transition: background-color 0.2s ease, transform 0.1s ease; 
-        }
-        button:hover { background-color: var(--primary-dark); }
-        button:active { transform: translateY(1px); }
-        
-        button.toggle-btn { background-color: transparent; color: var(--primary); margin-top: 16px; width: auto; font-size: 13px; padding: 8px 16px; box-shadow: none; text-decoration: none;}
-        button.toggle-btn:hover { background-color: var(--primary-light); color: var(--primary-dark); }
+        button.btn-primary { width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 600; margin-top: 10px; transition: background-color 0.2s; }
+        button.btn-primary:hover { background-color: var(--primary-dark); }
+        button.toggle-btn { background-color: transparent; color: var(--primary); margin-top: 16px; font-size: 13px; padding: 8px 16px; border: none; cursor: pointer; font-weight: 600; }
         
         #messageBox { margin-top: 20px; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 500; }
         .success { background-color: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
         .error { background-color: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
         .loading { background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
 
-        /* ---------------------------------------------------
-           AREA DASHBOARD UTAMA (TAMPILAN BERSIH & MODERN)
-           --------------------------------------------------- */
+        /* --- DASHBOARD UTAMA & SIDEBAR --- */
         .dashboard-wrapper { display: flex; height: 100vh; background-color: var(--bg-body); }
         
-        /* Sidebar Kiri */
-        .sidebar { 
-            width: 280px; 
-            background-color: var(--bg-surface); 
-            border-right: 1px solid var(--border); 
-            display: flex; 
-            flex-direction: column; 
-            overflow-y: auto;
-        }
+        /* Overlay untuk Mobile */
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; transition: opacity 0.3s; }
         
-        .sidebar-header { 
-            padding: 24px 20px; 
-            border-bottom: 1px solid var(--border); 
-            text-align: left; 
-        }
+        .sidebar { width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: all 0.3s ease; z-index: 100; white-space: nowrap; }
+        
+        /* Sidebar Mini (Desktop Buka Tutup) */
+        .sidebar.collapsed { width: 72px; }
+        .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text, .sidebar.collapsed .submenu { display: none !important; }
+        .sidebar.collapsed .menu-label-left { justify-content: center; width: 100%; }
+        .sidebar.collapsed .icon { margin-right: 0; }
+        .sidebar.collapsed .sidebar-header { padding: 24px 10px; text-align: center; }
+        .sidebar.collapsed .sidebar-header::before { content: "SR"; font-weight: 700; color: var(--primary); font-size: 18px; }
+
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid var(--border); transition: all 0.3s; }
         .sidebar-header h3 { margin: 0; font-size: 16px; font-weight: 700; color: var(--text-main); }
         .sidebar-header p { margin: 4px 0 0 0; font-size: 12px; font-weight: 500; color: var(--primary); }
         
         .menu-list { list-style: none; padding: 16px 12px; margin: 0; }
         
-        /* Gaya Menu List (Floating Pills) */
-        .menu-item { 
-            padding: 10px 16px; 
-            margin-bottom: 4px;
-            border-radius: 8px;
-            cursor: pointer; 
-            font-size: 14px;
-            font-weight: 600; 
-            color: var(--text-muted); 
-            transition: all 0.2s ease; 
-        }
-        .menu-item:hover, .menu-item.active { 
-            background-color: var(--primary-light); 
-            color: var(--primary-dark); 
-        }
+        .menu-item { margin-bottom: 4px; border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s ease; }
+        .menu-label { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; }
+        .menu-label:hover { background-color: var(--primary-light); color: var(--primary-dark); }
+        .menu-label-left { display: flex; align-items: center; }
+        .icon { margin-right: 12px; font-size: 22px; }
+        .menu-text { font-size: 14px; font-weight: 600; }
+        .chevron-icon { font-size: 18px; transition: transform 0.2s; }
         
-        /* Submenu & Sub-submenu */
-        .submenu { list-style: none; padding-left: 12px; display: none; margin-top: 4px; }
-        .sub-submenu { list-style: none; padding-left: 16px; display: none; border-left: 2px solid var(--border); margin-left: 8px; margin-top: 4px;}
+        .menu-item.active > .menu-label .chevron-icon, .submenu-item.active > .menu-label .chevron-icon { transform: rotate(180deg); }
+        .menu-item.active > .menu-label { background-color: var(--primary-light); color: var(--primary-dark); }
+
+        /* Submenu */
+        .submenu { list-style: none; padding: 0; display: none; margin-top: 4px; }
+        .submenu-item { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+        .submenu-label { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 10px 48px; border-radius: 6px; cursor: pointer; transition: 0.2s;}
+        .submenu-label:hover { color: var(--primary); background-color: rgba(169, 52, 55, 0.05); }
         
-        .submenu li, .sub-submenu li { 
-            padding: 8px 16px; 
-            border-radius: 6px;
-            margin-bottom: 2px;
-            font-size: 13px; 
-            font-weight: 500; 
-            cursor: pointer; 
-            color: var(--text-muted); 
-            transition: all 0.2s;
-        }
-        .submenu li:hover, .sub-submenu li:hover { 
-            color: var(--primary); 
-            background-color: rgba(169, 52, 55, 0.05);
-        }
-        
+        .sub-submenu { list-style: none; padding: 0; display: none; }
+        .sub-submenu li { padding: 10px 16px 10px 60px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
+        .sub-submenu li:hover { color: var(--primary); background-color: rgba(169, 52, 55, 0.05); }
+
         .menu-item.active > .submenu { display: block; }
-        .submenu li.active > .sub-submenu { display: block; }
+        .submenu-item.active > .sub-submenu { display: block; }
 
-        /* Tombol Logout di Sidebar Bawah */
-        .logout-btn { 
-            margin-top: auto; 
-            margin-bottom: 20px;
-            margin-left: 20px;
-            margin-right: 20px;
-            padding: 12px; 
-            background-color: #f3f4f6; 
-            color: var(--text-main); 
-            border-radius: 8px;
-            text-align: center; 
-            cursor: pointer; 
-            font-size: 14px;
-            font-weight: 600; 
-            transition: all 0.2s;
-        }
-        .logout-btn:hover { background-color: #e5e7eb; color: var(--primary-dark); }
+        .logout-btn { margin-top: auto; margin-bottom: 20px; margin-left: 12px; margin-right: 12px; padding: 12px; background-color: #f3f4f6; color: var(--text-main); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+        .logout-btn:hover { background-color: #fee2e2; color: #dc2626; }
+        .logout-btn .icon { font-size: 20px; }
 
-        /* Konten Utama Kanan */
-        .main-content { 
-            flex: 1; 
-            padding: 40px; 
-            overflow-y: auto; 
-            background-color: var(--bg-body);
-        }
+        /* Konten Kanan */
+        .main-content { flex: 1; padding: 24px 40px; overflow-y: auto; background-color: var(--bg-body); display: flex; flex-direction: column; transition: all 0.3s;}
+        .header-bar { display: flex; align-items: center; margin-bottom: 24px; }
         
-        /* Card Konten */
-        .content-card {
-            background-color: var(--bg-surface);
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--border);
-            min-height: 400px;
-        }
-
-        .content-header { 
-            border-bottom: 2px solid var(--bg-body); 
-            padding-bottom: 16px; 
-            margin-top: 0;
-            margin-bottom: 24px; 
-            color: var(--text-main); 
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
+        .hamburger-btn { background: none; border: none; color: var(--text-main); padding: 8px; margin-right: 16px; cursor: pointer; border-radius: 8px; display: flex; align-items: center; transition: 0.2s; }
+        .hamburger-btn:hover { background-color: #e5e7eb; color: var(--primary); }
         
-        #contentBody p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            font-size: 15px;
+        .content-card { background-color: var(--bg-surface); border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); flex: 1; }
+        .content-header { margin: 0 0 20px 0; color: var(--text-main); font-size: 24px; font-weight: 700; letter-spacing: -0.5px; border-bottom: 2px solid var(--bg-body); padding-bottom: 16px; }
+        #contentBody p { color: var(--text-muted); line-height: 1.6; font-size: 15px; }
+
+        /* --- PENGATURAN RESPONSIVE (HP & TABLET) --- */
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; }
+            .main-content { padding: 20px; }
+            .content-card { padding: 20px; }
+            
+            /* Sidebar Mode HP (Off-Canvas) */
+            .sidebar { position: fixed; left: -280px; top: 0; bottom: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+            .sidebar.mobile-open { left: 0; }
+            .sidebar-overlay.active { display: block; }
+            
+            /* Matikan efek collapsed (mini) di HP */
+            .sidebar.collapsed { width: 280px; }
+            .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text { display: block !important; }
+            .sidebar.collapsed .sidebar-header::before { display: none; }
+            .sidebar.collapsed .menu-label-left { justify-content: flex-start; }
+            .sidebar.collapsed .icon { margin-right: 12px; }
         }
     </style>
 </head>
@@ -233,7 +135,6 @@
 <div id="authArea" class="login-wrapper">
     <div class="container">
         
-        <!-- Form Login -->
         <div id="loginSection">
             <div class="logo-container"></div>
             <h2>Login SISRI</h2>
@@ -241,11 +142,10 @@
             <p class="address">SRT 6 Kota Bogor</p>
             <div class="form-group"><label>Username</label><input type="text" id="logUsername" placeholder="Masukkan username" required></div>
             <div class="form-group"><label>Password</label><input type="password" id="logPassword" placeholder="Masukkan password" required></div>
-            <button id="btnLogin" onclick="submitLogin()">Masuk Dashboard</button>
+            <button id="btnLogin" class="btn-primary" onclick="submitLogin()">Masuk Dashboard</button>
             <button class="toggle-btn" onclick="toggleView('register')">Belum punya akses? Daftar Akun</button>
         </div>
 
-        <!-- Form Daftar -->
         <div id="registerSection" class="hidden">
             <div class="logo-container"></div>
             <h2>Daftar SISRI</h2>
@@ -266,7 +166,7 @@
                     <option value="Wali Asrama">Wali Asrama</option>
                 </select>
             </div>
-            <button id="btnRegister" onclick="submitRegistration()">Kirim Pendaftaran</button>
+            <button id="btnRegister" class="btn-primary" onclick="submitRegistration()">Kirim Pendaftaran</button>
             <button class="toggle-btn" onclick="toggleView('login')">Kembali ke Login</button>
         </div>
         
@@ -277,8 +177,11 @@
 
 <!-- AREA DASHBOARD UTAMA -->
 <div id="dashboardArea" class="dashboard-wrapper hidden">
-    <!-- Sidebar Kiri -->
-    <div class="sidebar">
+    
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3 id="displayName">Nama User</h3>
             <p id="displayLevel">Level Akses</p>
@@ -286,13 +189,16 @@
 
         <ul class="menu-list" id="mainMenu">
             
-            <!-- 1. Sarana & Prasarana -->
             <li class="menu-item" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" onclick="toggleMenu(this, event)">
-                Sarana & Prasarana
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">domain</span><span class="menu-text">Sarana & Prasarana</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
                 <ul class="submenu">
-                    <li onclick="openContent('Aset (Non Ops)', event)">Non Ops (Aset)</li>
-                    <li onclick="openContent('Barang Habis Pakai (Ops)', event)">Ops (Barang habis pakai)</li>
-                    <li onclick="toggleSubMenu(this, event)">Sistem Pemeliharaan
+                    <li class="submenu-label" onclick="openContent('Aset (Non Ops)', event)">Non Ops (Aset)</li>
+                    <li class="submenu-label" onclick="openContent('Barang Habis Pakai (Ops)', event)">Ops (Barang habis pakai)</li>
+                    <li class="submenu-item" onclick="toggleSubMenu(this, event)">
+                        <div class="submenu-label"><span>Sistem Pemeliharaan</span><span class="material-symbols-outlined chevron-icon">expand_more</span></div>
                         <ul class="sub-submenu">
                             <li onclick="openContent('Pengajuan Perbaikan', event)">Pengajuan Perbaikan</li>
                             <li onclick="openContent('Daftar Barang Rusak', event)">Daftar Barang Rusak</li>
@@ -302,68 +208,89 @@
                 </ul>
             </li>
 
-            <!-- 2. Sistem Otomasi Surat -->
             <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
-                Sistem Otomasi Surat
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">mail</span><span class="menu-text">Sistem Otomasi Surat</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
                 <ul class="submenu">
-                    <li onclick="openContent('Pengajuan Surat', event)">Pengajuan Surat</li>
-                    <li onclick="openContent('Monitoring Surat', event)">Monitoring Surat</li>
-                    <li onclick="openContent('Template Surat', event)">Template Surat</li>
-                    <li onclick="openContent('Disposisi Surat', event)">Disposisi Surat</li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Surat', event)">Pengajuan Surat</li>
+                    <li class="submenu-label" onclick="openContent('Monitoring Surat', event)">Monitoring Surat</li>
+                    <li class="submenu-label" onclick="openContent('Template Surat', event)">Template Surat</li>
+                    <li class="submenu-label" onclick="openContent('Disposisi Surat', event)">Disposisi Surat</li>
                 </ul>
             </li>
 
-            <!-- 3. Asesmen Siswa -->
             <li class="menu-item" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru" onclick="toggleMenu(this, event)">
-                Asesmen Siswa
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">quiz</span><span class="menu-text">Asesmen Siswa</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
                 <ul class="submenu">
-                    <li onclick="openContent('Asesmen Rutin', event)">Asesmen Rutin</li>
-                    <li onclick="openContent('Asesmen Insidentil', event)">Asesmen Insidentil</li>
+                    <li class="submenu-label" onclick="openContent('Asesmen Rutin', event)">Asesmen Rutin</li>
+                    <li class="submenu-label" onclick="openContent('Asesmen Insidentil', event)">Asesmen Insidentil</li>
                 </ul>
             </li>
 
-            <!-- 4. Kesiswaan -->
             <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
-                Kesiswaan
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">school</span><span class="menu-text">Kesiswaan</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
                 <ul class="submenu">
-                    <li onclick="toggleSubMenu(this, event)">Data Siswa
+                    <li class="submenu-item" onclick="toggleSubMenu(this, event)">
+                        <div class="submenu-label"><span>Data Siswa</span><span class="material-symbols-outlined chevron-icon">expand_more</span></div>
                         <ul class="sub-submenu">
                             <li onclick="openContent('Data Siswa SRMP', event)">Siswa SRMP</li>
                             <li onclick="openContent('Data Siswa SRMA', event)">Siswa SRMA</li>
                         </ul>
                     </li>
-                    <li onclick="openContent('Data Ekstrakurikuler', event)">Ekstrakurikuler</li>
-                    <li onclick="openContent('Pengajuan Program Kesiswaan', event)">Pengajuan Program</li>
+                    <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">Ekstrakurikuler</li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Program Kesiswaan', event)">Pengajuan Program</li>
                 </ul>
             </li>
 
-            <!-- 5. Pengajuan Penggunaan Ruangan -->
             <li class="menu-item" data-role="Seluruh" onclick="openContent('Pengajuan Penggunaan Ruangan', event)">
-                Pengajuan Ruangan
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">meeting_room</span><span class="menu-text">Pengajuan Ruangan</span></div>
+                </div>
             </li>
 
-            <!-- 6. Keuangan -->
             <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
-                Keuangan
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">account_balance_wallet</span><span class="menu-text">Keuangan</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
                 <ul class="submenu">
-                    <li onclick="openContent('Pengajuan Anggaran', event)">Pengajuan Anggaran</li>
-                    <li onclick="openContent('Realisasi Anggaran', event)">Realisasi Anggaran</li>
-                    <li onclick="openContent('Pencairan Anggaran', event)">Pencairan Anggaran</li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Anggaran', event)">Pengajuan Anggaran</li>
+                    <li class="submenu-label" onclick="openContent('Realisasi Anggaran', event)">Realisasi Anggaran</li>
+                    <li class="submenu-label" onclick="openContent('Pencairan Anggaran', event)">Pencairan Anggaran</li>
                 </ul>
             </li>
 
         </ul>
 
-        <div class="logout-btn" onclick="logout()">Log Out</div>
+        <div class="logout-btn" onclick="logout()">
+            <span class="material-symbols-outlined icon">logout</span>
+            <span class="logout-text">Log Out</span>
+        </div>
     </div>
 
     <!-- Konten Kanan -->
     <div class="main-content">
+        <div class="header-bar">
+            <!-- Tombol Hamburger -->
+            <button class="hamburger-btn" onclick="toggleSidebar()" title="Buka/Tutup Menu">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <h1 class="content-header" style="border:none; margin:0; padding:0;">Dashboard Utama</h1>
+        </div>
+        
         <div class="content-card">
-            <h1 class="content-header" id="contentTitle">Dashboard Utama</h1>
+            <h2 class="content-header" id="contentTitle" style="font-size: 20px;">Selamat Datang</h2>
             <div id="contentBody">
                 <p>Selamat datang di <b>Sistem Informasi Sekolah Rakyat Indonesia (SISRI)</b>.</p>
-                <p>Silakan pilih menu navigasi di panel sebelah kiri untuk mulai mengelola data dan aktivitas sekolah. Antarmuka ini dirancang untuk kemudahan dan efisiensi operasional.</p>
+                <p>Silakan pilih menu navigasi di panel sebelah kiri untuk mulai mengelola data dan aktivitas sekolah. Antarmuka ini dirancang untuk kemudahan dan efisiensi operasional dari perangkat apapun.</p>
             </div>
         </div>
     </div>
@@ -371,18 +298,43 @@
 
 <script>
     // MASUKKAN URL APPS SCRIPT ANDA DI SINI
-    const scriptURL = "https://script.google.com/macros/s/AKfycbzp41rOKzyfqwNxRkb-LwJy-Of-cCqM7XP9qOmHFB0reOtES7NO8dEoTLz9BvpjPw/exec";
+    const scriptURL = "GANTI_DENGAN_URL_APPS_SCRIPT_ANDA_DISINI";
 
-    // Fungsi Navigasi Login/Daftar
+    // Navigasi Buka/Tutup Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        if (window.innerWidth <= 768) {
+            // Mode HP (Slider)
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+        } else {
+            // Mode Desktop (Mini Sidebar)
+            sidebar.classList.toggle('collapsed');
+            
+            // Tutup semua submenu jika disusutkan
+            if (sidebar.classList.contains('collapsed')) {
+                document.querySelectorAll('.menu-item.active').forEach(el => el.classList.remove('active'));
+            }
+        }
+    }
+
+    // Auto tutup sidebar di HP saat menu diklik
+    function closeSidebarMobile() {
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.remove('mobile-open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+    }
+
+    // Navigasi Login
     function toggleView(view) {
         document.getElementById('registerSection').classList.add('hidden');
         document.getElementById('loginSection').classList.add('hidden');
         document.getElementById('messageBox').classList.add('hidden');
-        if(view === 'register') {
-            document.getElementById('registerSection').classList.remove('hidden');
-        } else {
-            document.getElementById('loginSection').classList.remove('hidden');
-        }
+        if(view === 'register') { document.getElementById('registerSection').classList.remove('hidden'); } 
+        else { document.getElementById('loginSection').classList.remove('hidden'); }
     }
 
     function showMessage(msg, type) {
@@ -390,7 +342,6 @@
         msgBox.innerHTML = msg; msgBox.className = type; msgBox.classList.remove('hidden');
     }
 
-    // Fungsi Pendaftaran
     function submitRegistration() {
         const user = document.getElementById('regUsername').value;
         const email = document.getElementById('regEmail').value;
@@ -414,12 +365,10 @@
             if(data.status === "berhasil") { showMessage(data.pesan, "success"); } 
             else { showMessage(data.pesan, "error"); }
         }).catch(err => {
-            btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran";
-            showMessage("Terjadi kesalahan koneksi.", "error");
+            btn.disabled = false; btn.innerHTML = "Kirim Pendaftaran"; showMessage("Terjadi kesalahan koneksi.", "error");
         });
     }
 
-    // Fungsi Login
     function submitLogin() {
         const user = document.getElementById('logUsername').value;
         const pass = document.getElementById('logPassword').value;
@@ -439,42 +388,45 @@
         .then(data => {
             btn.disabled = false; btn.innerHTML = "Masuk Dashboard";
             if(data.status === "berhasil") {
-                // Sembunyikan Body Login
                 document.body.style.backgroundColor = "var(--bg-body)";
                 document.getElementById('authArea').classList.add('hidden');
                 document.getElementById('dashboardArea').classList.remove('hidden');
-                
                 document.getElementById('displayName').innerText = data.username;
                 document.getElementById('displayLevel').innerText = data.level;
                 aturHakAksesMenu(data.level);
-            } else {
-                showMessage(data.pesan, "error");
-            }
+            } else { showMessage(data.pesan, "error"); }
         }).catch(err => {
-            btn.disabled = false; btn.innerHTML = "Masuk Dashboard";
-            showMessage("Gagal terhubung ke server.", "error");
+            btn.disabled = false; btn.innerHTML = "Masuk Dashboard"; showMessage("Gagal terhubung ke server.", "error");
         });
     }
 
-    // FILTER MENU (RBAC)
     function aturHakAksesMenu(userLevel) {
-        const menuItems = document.querySelectorAll('.menu-item');
-        menuItems.forEach(menu => {
+        document.querySelectorAll('.menu-item').forEach(menu => {
             const allowedRoles = menu.getAttribute('data-role');
-            if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) {
-                menu.style.display = "block";
-            } else {
-                menu.style.display = "none";
-            }
+            if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) { menu.style.display = "block"; } 
+            else { menu.style.display = "none"; }
         });
     }
 
-    // Interaksi Sidebar
     function toggleMenu(element, event) {
-        // Matikan active di menu lain agar hanya 1 yang terbuka
-        document.querySelectorAll('.menu-item').forEach(m => {
-            if(m !== element) m.classList.remove('active');
-        });
+        event.stopPropagation();
+        
+        // Jangan buka menu jika mode sidebar mini di desktop sedang aktif
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar.classList.contains('collapsed') && window.innerWidth > 768) {
+            sidebar.classList.remove('collapsed'); // Buka sidebar dulu otomatis
+        }
+        
+        const hasSubmenu = element.querySelector('.submenu');
+        if (!hasSubmenu) return; // Jika tidak ada submenu, abaikan (misal menu ruangan)
+        
+        // Matikan active di menu lain (Accordion effect)
+        const siblings = element.parentElement.children;
+        for(let i=0; i<siblings.length; i++) {
+            if(siblings[i] !== element && siblings[i].classList.contains('menu-item')) {
+                siblings[i].classList.remove('active');
+            }
+        }
         element.classList.toggle('active');
     }
     
@@ -486,18 +438,19 @@
     function openContent(menuName, event) {
         event.stopPropagation();
         
-        // Membersihkan efek bold pada semua submenu
-        document.querySelectorAll('.submenu li, .sub-submenu li').forEach(li => {
-            li.style.fontWeight = "500";
-            li.style.color = "var(--text-muted)";
-        });
-        
-        // Memberikan efek terpilih pada yang diklik
-        event.target.style.fontWeight = "600";
-        event.target.style.color = "var(--primary-dark)";
-
+        // Tampilkan judul di layar tengah
         document.getElementById('contentTitle').innerText = menuName;
-        document.getElementById('contentBody').innerHTML = "<p>Ini adalah ruang kerja untuk modul pengelola <b>" + menuName + "</b>.</p><p>Formulir input data dan tabel rekapitulasi akan ditampilkan di area ini.</p>";
+        document.getElementById('contentBody').innerHTML = "<p>Ini adalah ruang kerja untuk modul pengelola <b>" + menuName + "</b>.</p><p>Formulir input data dan tabel rekapitulasi akan ditampilkan di area ini pada pembaruan fitur selanjutnya.</p>";
+        
+        // Ubah warna text menu yang sedang dipilih
+        document.querySelectorAll('.submenu-label, .sub-submenu li').forEach(li => { li.style.color = "var(--text-muted)"; li.style.fontWeight = "500"; });
+        if(event.target.classList.contains('submenu-label') || event.target.tagName === 'LI') {
+            event.target.style.color = "var(--primary)";
+            event.target.style.fontWeight = "600";
+        }
+        
+        // Auto-tutup sidebar jika di HP
+        closeSidebarMobile();
     }
 
     function logout() {
