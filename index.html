@@ -745,13 +745,29 @@
     function sesuaikanFormInput() {
         const jenis = document.getElementById('inJenis').value;
         const elemenAset = document.querySelectorAll('.aset-only');
+        const selectKondisi = document.getElementById('inKondisi'); // Penambahan elemen dropdown
         
         if(jenis === 'Habis Pakai') {
+            // Pengaturan UI khusus Habis Pakai
             elemenAset.forEach(el => el.style.display = 'none');
             document.getElementById('labelRuangan').innerText = "Lokasi Penyimpanan (Gudang/Dapur)";
+            
+            // Ubah opsi Kondisi hanya jadi 2 pilihan
+            selectKondisi.innerHTML = `
+                <option value="Baik">Baik</option>
+                <option value="Rusak">Rusak</option>
+            `;
         } else {
+            // Pengaturan UI khusus Aset (KIR)
             elemenAset.forEach(el => el.style.display = 'block');
             document.getElementById('labelRuangan').innerText = "Nama Ruangan";
+            
+            // Kembalikan opsi Kondisi lengkap 3 pilihan
+            selectKondisi.innerHTML = `
+                <option value="Baik">Baik</option>
+                <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                <option value="Rusak">Rusak</option>
+            `;
         }
     }
 
