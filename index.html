@@ -434,7 +434,7 @@
 
                 <!-- 1. Tombol Navigasi Sub-menu (Action Cards) Paling Atas -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="alert('Masuk ke form pengajuan')">
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('pengajuan_perbaikan', event)">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                             <div style="background: var(--primary-light); color: var(--primary); padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">home_repair_service</span></div>
                             <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Pengajuan Perbaikan</h3>
@@ -489,6 +489,28 @@
                             <canvas id="chartPerbaikan"></canvas>
                         </div>
                     </div>
+                </div>
+                <!-- MODULE 4: PENGAJUAN PERBAIKAN -->
+            <div id="modul_pengajuan_perbaikan" class="hidden">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <button class="btn-outline" style="border:none; padding:0; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; cursor:pointer;" onclick="openModule('pemeliharaan', event)">
+                            <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">arrow_back</span> Kembali ke Dashboard
+                        </button>
+                        <h2 style="margin:0; font-size:20px; color:var(--text-main);">Daftar Pengajuan Perbaikan</h2>
+                    </div>
+                    <button class="btn-add" onclick="bukaModalPerbaikan()"><span class="material-symbols-outlined icon">add</span>Buat Pengajuan</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="tabelPerbaikan">
+                        <thead>
+                            <tr><th>Tgl Pengajuan</th><th>Kode Barang</th><th>Nama Barang</th><th>Ruangan</th><th>Detail Keluhan</th><th>Urgensi</th><th>Status</th><th>Pelapor</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tbodyPerbaikan">
+                            <tr><td colspan="9" style="text-align:center;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -640,7 +662,51 @@
         </div>
     </div>
 </div>
-
+<!-- ============================================== -->
+<!-- POP-UP MODAL PENGAJUAN PERBAIKAN               -->
+<!-- ============================================== -->
+<div class="modal-overlay hidden" id="modalPerbaikan">
+    <div class="modal-card" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>Form Pengajuan Perbaikan</h3>
+            <button class="close-btn" onclick="document.getElementById('modalPerbaikan').classList.add('hidden')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="background:#fffbeb; color:#92400e; padding:12px; border-radius:8px; font-size:13px; margin-bottom:16px;">
+                Identitas Anda (<span id="lblUserPelapor" style="font-weight:bold;"></span>) akan terekam otomatis sebagai pelapor.
+            </div>
+            
+            <div class="form-group"><label>Tanggal Pengajuan</label><input type="date" id="inTglPerbaikan" required></div>
+            
+            <!-- Fitur Auto-Fill Pencarian Barang -->
+            <div class="form-group" style="display:flex; gap:8px; align-items:flex-end;">
+                <div style="flex:1;">
+                    <label>Kode Barang / ID Sistem</label>
+                    <input type="text" id="inKodePerbaikan" placeholder="Contoh: NOP-123 / Kode SKU" required>
+                </div>
+                <button type="button" class="btn-primary" style="width:auto; margin:0; padding:12px 16px;" onclick="cekKodeBarang()" id="btnCekKode">Cari Barang</button>
+            </div>
+            
+            <!-- Nama & Ruangan terkunci (readonly) -->
+            <div class="form-group"><label>Nama Aset / Barang</label><input type="text" id="inBarangPerbaikan" placeholder="Otomatis terisi jika kode benar..." readonly style="background:#e5e7eb; cursor:not-allowed;" required></div>
+            <div class="form-group"><label>Lokasi / Ruangan</label><input type="text" id="inRuangPerbaikan" placeholder="Otomatis terisi..." readonly style="background:#e5e7eb; cursor:not-allowed;" required></div>
+            
+            <div class="form-group">
+                <label>Tingkat Urgensi</label>
+                <select id="inUrgensiPerbaikan">
+                    <option value="Rendah">Rendah (Masih bisa digunakan)</option>
+                    <option value="Sedang">Sedang (Mengganggu kenyamanan)</option>
+                    <option value="Tinggi">Tinggi (Rusak total / Bahaya)</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Detail Kerusakan / Keluhan</label><textarea id="inKeluhanPerbaikan" rows="3" placeholder="Jelaskan secara rinci kerusakannya..." required></textarea></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-outline" onclick="document.getElementById('modalPerbaikan').classList.add('hidden')">Batal</button>
+            <button class="btn-primary" style="width:auto; margin:0;" onclick="simpanPengajuanPerbaikan()" id="btnSimpanPerbaikan">Kirim Pengajuan</button>
+        </div>
+    </div>
+</div>
 <script>
     // MASUKKAN URL APPS SCRIPT ANDA DI SINI
     const scriptURL = "https://script.google.com/macros/s/AKfycbzp41rOKzyfqwNxRkb-LwJy-Of-cCqM7XP9qOmHFB0reOtES7NO8dEoTLz9BvpjPw/exec";
@@ -851,6 +917,7 @@
         document.getElementById('modul_nonops').classList.add('hidden');
         document.getElementById('modul_ops').classList.add('hidden');
         document.getElementById('modul_pemeliharaan').classList.add('hidden'); 
+        document.getElementById('modul_pengajuan_perbaikan').classList.add('hidden');
         
         // Tampilkan halaman sesuai menu yang diklik
         if(modulName === 'nonops') {
@@ -862,6 +929,9 @@
         } else if(modulName === 'pemeliharaan') {
             document.getElementById('modul_pemeliharaan').classList.remove('hidden');
             renderGrafikPemeliharaan(); // Panggil fungsi gambar grafik
+        } else if(modulName === 'pengajuan_perbaikan') {
+            document.getElementById('modul_pengajuan_perbaikan').classList.remove('hidden');
+            muatDataPerbaikan();
         }
         closeSidebarMobile();
     }
@@ -1306,6 +1376,109 @@
                 }]
             },
             options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+    // ==========================================
+    // LOGIKA PENGAJUAN PERBAIKAN & AUTO-FILL
+    // ==========================================
+    function muatDataPerbaikan() {
+        document.getElementById('tbodyPerbaikan').innerHTML = '<tr><td colspan="9" style="text-align:center;">Mengambil data...</td></tr>';
+        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                const tbody = document.getElementById('tbodyPerbaikan');
+                tbody.innerHTML = '';
+                if(data.data.length === 0) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada pengajuan.</td></tr>'; return; }
+                
+                data.data.forEach((row) => {
+                    let warnaStatus = row.status === 'Selesai' ? '#166534' : (row.status === 'Sedang Diperbaiki' ? '#854d0e' : '#991b1b');
+                    let bgStatus = row.status === 'Selesai' ? '#dcfce7' : (row.status === 'Sedang Diperbaiki' ? '#fef08a' : '#fee2e2');
+
+                    tbody.innerHTML += `<tr>
+                        <td>${row.tanggal}</td>
+                        <td>${row.kode_barang}</td>
+                        <td><b>${row.nama_barang}</b></td>
+                        <td>${row.ruangan}</td>
+                        <td>${row.keluhan}</td>
+                        <td>${row.urgensi}</td>
+                        <td><span style="background:${bgStatus}; color:${warnaStatus}; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${row.status}</span></td>
+                        <td>${row.user}</td>
+                        <td><button class="btn-icon" title="Cetak Bukti"><span class="material-symbols-outlined" style="font-size:18px;">print</span></button></td>
+                    </tr>`;
+                });
+            }
+        });
+    }
+
+    function bukaModalPerbaikan() {
+        document.getElementById('modalPerbaikan').classList.remove('hidden');
+        document.getElementById('lblUserPelapor').innerText = sessionStorage.getItem('username');
+        document.getElementById('inTglPerbaikan').valueAsDate = new Date();
+    }
+
+    function cekKodeBarang() {
+        const kode = document.getElementById('inKodePerbaikan').value;
+        const btn = document.getElementById('btnCekKode');
+        
+        if(!kode) { alert("Masukkan kode barang terlebih dahulu!"); return; }
+        
+        btn.disabled = true; btn.innerText = "Mencari...";
+        document.getElementById('inBarangPerbaikan').value = "Mengambil data...";
+        document.getElementById('inRuangPerbaikan').value = "Mengambil data...";
+        
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "cari_barang", kode_barang: kode })
+        }).then(res => res.json()).then(data => {
+            btn.disabled = false; btn.innerText = "Cari Barang";
+            if(data.status === "ditemukan") {
+                document.getElementById('inBarangPerbaikan').value = data.nama_barang;
+                document.getElementById('inRuangPerbaikan').value = data.ruangan;
+                document.getElementById('inBarangPerbaikan').style.backgroundColor = "#dcfce7";
+                setTimeout(() => document.getElementById('inBarangPerbaikan').style.backgroundColor = "#e5e7eb", 1000);
+            } else {
+                document.getElementById('inBarangPerbaikan').value = "";
+                document.getElementById('inRuangPerbaikan').value = "";
+                alert(data.pesan);
+            }
+        }).catch(err => {
+            btn.disabled = false; btn.innerText = "Cari Barang";
+            document.getElementById('inBarangPerbaikan').value = "";
+            document.getElementById('inRuangPerbaikan').value = "";
+            alert("Error koneksi saat mencari data!");
+        });
+    }
+    
+    function simpanPengajuanPerbaikan() {
+        const btn = document.getElementById('btnSimpanPerbaikan');
+        const payload = {
+            action: "add_perbaikan",
+            user_penginput: sessionStorage.getItem('username'), 
+            user_level: sessionStorage.getItem('level'),
+            tanggal: document.getElementById('inTglPerbaikan').value,
+            kode_barang: document.getElementById('inKodePerbaikan').value, 
+            nama_barang: document.getElementById('inBarangPerbaikan').value,
+            ruangan: document.getElementById('inRuangPerbaikan').value,
+            urgensi: document.getElementById('inUrgensiPerbaikan').value,
+            keluhan: document.getElementById('inKeluhanPerbaikan').value
+        };
+        
+        if(!payload.kode_barang || !payload.nama_barang || !payload.keluhan) { 
+            alert("Pastikan Anda sudah klik tombol 'Cari Barang' dan mengisi detail keluhan!"); return; 
+        }
+        
+        btn.disabled = true; btn.innerText = "Mengirim...";
+        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+        }).then(res => res.json()).then(data => {
+            btn.disabled = false; btn.innerText = "Kirim Pengajuan";
+            if(data.status === "berhasil") {
+                document.getElementById('modalPerbaikan').classList.add('hidden');
+                alert("Pengajuan berhasil dikirim!"); 
+                muatDataPerbaikan(); 
+                document.getElementById('inKodePerbaikan').value = ''; 
+                document.getElementById('inBarangPerbaikan').value = ''; 
+                document.getElementById('inKeluhanPerbaikan').value = '';
+            } else { alert("Gagal: " + data.pesan); }
         });
     }
 </script>
