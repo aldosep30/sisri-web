@@ -223,7 +223,7 @@
                     <li class="submenu-label" onclick="openModule('nonops', event)">
                         <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">inventory_2</span><span class="submenu-text">Non Ops (Aset)</span></div>
                     </li>
-                    <li class="submenu-label" onclick="openContent('Ops (Barang habis pakai)', event)">
+                    <<li class="submenu-label" onclick="openModule('ops', event)">
                         <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">shopping_cart</span><span class="submenu-text">Ops (Barang habis pakai)</span></div>
                     </li>
                     <li class="submenu-item" onclick="toggleSubMenu(this, event)">
@@ -400,6 +400,29 @@
                     </table>
                 </div>
             </div>
+<!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
+            <div id="modul_ops" class="hidden">
+                <div class="page-header">
+                    <h2>Pengelolaan Inventaris (Ops / Habis Pakai)</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcelOps()">
+                            <span class="material-symbols-outlined icon" style="font-size:18px;">upload_file</span>Upload Excel
+                        </button>
+                        <button class="btn-add" onclick="bukaModalOps()"><span class="material-symbols-outlined icon">add</span>Tambah Data</button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="tabelOps">
+                        <thead>
+                            <tr><th>No</th><th>Nama Barang</th><th>Merk/Type</th><th>Stok</th><th>Satuan</th><th>Lokasi/Gudang</th><th>Kondisi</th><th>Keterangan</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tbodyOps">
+                            <tr><td colspan="9" style="text-align:center;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -497,6 +520,59 @@
     </div>
 </div>
 
+<!-- ============================================== -->
+<!-- POP-UP MODAL FORM INPUT & UPLOAD OPS           -->
+<!-- ============================================== -->
+<div class="modal-overlay hidden" id="modalOps">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Tambah Barang Ops Baru</h3>
+            <button class="close-btn" onclick="document.getElementById('modalOps').classList.add('hidden')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group full-width"><label>Nama Barang</label><input type="text" id="inNamaOps" required></div>
+                <div class="form-group"><label>Merk / Type</label><input type="text" id="inMerkOps"></div>
+                <div class="form-group"><label>Lokasi (Gudang/Ruang)</label><input type="text" id="inRuanganOps"></div>
+                <div class="form-group"><label>Jumlah (Stok)</label><input type="number" id="inJumlahOps" required></div>
+                <div class="form-group"><label>Satuan</label><input type="text" id="inSatuanOps" placeholder="Pcs, Rim, Dus..." required></div>
+                <div class="form-group">
+                    <label>Kondisi</label>
+                    <select id="inKondisiOps"><option value="Baik">Baik</option><option value="Rusak">Rusak</option></select>
+                </div>
+                <div class="form-group full-width"><label>Keterangan (Sumber Dana, dll)</label><textarea id="inKeteranganOps" rows="2"></textarea></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-outline" onclick="document.getElementById('modalOps').classList.add('hidden')">Batal</button>
+            <button class="btn-primary" style="width:auto; margin:0;" onclick="simpanDataOps()" id="btnSimpanOps">Simpan Data</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay hidden" id="modalUploadExcelOps">
+    <div class="modal-card" style="max-width: 450px;">
+        <div class="modal-header">
+            <h3>Upload Data Ops via Excel</h3>
+            <button class="close-btn" onclick="document.getElementById('modalUploadExcelOps').classList.add('hidden')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div style="background-color:#eff6ff; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; color:#1e40af; border:1px solid #bfdbfe;">
+                <ol style="margin-bottom:0; padding-left:16px;">
+                    <li>Unduh template Excel Barang Ops.</li>
+                    <li>Isi data tanpa mengubah judul kolom.</li>
+                    <li>Pilih file lalu klik Proses Upload.</li>
+                </ol>
+                <button class="btn-outline" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcelOps()">Unduh Template Ops</button>
+            </div>
+            <div class="form-group"><label>Pilih File Excel (.xlsx)</label><input type="file" id="fileExcelOps" accept=".xlsx, .xls"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-outline" onclick="document.getElementById('modalUploadExcelOps').classList.add('hidden')">Batal</button>
+            <button class="btn-primary" style="width:auto; margin:0;" onclick="prosesUploadExcelOps()" id="btnProsesExcelOps">Proses Upload</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // MASUKKAN URL APPS SCRIPT ANDA DI SINI
@@ -695,6 +771,9 @@
         if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             muatDataNonOps(); 
+        } else if(modulName === 'ops') {
+            document.getElementById('modul_ops').classList.remove('hidden');
+            muatDataOps(); 
         }
         closeSidebarMobile();
     }
@@ -867,7 +946,7 @@
             } else { alert("Gagal: " + data.pesan); }
         }).catch(err => { btn.disabled = false; btn.innerText = "Simpan Data"; alert("Error koneksi!"); });
     }
-    
+
     // ==========================================
     // LOGIKA UPLOAD EXCEL (SHEETJS)
     // ==========================================
@@ -975,6 +1054,122 @@
         };
         
         reader.readAsArrayBuffer(file);
+    }
+
+    // ==========================================
+    // LOGIKA MODUL OPS (BARANG HABIS PAKAI)
+    // ==========================================
+    let dataOpsGlobal = [];
+
+    function muatDataOps() {
+        document.getElementById('tbodyOps').innerHTML = '<tr><td colspan="9" style="text-align:center;">Mengambil data dari server...</td></tr>';
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "get_ops" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") { dataOpsGlobal = data.data; renderTabelOps(); }
+        }).catch(err => { document.getElementById('tbodyOps').innerHTML = '<tr><td colspan="9" style="text-align:center;color:red;">Gagal mengambil data.</td></tr>'; });
+    }
+
+    function renderTabelOps() {
+        const tbody = document.getElementById('tbodyOps');
+        tbody.innerHTML = '';
+        if(dataOpsGlobal.length === 0) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada data Barang Ops.</td></tr>'; return; }
+        
+        dataOpsGlobal.forEach((row, index) => {
+            tbody.innerHTML += `<tr>
+                <td>${index + 1}</td>
+                <td><b>${row.nama_barang}</b></td>
+                <td>${row.merk}</td>
+                <td style="font-weight:bold; color:var(--primary);">${row.jumlah}</td>
+                <td>${row.satuan}</td>
+                <td>${row.ruangan}</td>
+                <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
+                <td>${row.keterangan}</td>
+                <td class="action-btns">
+                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                    <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
+                </td>
+            </tr>`;
+        });
+    }
+
+    function bukaModalOps() { document.getElementById('modalOps').classList.remove('hidden'); }
+    
+    function simpanDataOps() {
+        const btn = document.getElementById('btnSimpanOps');
+        const payload = {
+            action: "add_ops",
+            user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'),
+            nama_barang: document.getElementById('inNamaOps').value, merk: document.getElementById('inMerkOps').value,
+            ruangan: document.getElementById('inRuanganOps').value, jumlah: document.getElementById('inJumlahOps').value,
+            satuan: document.getElementById('inSatuanOps').value, kondisi: document.getElementById('inKondisiOps').value,
+            keterangan: document.getElementById('inKeteranganOps').value
+        };
+        if(!payload.nama_barang || !payload.jumlah) { alert("Nama barang dan Jumlah wajib diisi!"); return; }
+        btn.disabled = true; btn.innerText = "Menyimpan...";
+        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+        }).then(res => res.json()).then(data => {
+            btn.disabled = false; btn.innerText = "Simpan Data";
+            if(data.status === "berhasil") {
+                document.getElementById('modalOps').classList.add('hidden');
+                alert("Data berhasil ditambahkan!"); muatDataOps(); 
+                document.getElementById('inNamaOps').value = ''; document.getElementById('inJumlahOps').value = '';
+            } else { alert("Gagal: " + data.pesan); }
+        }).catch(err => { btn.disabled = false; btn.innerText = "Simpan Data"; alert("Error koneksi!"); });
+    }
+
+    // UPLOAD EXCEL OPS
+    function bukaModalUploadExcelOps() {
+        document.getElementById('modalUploadExcelOps').classList.remove('hidden');
+        document.getElementById('fileExcelOps').value = ''; 
+    }
+
+    function unduhTemplateExcelOps() {
+        let ws_data = [['Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']];
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template");
+        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
+        XLSX.writeFile(wb, "Template_Upload_Ops.xlsx");
+    }
+
+    function prosesUploadExcelOps() {
+        const fileInput = document.getElementById('fileExcelOps');
+        const btn = document.getElementById('btnProsesExcelOps');
+        if (!fileInput.files.length) { alert("Pilih file Excel terlebih dahulu!"); return; }
+        
+        btn.disabled = true; btn.innerText = "Membaca File...";
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const rawJSON = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval: ""});
+            
+            if(rawJSON.length === 0) { alert("File Excel kosong."); btn.disabled = false; btn.innerText = "Proses Upload"; return; }
+
+            let mappedData = [];
+            rawJSON.forEach(row => {
+                mappedData.push({
+                    nama_barang: row['Nama Barang'], merk: row['Merk/Type'],
+                    ruangan: row['Lokasi Gudang'], jumlah: row['Jumlah'],
+                    satuan: row['Satuan'], kondisi: row['Kondisi'], keterangan: row['Keterangan']
+                });
+            });
+
+            btn.innerText = "Mengunggah...";
+            fetch(scriptURL, {
+                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "bulk_add_ops", user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'), data: mappedData })
+            }).then(res => res.json()).then(resData => {
+                btn.disabled = false; btn.innerText = "Proses Upload";
+                if(resData.status === "berhasil") {
+                    document.getElementById('modalUploadExcelOps').classList.add('hidden');
+                    alert(resData.pesan); muatDataOps(); 
+                } else { alert("Gagal: " + resData.pesan); }
+            }).catch(err => { btn.disabled = false; btn.innerText = "Proses Upload"; alert("Error koneksi!"); });
+        };
+        reader.readAsArrayBuffer(fileInput.files[0]);
     }
 </script>
 </body>
