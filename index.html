@@ -235,7 +235,7 @@
                             <span class="material-symbols-outlined chevron-icon">expand_more</span>
                         </div>
                         <ul class="sub-submenu">
-                            <li onclick="alert('Fitur Pengajuan Perbaikan segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
+                            <li onclick="openModule('pengajuan_perbaikan', event)"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
                             <li onclick="alert('Fitur Daftar Barang Rusak segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
                             <li onclick="alert('Fitur Daftar Pemeliharaan segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
                         </ul>
@@ -906,33 +906,46 @@
         closeSidebarMobile();
     }
 
-    // Fungsi Khusus Buka Modul Aset (Non Ops & Ops)
+    // Fungsi Khusus Buka Modul (Anti-Blank / Kebal Error)
     function openModule(modulName, event) {
-        event.stopPropagation();
+        if(event) event.stopPropagation();
         bersihkanSorotanMenu();
-        event.currentTarget.classList.add('selected');
         
-        // Sembunyikan semua modul (Termasuk Pemeliharaan yang baru)
-        document.getElementById('defaultContent').classList.add('hidden');
-        document.getElementById('modul_nonops').classList.add('hidden');
-        document.getElementById('modul_ops').classList.add('hidden');
-        document.getElementById('modul_pemeliharaan').classList.add('hidden'); 
-        document.getElementById('modul_pengajuan_perbaikan').classList.add('hidden');
+        // Tambahkan efek sorotan/warna (hanya jika yang diklik adalah menu sidebar)
+        if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
+            event.currentTarget.classList.add('selected');
+        }
         
-        // Tampilkan halaman sesuai menu yang diklik
+        // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU (Menggunakan sistem Array agar aman)
+        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan'];
+        semuaModul.forEach(id => {
+            const elemen = document.getElementById(id);
+            if(elemen) elemen.classList.add('hidden'); // Sembunyikan jika elemennya ada
+        });
+        
+        // 2. TAMPILKAN HANYA YANG DIPILIH
         if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
-            muatDataNonOps(); 
-        } else if(modulName === 'ops') {
+            if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
+        } 
+        else if(modulName === 'ops') {
             document.getElementById('modul_ops').classList.remove('hidden');
-            muatDataOps(); 
-        } else if(modulName === 'pemeliharaan') {
+            if(typeof muatDataOps === 'function') muatDataOps(); 
+        } 
+        else if(modulName === 'pemeliharaan') {
             document.getElementById('modul_pemeliharaan').classList.remove('hidden');
-            renderGrafikPemeliharaan(); // Panggil fungsi gambar grafik
-        } else if(modulName === 'pengajuan_perbaikan') {
-            document.getElementById('modul_pengajuan_perbaikan').classList.remove('hidden');
-            muatDataPerbaikan();
+            if(typeof renderGrafikPemeliharaan === 'function') renderGrafikPemeliharaan();
+        } 
+        else if(modulName === 'pengajuan_perbaikan') {
+            const wadahPerbaikan = document.getElementById('modul_pengajuan_perbaikan');
+            if(wadahPerbaikan) {
+                wadahPerbaikan.classList.remove('hidden');
+                if(typeof muatDataPerbaikan === 'function') muatDataPerbaikan();
+            } else {
+                alert("Wadah tabel Pengajuan Perbaikan belum terpasang di HTML Anda!");
+            }
         }
+        
         closeSidebarMobile();
     }
 
