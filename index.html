@@ -50,15 +50,13 @@
 
         /* --- DASHBOARD UTAMA & SIDEBAR --- */
         .dashboard-wrapper { display: flex; height: 100vh; background-color: var(--bg-body); }
-        
-        /* Overlay untuk Mobile */
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; transition: opacity 0.3s; }
         
-        .sidebar { width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: all 0.3s ease; z-index: 100; white-space: nowrap; }
+        .sidebar { width: 300px; background-color: var(--bg-surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; transition: all 0.3s ease; z-index: 100; white-space: nowrap; }
         
         /* Sidebar Mini (Desktop Buka Tutup) */
         .sidebar.collapsed { width: 72px; }
-        .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text, .sidebar.collapsed .submenu { display: none !important; }
+        .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .submenu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text, .sidebar.collapsed .submenu { display: none !important; }
         .sidebar.collapsed .menu-label-left { justify-content: center; width: 100%; }
         .sidebar.collapsed .icon { margin-right: 0; }
         .sidebar.collapsed .sidebar-header { padding: 24px 10px; text-align: center; }
@@ -71,7 +69,7 @@
         .menu-list { list-style: none; padding: 16px 12px; margin: 0; }
         
         .menu-item { margin-bottom: 4px; border-radius: 8px; cursor: pointer; color: var(--text-muted); transition: all 0.2s ease; }
-        .menu-label { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; }
+        .menu-label { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 8px; font-family: 'Inter', sans-serif;}
         .menu-label:hover { background-color: var(--primary-light); color: var(--primary-dark); }
         .menu-label-left { display: flex; align-items: center; }
         .icon { margin-right: 12px; font-size: 22px; }
@@ -81,22 +79,27 @@
         .menu-item.active > .menu-label .chevron-icon, .submenu-item.active > .menu-label .chevron-icon { transform: rotate(180deg); }
         .menu-item.active > .menu-label { background-color: var(--primary-light); color: var(--primary-dark); }
 
-        /* Submenu */
+        /* Submenu dengan Ikon Terintegrasi */
         .submenu { list-style: none; padding: 0; display: none; margin-top: 4px; }
-        .submenu-item { font-size: 13px; font-weight: 500; color: var(--text-muted); }
-        .submenu-label { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 10px 48px; border-radius: 6px; cursor: pointer; transition: 0.2s;}
-        .submenu-label:hover { color: var(--primary); background-color: rgba(169, 52, 55, 0.05); }
+        .submenu-item { color: var(--text-muted); }
+        
+        /* Merapikan font & ikon sub-menu */
+        .submenu-label { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px 10px 36px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-family: 'Inter', sans-serif; font-weight: 500;}
+        .submenu-label:hover { color: var(--primary-dark); background-color: var(--primary-light); }
+        
+        .submenu-icon { margin-right: 10px; font-size: 18px; }
+        .submenu-text { font-size: 13px; font-weight: inherit; }
         
         .sub-submenu { list-style: none; padding: 0; display: none; }
-        .sub-submenu li { padding: 10px 16px 10px 60px; font-size: 13px; color: var(--text-muted); cursor: pointer; }
-        .sub-submenu li:hover { color: var(--primary); background-color: rgba(169, 52, 55, 0.05); }
+        .sub-submenu li { display: flex; align-items: center; padding: 10px 16px 10px 52px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; border-radius: 8px; }
+        .sub-submenu li:hover { color: var(--primary-dark); background-color: var(--primary-light); }
 
         .menu-item.active > .submenu { display: block; }
         .submenu-item.active > .sub-submenu { display: block; }
 
         .logout-btn { margin-top: auto; margin-bottom: 20px; margin-left: 12px; margin-right: 12px; padding: 12px; background-color: #f3f4f6; color: var(--text-main); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
         .logout-btn:hover { background-color: #fee2e2; color: #dc2626; }
-        .logout-btn .icon { font-size: 20px; }
+        .logout-btn .icon { font-size: 20px; margin-right: 8px;}
 
         /* Konten Kanan */
         .main-content { flex: 1; padding: 24px 40px; overflow-y: auto; background-color: var(--bg-body); display: flex; flex-direction: column; transition: all 0.3s;}
@@ -116,16 +119,17 @@
             .content-card { padding: 20px; }
             
             /* Sidebar Mode HP (Off-Canvas) */
-            .sidebar { position: fixed; left: -280px; top: 0; bottom: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+            .sidebar { position: fixed; left: -300px; top: 0; bottom: 0; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
             .sidebar.mobile-open { left: 0; }
             .sidebar-overlay.active { display: block; }
             
             /* Matikan efek collapsed (mini) di HP */
-            .sidebar.collapsed { width: 280px; }
-            .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text { display: block !important; }
+            .sidebar.collapsed { width: 300px; }
+            .sidebar.collapsed .sidebar-header h3, .sidebar.collapsed .sidebar-header p, .sidebar.collapsed .menu-text, .sidebar.collapsed .submenu-text, .sidebar.collapsed .chevron-icon, .sidebar.collapsed .logout-text { display: block !important; }
             .sidebar.collapsed .sidebar-header::before { display: none; }
             .sidebar.collapsed .menu-label-left { justify-content: flex-start; }
             .sidebar.collapsed .icon { margin-right: 12px; }
+            .logout-btn .icon { margin-right: 8px; }
         }
     </style>
 </head>
@@ -195,14 +199,22 @@
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-label" onclick="openContent('Aset (Non Ops)', event)">Non Ops (Aset)</li>
-                    <li class="submenu-label" onclick="openContent('Barang Habis Pakai (Ops)', event)">Ops (Barang habis pakai)</li>
+                    <!-- Penambahan Ikon Sub Menu -->
+                    <li class="submenu-label" onclick="openContent('Aset (Non Ops)', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">inventory_2</span><span class="submenu-text">Non Ops (Aset)</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Barang Habis Pakai (Ops)', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">shopping_cart</span><span class="submenu-text">Ops (Barang habis pakai)</span></div>
+                    </li>
                     <li class="submenu-item" onclick="toggleSubMenu(this, event)">
-                        <div class="submenu-label"><span>Sistem Pemeliharaan</span><span class="material-symbols-outlined chevron-icon">expand_more</span></div>
+                        <div class="submenu-label">
+                            <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">build</span><span class="submenu-text">Sistem Pemeliharaan</span></div>
+                            <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                        </div>
                         <ul class="sub-submenu">
-                            <li onclick="openContent('Pengajuan Perbaikan', event)">Pengajuan Perbaikan</li>
-                            <li onclick="openContent('Daftar Barang Rusak', event)">Daftar Barang Rusak</li>
-                            <li onclick="openContent('Daftar Pemeliharaan Barang', event)">Daftar Pemeliharaan</li>
+                            <li onclick="openContent('Pengajuan Perbaikan', event)"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
+                            <li onclick="openContent('Daftar Barang Rusak', event)"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
+                            <li onclick="openContent('Daftar Pemeliharaan Barang', event)"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
                         </ul>
                     </li>
                 </ul>
@@ -214,10 +226,18 @@
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-label" onclick="openContent('Pengajuan Surat', event)">Pengajuan Surat</li>
-                    <li class="submenu-label" onclick="openContent('Monitoring Surat', event)">Monitoring Surat</li>
-                    <li class="submenu-label" onclick="openContent('Template Surat', event)">Template Surat</li>
-                    <li class="submenu-label" onclick="openContent('Disposisi Surat', event)">Disposisi Surat</li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Surat', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">send</span><span class="submenu-text">Pengajuan Surat</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Monitoring Surat', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">manage_search</span><span class="submenu-text">Monitoring Surat</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Template Surat', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">description</span><span class="submenu-text">Template Surat</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Disposisi Surat', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">assignment_turned_in</span><span class="submenu-text">Disposisi Surat</span></div>
+                    </li>
                 </ul>
             </li>
 
@@ -227,8 +247,12 @@
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-label" onclick="openContent('Asesmen Rutin', event)">Asesmen Rutin</li>
-                    <li class="submenu-label" onclick="openContent('Asesmen Insidentil', event)">Asesmen Insidentil</li>
+                    <li class="submenu-label" onclick="openContent('Asesmen Rutin', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">event_note</span><span class="submenu-text">Asesmen Rutin</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Asesmen Insidentil', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">assignment_late</span><span class="submenu-text">Asesmen Insidentil</span></div>
+                    </li>
                 </ul>
             </li>
 
@@ -239,14 +263,21 @@
                 </div>
                 <ul class="submenu">
                     <li class="submenu-item" onclick="toggleSubMenu(this, event)">
-                        <div class="submenu-label"><span>Data Siswa</span><span class="material-symbols-outlined chevron-icon">expand_more</span></div>
+                        <div class="submenu-label">
+                            <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">groups</span><span class="submenu-text">Data Siswa</span></div>
+                            <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                        </div>
                         <ul class="sub-submenu">
-                            <li onclick="openContent('Data Siswa SRMP', event)">Siswa SRMP</li>
-                            <li onclick="openContent('Data Siswa SRMA', event)">Siswa SRMA</li>
+                            <li onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
+                            <li onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
                         </ul>
                     </li>
-                    <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">Ekstrakurikuler</li>
-                    <li class="submenu-label" onclick="openContent('Pengajuan Program Kesiswaan', event)">Pengajuan Program</li>
+                    <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">sports_soccer</span><span class="submenu-text">Ekstrakurikuler</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Program Kesiswaan', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">event_available</span><span class="submenu-text">Pengajuan Program</span></div>
+                    </li>
                 </ul>
             </li>
 
@@ -262,9 +293,15 @@
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-label" onclick="openContent('Pengajuan Anggaran', event)">Pengajuan Anggaran</li>
-                    <li class="submenu-label" onclick="openContent('Realisasi Anggaran', event)">Realisasi Anggaran</li>
-                    <li class="submenu-label" onclick="openContent('Pencairan Anggaran', event)">Pencairan Anggaran</li>
+                    <li class="submenu-label" onclick="openContent('Pengajuan Anggaran', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">request_quote</span><span class="submenu-text">Pengajuan Anggaran</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Realisasi Anggaran', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">price_check</span><span class="submenu-text">Realisasi Anggaran</span></div>
+                    </li>
+                    <li class="submenu-label" onclick="openContent('Pencairan Anggaran', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">payments</span><span class="submenu-text">Pencairan Anggaran</span></div>
+                    </li>
                 </ul>
             </li>
 
@@ -306,21 +343,16 @@
         const overlay = document.getElementById('sidebarOverlay');
         
         if (window.innerWidth <= 768) {
-            // Mode HP (Slider)
             sidebar.classList.toggle('mobile-open');
             overlay.classList.toggle('active');
         } else {
-            // Mode Desktop (Mini Sidebar)
             sidebar.classList.toggle('collapsed');
-            
-            // Tutup semua submenu jika disusutkan
             if (sidebar.classList.contains('collapsed')) {
                 document.querySelectorAll('.menu-item.active').forEach(el => el.classList.remove('active'));
             }
         }
     }
 
-    // Auto tutup sidebar di HP saat menu diklik
     function closeSidebarMobile() {
         if (window.innerWidth <= 768) {
             document.getElementById('sidebar').classList.remove('mobile-open');
@@ -410,17 +442,13 @@
 
     function toggleMenu(element, event) {
         event.stopPropagation();
-        
-        // Jangan buka menu jika mode sidebar mini di desktop sedang aktif
         const sidebar = document.getElementById('sidebar');
         if (sidebar.classList.contains('collapsed') && window.innerWidth > 768) {
-            sidebar.classList.remove('collapsed'); // Buka sidebar dulu otomatis
+            sidebar.classList.remove('collapsed');
         }
-        
         const hasSubmenu = element.querySelector('.submenu');
-        if (!hasSubmenu) return; // Jika tidak ada submenu, abaikan (misal menu ruangan)
+        if (!hasSubmenu) return; 
         
-        // Matikan active di menu lain (Accordion effect)
         const siblings = element.parentElement.children;
         for(let i=0; i<siblings.length; i++) {
             if(siblings[i] !== element && siblings[i].classList.contains('menu-item')) {
@@ -438,18 +466,23 @@
     function openContent(menuName, event) {
         event.stopPropagation();
         
+        // Membersihkan gaya pemilihan dari seluruh submenu item sebelumnya
+        document.querySelectorAll('.submenu-label, .sub-submenu li').forEach(el => { 
+            el.style.color = "var(--text-muted)"; 
+            el.style.fontWeight = "500"; 
+            el.style.backgroundColor = "transparent";
+        });
+        
+        // Menerapkan gaya khusus pada elemen (li / div) yang sedang diklik
+        const targetElement = event.currentTarget; 
+        targetElement.style.color = "var(--primary-dark)";
+        targetElement.style.fontWeight = "600";
+        targetElement.style.backgroundColor = "var(--primary-light)";
+        
         // Tampilkan judul di layar tengah
         document.getElementById('contentTitle').innerText = menuName;
         document.getElementById('contentBody').innerHTML = "<p>Ini adalah ruang kerja untuk modul pengelola <b>" + menuName + "</b>.</p><p>Formulir input data dan tabel rekapitulasi akan ditampilkan di area ini pada pembaruan fitur selanjutnya.</p>";
         
-        // Ubah warna text menu yang sedang dipilih
-        document.querySelectorAll('.submenu-label, .sub-submenu li').forEach(li => { li.style.color = "var(--text-muted)"; li.style.fontWeight = "500"; });
-        if(event.target.classList.contains('submenu-label') || event.target.tagName === 'LI') {
-            event.target.style.color = "var(--primary)";
-            event.target.style.fontWeight = "600";
-        }
-        
-        // Auto-tutup sidebar jika di HP
         closeSidebarMobile();
     }
 
