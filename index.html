@@ -159,7 +159,62 @@
         .sidebar.collapsed .sidebar-header { justify-content: center; padding: 24px 10px; }
         .sidebar.collapsed .user-info { display: none !important; }
         .sidebar.collapsed .sidebar-header::before { display: none !important; }
-    /* --- ANTI-GLITCH LOGIN SCREEN --- */
+    /* ========================================================= */
+        /* --- DESAIN BARU DASHBOARD ENTERPRISE (SISRI MODERN) --- */
+        /* ========================================================= */
+
+        .hero-banner { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); border-radius: 20px; padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden; color: white; box-shadow: 0 10px 25px rgba(127, 29, 29, 0.2); }
+        .hero-banner::after { content: ''; position: absolute; right: -50px; bottom: -50px; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; }
+        .hero-welcome { margin: 0 0 4px 0; font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #fca5a5; }
+        .hero-name { margin: 0 0 16px 0; font-size: 36px; font-weight: 700; }
+        .hero-desc { margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #fecaca; max-width: 450px; }
+        .hero-badges { display: flex; gap: 12px; }
+        .badge { background: rgba(0, 0, 0, 0.2); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .badge .material-symbols-outlined { font-size: 16px; }
+        .status-dot { width: 8px; height: 8px; background-color: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .stat-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .stat-icon span { font-size: 28px; }
+        .stat-title { margin: 0 0 4px 0; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+        .stat-value { margin: 0 0 4px 0; font-size: 24px; color: var(--text-main); font-weight: 700; }
+        .stat-desc { margin: 0; font-size: 11px; color: var(--text-muted); }
+
+        .service-section { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .service-header { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+        .service-title-area { display: flex; align-items: center; gap: 16px; }
+        .service-icon-main { width: 48px; height: 48px; background: #374151; color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        
+        .main-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .service-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: 0.2s; background: #fcfcfc; display: flex; flex-direction: column; }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -8px rgba(0,0,0,0.1); background: white; }
+        
+        .sc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .sc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .sc-icon span { font-size: 22px; }
+        .sc-title { margin: 0; font-size: 16px; font-weight: 700; }
+        .sc-desc { margin: 0 0 20px 0; font-size: 13px; color: var(--text-muted); line-height: 1.5; flex-grow: 1; }
+        
+        .sc-links { display: flex; flex-direction: column; gap: 8px; }
+        .sc-btn { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px; text-align: left; transition: 0.2s; font-family: 'Inter', sans-serif; width: 100%; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .sc-btn span:first-child { font-size: 18px; opacity: 0.8; }
+        .sc-btn .arrow { margin-left: auto; font-size: 16px; opacity: 0.5; transition: 0.2s; }
+        .sc-btn:hover .arrow { transform: translateX(4px); opacity: 1; }
+
+        .bg-light-red { background: #fee2e2; } .text-red { color: #b91c1c; } .border-red { border-top: 4px solid #fca5a5; }
+        .bg-light-blue { background: #e0f2fe; } .text-blue { color: #0369a1; } .border-blue { border-top: 4px solid #7dd3fc; }
+        .bg-light-yellow { background: #fef08a; } .text-yellow { color: #a16207; } .border-yellow { border-top: 4px solid #fde047; }
+        .bg-light-green { background: #dcfce7; } .text-green { color: #15803d; } .border-green { border-top: 4px solid #86efac; }
+        .bg-light-purple { background: #f3e8ff; } .text-purple { color: #7e22ce; } .border-purple { border-top: 4px solid #d8b4fe; }
+
+        .hover-red:hover { background: #fef2f2; border-color: #fca5a5; }
+        .hover-blue:hover { background: #f0f9ff; border-color: #bae6fd; }
+        .hover-yellow:hover { background: #fefce8; border-color: #fef08a; }
+        .hover-green:hover { background: #f0fdf4; border-color: #bbf7d0; }
+        .hover-purple:hover { background: #faf5ff; border-color: #e9d5ff; }
+    
+        /* --- ANTI-GLITCH LOGIN SCREEN --- */
         html.user-logged-in body { background-color: var(--bg-body) !important; }
         html.user-logged-in #authArea { display: none !important; }
         html.user-logged-in #dashboardArea { display: flex !important; }
@@ -380,83 +435,154 @@
         
         <div class="content-card">
             
-            <!-- Default Content (DASHBOARD UTAMA / MENU HUB) -->
+            <!-- ================================================= -->
+            <!-- Default Content (DASHBOARD UTAMA / MENU HUB BARU) -->
+            <!-- ================================================= -->
             <div id="defaultContent">
-                <div class="page-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 24px;">
-                    <h2 style="margin:0; font-size:24px; color:var(--text-main);">Dashboard Utama</h2>
-                    <p style="margin:6px 0 0 0; color:var(--text-muted); font-size:14px;">Selamat datang, <b id="dashUserName">Pengguna</b>! Silakan pilih menu layanan di bawah ini.</p>
+                
+                <!-- HERO BANNER MELENGKUNG -->
+                <div class="hero-banner">
+                    <div class="hero-content">
+                        <p class="hero-welcome">SELAMAT DATANG,</p>
+                        <h2 class="hero-name" id="dashUserName">Pengguna!</h2>
+                        <p class="hero-desc">Kelola data sekolah dengan mudah dan terintegrasi<br>melalui sistem informasi sekolah rakyat Indonesia.</p>
+                        
+                        <div class="hero-badges">
+                            <div class="badge"><span class="material-symbols-outlined">calendar_today</span> <span id="dashDate">Senin, 01 Jan 2026</span></div>
+                            <div class="badge"><span class="status-dot"></span> Sistem Berjalan Normal</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-                    
-                    <!-- 1. KARTU SARANA PRASARANA -->
-                    <div class="dash-card" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">domain</span></div>
-                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Sarana & Prasarana</h3>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openModule('nonops', event)"><span class="material-symbols-outlined" style="font-size:18px;">inventory_2</span> Non Ops (Aset)</button>
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openModule('ops', event)"><span class="material-symbols-outlined" style="font-size:18px;">shopping_cart</span> Ops (Habis Pakai)</button>
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px; background:#f8fafc;" onclick="openModule('pemeliharaan', event)"><span class="material-symbols-outlined" style="font-size:18px; color:#0284c7;">build</span> Sistem Pemeliharaan</button>
+                <!-- KARTU STATISTIK RINGKASAN -->
+                <div class="stats-grid">
+                    <!-- Stat 1 -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-light-red"><span class="material-symbols-outlined" style="color: #dc2626;">domain</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title">Total Aset</p>
+                            <h3 class="stat-value" id="statAset">...</h3>
+                            <p class="stat-desc">Terdaftar dalam sistem</p>
                         </div>
                     </div>
-
-                    <!-- 2. KARTU OTOMASI SURAT -->
-                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">mail</span></div>
-                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Sistem Otomasi Surat</h3>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Pengajuan Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">send</span> Pengajuan</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Monitoring Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">manage_search</span> Monitoring</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Template Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">description</span> Template</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Disposisi Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">assignment_turned_in</span> Disposisi</button>
+                    <!-- Stat 2 -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined" style="color: #0284c7;">draft</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title">Sistem Persuratan</p>
+                            <h3 class="stat-value" id="statSurat">Aktif</h3>
+                            <p class="stat-desc">Siap digunakan</p>
                         </div>
                     </div>
-
-                    <!-- 3. KARTU ASESMEN SISWA -->
-                    <div class="dash-card" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="background: #fef08a; color: #a16207; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">quiz</span></div>
-                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Asesmen Siswa</h3>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Asesmen Rutin', event)"><span class="material-symbols-outlined" style="font-size:18px;">event_note</span> Asesmen Rutin</button>
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Asesmen Insidentil', event)"><span class="material-symbols-outlined" style="font-size:18px;">assignment_late</span> Asesmen Insidentil</button>
+                    <!-- Stat 3 -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-light-yellow"><span class="material-symbols-outlined" style="color: #d97706;">engineering</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title">Pemeliharaan</p>
+                            <h3 class="stat-value" id="statPerbaikan">...</h3>
+                            <p class="stat-desc">Aset dalam perbaikan</p>
                         </div>
                     </div>
-
-                    <!-- 4. KARTU KESISWAAN & RUANGAN -->
-                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="background: #dcfce7; color: #15803d; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">school</span></div>
-                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Kesiswaan & Ruangan</h3>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined" style="font-size:16px;">groups</span> Data SRMP</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined" style="font-size:16px;">groups</span> Data SRMA</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined" style="font-size:16px;">sports_soccer</span> Ekskul</button>
-                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Pengajuan Penggunaan Ruangan', event)"><span class="material-symbols-outlined" style="font-size:16px;">meeting_room</span> Ruangan</button>
+                    <!-- Stat 4 -->
+                    <div class="stat-card">
+                        <div class="stat-icon bg-light-purple"><span class="material-symbols-outlined" style="color: #7e22ce;">payments</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title">Anggaran Ops</p>
+                            <h3 class="stat-value">Tersedia</h3>
+                            <p class="stat-desc">Siklus tahun berjalan</p>
                         </div>
                     </div>
-
-                    <!-- 5. KARTU KEUANGAN -->
-                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                            <div style="background: #f3e8ff; color: #7e22ce; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">account_balance_wallet</span></div>
-                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Keuangan</h3>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Pengajuan Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">request_quote</span> Pengajuan Anggaran</button>
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Realisasi Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">price_check</span> Realisasi Anggaran</button>
-                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Pencairan Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">payments</span> Pencairan Anggaran</button>
-                        </div>
-                    </div>
-
                 </div>
-            </div>
+
+                <!-- BAGIAN LAYANAN UTAMA -->
+                <div class="service-section">
+                    <div class="service-header">
+                        <div class="service-title-area">
+                            <div class="service-icon-main"><span class="material-symbols-outlined">dashboard</span></div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 18px; color: var(--text-main);">Layanan Utama</h3>
+                                <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Akses cepat ke seluruh layanan sistem informasi sekolah rakyat.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRID LAYANAN (KARTU MENU) -->
+                    <div class="main-services-grid">
+                        
+                        <!-- 1. KARTU SARANA PRASARANA -->
+                        <div class="service-card border-red" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh">
+                            <div class="sc-header">
+                                <div class="sc-icon text-red bg-light-red"><span class="material-symbols-outlined">home_work</span></div>
+                                <h4 class="sc-title text-red">Sarana & Prasarana</h4>
+                            </div>
+                            <p class="sc-desc">Pengelolaan aset, perlengkapan habis pakai, dan pemeliharaan sarana prasarana sekolah.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-red hover-red" onclick="openModule('nonops', event)"><span class="material-symbols-outlined">inventory_2</span> Non Ops (Aset) <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-red hover-red" onclick="openModule('ops', event)"><span class="material-symbols-outlined">inventory</span> Ops (Habis Pakai) <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-red hover-red" onclick="openModule('pemeliharaan', event)"><span class="material-symbols-outlined">build</span> Sistem Pemeliharaan <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- 2. KARTU OTOMASI SURAT -->
+                        <div class="service-card border-blue" data-role="Seluruh">
+                            <div class="sc-header">
+                                <div class="sc-icon text-blue bg-light-blue"><span class="material-symbols-outlined">mail</span></div>
+                                <h4 class="sc-title text-blue">Sistem Otomasi Surat</h4>
+                            </div>
+                            <p class="sc-desc">Pengajuan, monitoring, dan pengelolaan surat secara otomatis dan terintegrasi.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-blue hover-blue" onclick="openContent('Pengajuan Surat', event)"><span class="material-symbols-outlined">send</span> Pengajuan <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-blue hover-blue" onclick="openContent('Monitoring Surat', event)"><span class="material-symbols-outlined">manage_search</span> Monitoring <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-blue hover-blue" onclick="openContent('Template Surat', event)"><span class="material-symbols-outlined">description</span> Template <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-blue hover-blue" onclick="openContent('Disposisi Surat', event)"><span class="material-symbols-outlined">assignment_turned_in</span> Disposisi <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- 3. KARTU ASESMEN SISWA -->
+                        <div class="service-card border-yellow" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru">
+                            <div class="sc-header">
+                                <div class="sc-icon text-yellow bg-light-yellow"><span class="material-symbols-outlined">assignment</span></div>
+                                <h4 class="sc-title text-yellow">Asesmen Siswa</h4>
+                            </div>
+                            <p class="sc-desc">Pelaksanaan asesmen rutin dan insidentil untuk memantau perkembangan siswa.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-yellow hover-yellow" onclick="openContent('Asesmen Rutin', event)"><span class="material-symbols-outlined">calendar_month</span> Asesmen Rutin <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-yellow hover-yellow" onclick="openContent('Asesmen Insidentil', event)"><span class="material-symbols-outlined">event_busy</span> Asesmen Insidentil <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- 4. KARTU KESISWAAN -->
+                        <div class="service-card border-green" data-role="Seluruh">
+                            <div class="sc-header">
+                                <div class="sc-icon text-green bg-light-green"><span class="material-symbols-outlined">school</span></div>
+                                <h4 class="sc-title text-green">Kesiswaan & Ruangan</h4>
+                            </div>
+                            <p class="sc-desc">Data siswa, ekstrakurikuler, dan pengelolaan reservasi ruangan sekolah.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined">groups</span> Data SRMP <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined">groups</span> Data SRMA <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined">sports_soccer</span> Ekskul <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Pengajuan Penggunaan Ruangan', event)"><span class="material-symbols-outlined">meeting_room</span> Ruangan <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- 5. KARTU KEUANGAN -->
+                        <div class="service-card border-purple" data-role="Seluruh">
+                            <div class="sc-header">
+                                <div class="sc-icon text-purple bg-light-purple"><span class="material-symbols-outlined">account_balance</span></div>
+                                <h4 class="sc-title text-purple">Keuangan</h4>
+                            </div>
+                            <p class="sc-desc">Pengelolaan anggaran dan realisasi keuangan sekolah yang transparan.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-purple hover-purple" onclick="openContent('Pengajuan Anggaran', event)"><span class="material-symbols-outlined">request_quote</span> Pengajuan Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-purple hover-purple" onclick="openContent('Realisasi Anggaran', event)"><span class="material-symbols-outlined">analytics</span> Realisasi Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-purple hover-purple" onclick="openContent('Pencairan Anggaran', event)"><span class="material-symbols-outlined">payments</span> Pencairan Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- PENUTUP DEFAULT CONTENT BARU -->
 
             <!-- Modul Non Ops (Tabel Data) -->
             <div id="modul_nonops" class="hidden">
@@ -907,6 +1033,27 @@
             // Setel nama di Dashboard Utama
             if(document.getElementById('dashUserName')) document.getElementById('dashUserName').innerText = user;
 
+            // Mengatur Tanggal Hari Ini di Hero Banner
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('id-ID', options);
+            if(document.getElementById('dashDate')) document.getElementById('dashDate').innerText = today;
+
+            // Menarik Angka Statistik secara Real-Time (Tanpa Mengganggu UI Utama)
+            if(document.getElementById('statAset')) {
+                Promise.all([
+                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_nonops" }) }).then(res => res.json()),
+                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_ops" }) }).then(res => res.json()),
+                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json())
+                ]).then(([rNon, rOps, rPerbaikan]) => {
+                    let tAset = 0; let tPerbaikan = 0;
+                    if(rNon.status === "berhasil") tAset += rNon.data.length;
+                    if(rOps.status === "berhasil") tAset += rOps.data.length;
+                    if(rPerbaikan.status === "berhasil") tPerbaikan += rPerbaikan.data.filter(item => item.status === "Sedang Diperbaiki").length;
+                    
+                    document.getElementById('statAset').innerText = tAset;
+                    document.getElementById('statPerbaikan').innerText = tPerbaikan;
+                }).catch(err => console.log("Gagal memuat statistik."));
+            }
             if (lastType === 'module' && lastModule) {
                 openModule(lastModule, null);
             } else if (lastType === 'content' && lastModule) {
