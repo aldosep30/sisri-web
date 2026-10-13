@@ -246,7 +246,7 @@
                         <ul class="sub-submenu">
                             <li onclick="openModule('pengajuan_perbaikan', event)"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
                            <li onclick="openModule('barang_rusak', event)"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
-                            <li onclick="openContent('Daftar Pemeliharaan', event)"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
+                            <li onclick="openModule('daftar_pemeliharaan', event)"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
                         </ul>
                     </li>
                 </ul>
@@ -468,7 +468,7 @@
                         <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Rekapitulasi inventaris yang sedang dalam kondisi rusak/tidak layak.</p>
                     </div>
 
-                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openContent('Daftar Pemeliharaan', event)">
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('daftar_pemeliharaan', event)">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                             <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">engineering</span></div>
                             <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Daftar Pemeliharaan</h3>
@@ -569,7 +569,7 @@
                 </div>
             </div> <!-- PENUTUP MODUL 5 -->
             <!-- ================================================= -->
-            <!-- MODULE 6: DAFTAR PEMELIHARAAN BERJALAN            -->
+            <!-- MODULE 6: DAFTAR PEMELIHARAAN                     -->
             <!-- ================================================= -->
             <div id="modul_daftar_pemeliharaan" class="hidden">
                 <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
@@ -577,26 +577,25 @@
                         <button class="btn-outline" style="border:none; padding:0; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; cursor:pointer;" onclick="openModule('pemeliharaan', event)">
                             <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">arrow_back</span> Kembali ke Dashboard
                         </button>
-                        <h2 style="margin:0; font-size:20px; color:var(--text-main);">Pantauan Pemeliharaan Berjalan</h2>
+                        <h2 style="margin:0; font-size:20px; color:var(--text-main);">Daftar Pemeliharaan & Perbaikan</h2>
                     </div>
                 </div>
                 
-                <!-- Kotak Info Khusus -->
-                <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
-                    <span class="material-symbols-outlined" style="color: #166534; font-size: 28px;">engineering</span>
+                <div style="background-color: #e0f2fe; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                    <span class="material-symbols-outlined" style="color: #0284c7; font-size: 28px;">engineering</span>
                     <div>
-                        <h4 style="margin: 0 0 4px 0; color: #14532d; font-size: 14px;">Status Perbaikan Aset</h4>
-                        <p style="margin: 0; color: #15803d; font-size: 13px;">Daftar ini memantau secara real-time aset yang sedang dalam proses perbaikan atau sedang menunggu penanganan teknisi.</p>
+                        <h4 style="margin: 0 0 4px 0; color: #075985; font-size: 14px;">Pantauan Proses Pemeliharaan</h4>
+                        <p style="margin: 0; color: #0369a1; font-size: 13px;">Daftar ini berisi status terkini dari aset yang sedang atau telah selesai diperbaiki.</p>
                     </div>
                 </div>
 
                 <div class="table-responsive">
                     <table id="tabelDaftarPemeliharaan">
                         <thead>
-                            <tr><th>No</th><th>Tgl Pengajuan</th><th>Kode Barang</th><th>Nama Barang</th><th>Ruangan / Lokasi</th><th>Keluhan</th><th>Status</th><th>Pelapor</th></tr>
+                            <tr><th>Tgl Pengajuan</th><th>Kode Barang</th><th>Nama Barang</th><th>Ruangan</th><th>Detail Keluhan</th><th>Status Perbaikan</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="tbodyDaftarPemeliharaan">
-                            <tr><td colspan="8" style="text-align:center;">Memuat data...</td></tr>
+                            <tr><td colspan="7" style="text-align:center;">Memuat data pemeliharaan...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1013,8 +1012,8 @@
         }
         
         // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU 
-        // (Perhatikan: 'modul_barang_rusak' sudah saya tambahkan di ujung daftar ini)
-        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak'];
+        // (Perhatikan: modul_daftar_pemeliharaan sudah ada di daftar ini)
+        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
         
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
@@ -1041,12 +1040,19 @@
                 if(typeof muatDataPerbaikan === 'function') muatDataPerbaikan();
             }
         }
-        // ---> INI DIA LOGIKA BARU UNTUK MEMANGGIL DAFTAR BARANG RUSAK <---
         else if(modulName === 'barang_rusak') {
             const wadahRusak = document.getElementById('modul_barang_rusak');
             if(wadahRusak) {
                 wadahRusak.classList.remove('hidden');
                 if(typeof muatDataBarangRusak === 'function') muatDataBarangRusak();
+            }
+        }
+        // ---> INI LOGIKA BARU UNTUK DAFTAR PEMELIHARAAN <---
+        else if(modulName === 'daftar_pemeliharaan') {
+            const wadahDaftarPemeliharaan = document.getElementById('modul_daftar_pemeliharaan');
+            if(wadahDaftarPemeliharaan) {
+                wadahDaftarPemeliharaan.classList.remove('hidden');
+                if(typeof muatDataDaftarPemeliharaan === 'function') muatDataDaftarPemeliharaan();
             }
         }
         
@@ -1710,6 +1716,56 @@
             // 3. Langsung jalankan pencarian Auto-Fill
             cekKodeBarang(); 
         }, 500);
+    }
+    // ==========================================
+    // LOGIKA DAFTAR PEMELIHARAAN
+    // ==========================================
+    function muatDataDaftarPemeliharaan() {
+        document.getElementById('tbodyDaftarPemeliharaan').innerHTML = '<tr><td colspan="7" style="text-align:center;">Mengambil data perbaikan...</td></tr>';
+        
+        // Kita gunakan endpoint get_perbaikan yang sudah ada, lalu kita olah datanya di sini
+        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                const tbody = document.getElementById('tbodyDaftarPemeliharaan');
+                tbody.innerHTML = '';
+                
+                // Cek Hak Akses Edit
+                const userLevel = sessionStorage.getItem('level');
+                const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
+                
+                if(data.data.length === 0) { 
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px;">Belum ada data pemeliharaan atau perbaikan.</td></tr>'; 
+                    return; 
+                }
+                
+                data.data.forEach((row) => {
+                    let warnaStatus = row.status === 'Selesai' ? '#166534' : (row.status === 'Sedang Diperbaiki' ? '#854d0e' : '#991b1b');
+                    let bgStatus = row.status === 'Selesai' ? '#dcfce7' : (row.status === 'Sedang Diperbaiki' ? '#fef08a' : '#fee2e2');
+                    
+                    let actionHtml = canEdit ? `
+                        <button class="btn-icon" title="Update Status" onclick="updateStatusPerbaikan('${row.kode_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">update</span></button>
+                    ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600;">Hanya Lihat</span>`;
+
+                    tbody.innerHTML += `<tr>
+                        <td>${row.tanggal}</td>
+                        <td>${row.kode_barang}</td>
+                        <td><b>${row.nama_barang}</b></td>
+                        <td>${row.ruangan}</td>
+                        <td>${row.keluhan}</td>
+                        <td><span style="background:${bgStatus}; color:${warnaStatus}; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${row.status || 'Belum Ditangani'}</span></td>
+                        <td>${actionHtml}</td>
+                    </tr>`;
+                });
+            }
+        }).catch(err => {
+             document.getElementById('tbodyDaftarPemeliharaan').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat data.</td></tr>';
+        });
+    }
+
+    function updateStatusPerbaikan(kode) {
+        alert("Fitur update status perbaikan untuk kode " + kode + " akan segera diintegrasikan dengan database!");
+        // Di sini nantinya kita buat popup untuk mengubah status (misal dari "Sedang Diperbaiki" ke "Selesai")
     }
 </script>
 </body>
