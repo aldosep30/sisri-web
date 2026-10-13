@@ -477,22 +477,24 @@
                     </div>
                 </div>
 
-                <!-- 2. Metrik Angka Ringkasan -->
+                <!-- 2. Metrik Angka Ringkasan (DINAMIS REAL-TIME) -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
                     <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center;">
                         <p style="margin: 0 0 8px 0; font-size: 13px; color: var(--text-muted); font-weight: 600;">Total Aset Terdaftar</p>
-                        <h2 style="margin: 0; font-size: 28px; color: var(--text-main);">1,245</h2>
+                        <!-- Tambahkan ID valTotalAset -->
+                        <h2 id="valTotalAset" style="margin: 0; font-size: 28px; color: var(--text-main);">0</h2>
                     </div>
                     <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; text-align: center;">
                         <p style="margin: 0 0 8px 0; font-size: 13px; color: #991b1b; font-weight: 600;">Aset Kondisi Rusak</p>
-                        <h2 style="margin: 0; font-size: 28px; color: #b91c1c;">42</h2>
+                        <!-- Tambahkan ID valAsetRusak -->
+                        <h2 id="valAsetRusak" style="margin: 0; font-size: 28px; color: #b91c1c;">0</h2>
                     </div>
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; text-align: center;">
                         <p style="margin: 0 0 8px 0; font-size: 13px; color: #166534; font-weight: 600;">Sedang Diperbaiki</p>
-                        <h2 style="margin: 0; font-size: 28px; color: #15803d;">18</h2>
+                        <!-- Tambahkan ID valSedangDiperbaiki -->
+                        <h2 id="valSedangDiperbaiki" style="margin: 0; font-size: 28px; color: #15803d;">0</h2>
                     </div>
                 </div>
-
                 <!-- 3. Grafik Trend -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px;">
                     <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px;">
@@ -1505,52 +1507,123 @@
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
 // ==========================================
-    // LOGIKA DASHBOARD PEMELIHARAAN (GRAFIK)
+    // LOGIKA DASHBOARD PEMELIHARAAN (GRAFIK DINAMIS)
     // ==========================================
     let chartKerusakanInstance = null;
     let chartPerbaikanInstance = null;
 
     function renderGrafikPemeliharaan() {
-        // Data ini adalah dummy sementara (Nanti bisa ditarik dari Apps Script)
-        const bulanLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
-        const dataRusak = [12, 8, 15, 10, 6, 42]; 
-        const dataPerbaikan = [5, 10, 8, 12, 9, 18];
+        // 1. Tampilkan status loading ("...") saat sistem sedang berhitung
+        document.getElementById('valTotalAset').innerText = "...";
+        document.getElementById('valAsetRusak').innerText = "...";
+        document.getElementById('valSedangDiperbaiki').innerText = "...";
 
-        // 1. Gambar Grafik Garis (Trend Kerusakan)
-        if(chartKerusakanInstance) chartKerusakanInstance.destroy(); // Hapus grafik lama jika ada
-        const ctxRusak = document.getElementById('chartKerusakan').getContext('2d');
-        chartKerusakanInstance = new Chart(ctxRusak, {
-            type: 'line',
-            data: {
-                labels: bulanLabels,
-                datasets: [{
-                    label: 'Jumlah Aset Rusak',
-                    data: dataRusak,
-                    borderColor: '#dc2626', // Merah
-                    backgroundColor: 'rgba(220, 38, 38, 0.1)', // Merah Transparan
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4 // Membuat garis melengkung elegan
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
-        });
+        // 2. Tarik 3 Database Sekaligus (Non-Ops, Ops, Perbaikan) secara bersamaan!
+        Promise.all([
+            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_nonops" }) }).then(res => res.json()),
+            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_ops" }) }).then(res => res.json()),
+            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json())
+        ]).then(([resNonOps, resOps, resPerbaikan]) => {
+            
+            let totalAset = 0; let totalRusak = 0; let sedangDiperbaiki = 0;
 
-        // 2. Gambar Grafik Batang (Trend Perbaikan)
-        if(chartPerbaikanInstance) chartPerbaikanInstance.destroy();
-        const ctxPerbaikan = document.getElementById('chartPerbaikan').getContext('2d');
-        chartPerbaikanInstance = new Chart(ctxPerbaikan, {
-            type: 'bar',
-            data: {
-                labels: bulanLabels,
-                datasets: [{
-                    label: 'Aset Selesai Diperbaiki',
-                    data: dataPerbaikan,
-                    backgroundColor: '#0284c7', // Biru
-                    borderRadius: 4 // Ujung batang melengkung
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false }
+            // 3. Kalkulasi Data Gudang Non Ops (Aset)
+            if(resNonOps.status === "berhasil") {
+                totalAset += resNonOps.data.length;
+                totalRusak += resNonOps.data.filter(item => item.kondisi === "Rusak").length;
+            }
+            
+            // 4. Kalkulasi Data Gudang Ops (Habis Pakai)
+            if(resOps.status === "berhasil") {
+                totalAset += resOps.data.length;
+                totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length;
+            }
+            
+            // 5. Kalkulasi Status Pengajuan Perbaikan
+            let dataPengajuan = [];
+            if(resPerbaikan.status === "berhasil") {
+                dataPengajuan = resPerbaikan.data;
+                sedangDiperbaiki += dataPengajuan.filter(item => item.status === "Sedang Diperbaiki").length;
+            }
+
+            // 6. Cetak Angka Asli ke Layar Dashboard
+            document.getElementById('valTotalAset').innerText = totalAset;
+            document.getElementById('valAsetRusak').innerText = totalRusak;
+            document.getElementById('valSedangDiperbaiki').innerText = sedangDiperbaiki;
+
+            // =====================================
+            // 7. LOGIKA GRAFIK (6 BULAN TERAKHIR OTOMATIS)
+            // =====================================
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+            let bulanLabels = [];
+            let dataGrafikRusak = [0, 0, 0, 0, 0, 0];
+            let dataGrafikSelesai = [0, 0, 0, 0, 0, 0];
+
+            // Deteksi bulan saat ini dan mundur 6 bulan ke belakang
+            let d = new Date();
+            for (let m = 5; m >= 0; m--) {
+                let tempD = new Date(d.getFullYear(), d.getMonth() - m, 1);
+                bulanLabels.push(monthNames[tempD.getMonth()]);
+            }
+
+            // Kelompokkan histori perbaikan ke dalam masing-masing bulan
+            dataPengajuan.forEach(item => {
+                if(item.tanggal) {
+                    let tgl = new Date(item.tanggal); 
+                    if(!isNaN(tgl.getTime())) {
+                        let namaBulan = monthNames[tgl.getMonth()];
+                        let indexBulan = bulanLabels.indexOf(namaBulan);
+                        
+                        // Cek jika pengajuan tersebut terjadi di rentang 6 bulan terakhir
+                        if(indexBulan !== -1) {
+                            if(item.status !== "Selesai") {
+                                dataGrafikRusak[indexBulan]++; // Tambah grafik garis merah
+                            } else if(item.status === "Selesai") {
+                                dataGrafikSelesai[indexBulan]++; // Tambah grafik batang biru
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- RENDER GRAFIK GARIS (Kerusakan Masuk) ---
+            if(chartKerusakanInstance) chartKerusakanInstance.destroy();
+            const ctxRusak = document.getElementById('chartKerusakan').getContext('2d');
+            chartKerusakanInstance = new Chart(ctxRusak, {
+                type: 'line',
+                data: {
+                    labels: bulanLabels,
+                    datasets: [{
+                        label: 'Laporan Kerusakan',
+                        data: dataGrafikRusak,
+                        borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 2, fill: true, tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+            // --- RENDER GRAFIK BATANG (Perbaikan Selesai) ---
+            if(chartPerbaikanInstance) chartPerbaikanInstance.destroy();
+            const ctxPerbaikan = document.getElementById('chartPerbaikan').getContext('2d');
+            chartPerbaikanInstance = new Chart(ctxPerbaikan, {
+                type: 'bar',
+                data: {
+                    labels: bulanLabels,
+                    datasets: [{
+                        label: 'Aset Selesai Diperbaiki',
+                        data: dataGrafikSelesai,
+                        backgroundColor: '#0284c7', borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+        }).catch(err => {
+            console.error("Gagal memuat data dashboard:", err);
+            document.getElementById('valTotalAset').innerText = "0";
+            document.getElementById('valAsetRusak').innerText = "0";
+            document.getElementById('valSedangDiperbaiki').innerText = "0";
         });
     }
     // ==========================================
