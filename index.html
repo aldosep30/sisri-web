@@ -241,7 +241,12 @@
      </div>
 
         <ul class="menu-list" id="mainMenu">
-            
+           <!-- MENU DASHBOARD UTAMA -->
+            <li class="menu-item" data-role="Seluruh" onclick="openModule('dashboard', event)">
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">dashboard</span><span class="menu-text">Dashboard Utama</span></div>
+                </div>
+            </li> 
             <li class="menu-item" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">domain</span><span class="menu-text">Sarana & Prasarana</span></div>
@@ -375,12 +380,81 @@
         
         <div class="content-card">
             
-            <!-- Default Content (Halaman Kosong Sementara) -->
+            <!-- Default Content (DASHBOARD UTAMA / MENU HUB) -->
             <div id="defaultContent">
-                <h2 class="content-header" id="contentTitle" style="font-size: 20px;">Selamat Datang</h2>
-                <div id="contentBody">
-                    <p>Selamat datang di <b>Sistem Informasi Sekolah Rakyat Indonesia (SISRI)</b>.</p>
-                    <p>Silakan pilih menu navigasi di panel sebelah kiri untuk mulai mengelola data dan aktivitas sekolah. Antarmuka ini dirancang untuk kemudahan dan efisiensi operasional dari perangkat apapun.</p>
+                <div class="page-header" style="border-bottom:none; padding-bottom:0; margin-bottom: 24px;">
+                    <h2 style="margin:0; font-size:24px; color:var(--text-main);">Dashboard Utama</h2>
+                    <p style="margin:6px 0 0 0; color:var(--text-muted); font-size:14px;">Selamat datang, <b id="dashUserName">Pengguna</b>! Silakan pilih menu layanan di bawah ini.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                    
+                    <!-- 1. KARTU SARANA PRASARANA -->
+                    <div class="dash-card" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">domain</span></div>
+                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Sarana & Prasarana</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openModule('nonops', event)"><span class="material-symbols-outlined" style="font-size:18px;">inventory_2</span> Non Ops (Aset)</button>
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openModule('ops', event)"><span class="material-symbols-outlined" style="font-size:18px;">shopping_cart</span> Ops (Habis Pakai)</button>
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px; background:#f8fafc;" onclick="openModule('pemeliharaan', event)"><span class="material-symbols-outlined" style="font-size:18px; color:#0284c7;">build</span> Sistem Pemeliharaan</button>
+                        </div>
+                    </div>
+
+                    <!-- 2. KARTU OTOMASI SURAT -->
+                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">mail</span></div>
+                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Sistem Otomasi Surat</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Pengajuan Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">send</span> Pengajuan</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Monitoring Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">manage_search</span> Monitoring</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Template Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">description</span> Template</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Disposisi Surat', event)"><span class="material-symbols-outlined" style="font-size:16px;">assignment_turned_in</span> Disposisi</button>
+                        </div>
+                    </div>
+
+                    <!-- 3. KARTU ASESMEN SISWA -->
+                    <div class="dash-card" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #fef08a; color: #a16207; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">quiz</span></div>
+                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Asesmen Siswa</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Asesmen Rutin', event)"><span class="material-symbols-outlined" style="font-size:18px;">event_note</span> Asesmen Rutin</button>
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Asesmen Insidentil', event)"><span class="material-symbols-outlined" style="font-size:18px;">assignment_late</span> Asesmen Insidentil</button>
+                        </div>
+                    </div>
+
+                    <!-- 4. KARTU KESISWAAN & RUANGAN -->
+                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #dcfce7; color: #15803d; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">school</span></div>
+                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Kesiswaan & Ruangan</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined" style="font-size:16px;">groups</span> Data SRMP</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined" style="font-size:16px;">groups</span> Data SRMA</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined" style="font-size:16px;">sports_soccer</span> Ekskul</button>
+                            <button class="btn-outline" style="text-align:left; padding:8px; font-size:12px; display:flex; align-items:center; gap:4px;" onclick="openContent('Pengajuan Penggunaan Ruangan', event)"><span class="material-symbols-outlined" style="font-size:16px;">meeting_room</span> Ruangan</button>
+                        </div>
+                    </div>
+
+                    <!-- 5. KARTU KEUANGAN -->
+                    <div class="dash-card" data-role="Seluruh" style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                            <div style="background: #f3e8ff; color: #7e22ce; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+                            <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Keuangan</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Pengajuan Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">request_quote</span> Pengajuan Anggaran</button>
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Realisasi Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">price_check</span> Realisasi Anggaran</button>
+                            <button class="btn-outline" style="text-align:left; display:flex; align-items:center; gap:8px;" onclick="openContent('Pencairan Anggaran', event)"><span class="material-symbols-outlined" style="font-size:18px;">payments</span> Pencairan Anggaran</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -830,10 +904,15 @@
             const lastType = sessionStorage.getItem('lastType');
             const lastModule = sessionStorage.getItem('lastModule');
             
+            // Setel nama di Dashboard Utama
+            if(document.getElementById('dashUserName')) document.getElementById('dashUserName').innerText = user;
+
             if (lastType === 'module' && lastModule) {
                 openModule(lastModule, null);
             } else if (lastType === 'content' && lastModule) {
                 openContent(lastModule, null);
+            } else {
+                openModule('dashboard', null); // Buka Dashboard jika baru login
             }
         }
     };
@@ -945,10 +1024,13 @@
     }
 
     function aturHakAksesMenu(userLevel) {
-        document.querySelectorAll('.menu-item').forEach(menu => {
-            const allowedRoles = menu.getAttribute('data-role');
-            if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) { menu.style.display = "block"; } 
-            else { menu.style.display = "none"; }
+        // Menyembunyikan/menampilkan Menu Sidebar DAN Kartu Dashboard sesuai level
+        document.querySelectorAll('.menu-item, .dash-card').forEach(el => {
+            const allowedRoles = el.getAttribute('data-role');
+            if (allowedRoles) {
+                if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) { el.style.display = ""; } 
+                else { el.style.display = "none"; }
+            }
         });
     }
 
@@ -1048,6 +1130,9 @@
         });
         
         // 2. TAMPILKAN HANYA YANG DIPILIH
+        if(modulName === 'dashboard') {
+            document.getElementById('defaultContent').classList.remove('hidden');
+        }
         if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
