@@ -801,7 +801,7 @@
     let tabAktif = "Aset";
 
     // -------------------------------------------------------------
-    // FITUR ANTI REFRESH (MENYIMPAN SESI LOGIN)
+    // FITUR ANTI REFRESH (MENYIMPAN SESI LOGIN & MODUL TERAKHIR)
     // -------------------------------------------------------------
     window.onload = function() {
         const loggedIn = sessionStorage.getItem('isLoggedIn');
@@ -815,6 +815,16 @@
             document.getElementById('displayName').innerText = user;
             document.getElementById('displayLevel').innerText = level;
             aturHakAksesMenu(level);
+
+            // ---> MENGINGAT HALAMAN TERAKHIR YANG DIAKSES <---
+            const lastType = sessionStorage.getItem('lastType');
+            const lastModule = sessionStorage.getItem('lastModule');
+            
+            if (lastType === 'module' && lastModule) {
+                openModule(lastModule, null);
+            } else if (lastType === 'content' && lastModule) {
+                openContent(lastModule, null);
+            }
         }
     };
 
@@ -968,6 +978,10 @@
         bersihkanSorotanMenu();
         if(event && event.currentTarget) event.currentTarget.classList.add('selected');
         
+        // --- TAMBAHKAN DUA BARIS PEREKAM INI ---
+        sessionStorage.setItem('lastType', 'content');
+        sessionStorage.setItem('lastModule', menuName);
+        
         // 1. Sembunyikan SEMUA modul menggunakan Array yang aman (Anti-Blank Error)
         const semuaModul = ['modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak'];
         semuaModul.forEach(id => {
@@ -1004,6 +1018,11 @@
     function openModule(modulName, event) {
         if(event) event.stopPropagation();
         bersihkanSorotanMenu();
+        
+        // --- TAMBAHKAN DUA BARIS PEREKAM INI ---
+        sessionStorage.setItem('lastType', 'module');
+        sessionStorage.setItem('lastModule', modulName);
+        // ---------------------------------------
         
         // Tambahkan efek sorotan/warna (hanya jika yang diklik adalah menu sidebar)
         if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
