@@ -442,13 +442,15 @@
                     </table>
                 </div>
             </div>
-<!-- MODULE 3: SISTEM PEMELIHARAAN (DASHBOARD) -->
+<!-- ================================================= -->
+            <!-- MODULE 3: SISTEM PEMELIHARAAN (DASHBOARD)         -->
+            <!-- ================================================= -->
             <div id="modul_pemeliharaan" class="hidden">
                 <div class="page-header">
                     <h2>Dashboard Pemeliharaan & Kerusakan Aset</h2>
                 </div>
 
-                <!-- 1. Tombol Navigasi Sub-menu (Action Cards) Paling Atas -->
+                <!-- 1. Tombol Navigasi Sub-menu (Action Cards) -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px;">
                     <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('pengajuan_perbaikan', event)">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
@@ -466,12 +468,13 @@
                         <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Rekapitulasi inventaris yang sedang dalam kondisi rusak/tidak layak.</p>
                     </div>
 
-                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('daftar_pemeliharaan', event)">
-                     <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                         <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">engineering</span></div>
-                         <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Daftar Pemeliharaan</h3>
-                     </div>
-                    <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Pantau status perbaikan atau jadwal servis berkala aset.</p>
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openContent('Daftar Pemeliharaan', event)">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">engineering</span></div>
+                            <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Daftar Pemeliharaan</h3>
+                        </div>
+                        <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Pantau status perbaikan atau jadwal servis berkala aset.</p>
+                    </div>
                 </div>
 
                 <!-- 2. Metrik Angka Ringkasan -->
@@ -505,7 +508,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> <!-- PENUTUP MODUL 3 -->
                 <!-- MODULE 4: PENGAJUAN PERBAIKAN -->
            <!-- ================================================= -->
             <!-- MODULE 4: PENGAJUAN PERBAIKAN                     -->
@@ -961,35 +964,40 @@
         });
     }
 
-    // Fungsi Buka Konten (Menu yang Masih Tahap Pengembangan)
+    // Fungsi Buka Konten (Menu yang Masih Tahap Pengembangan) - KEBAL ERROR
     function openContent(menuName, event) {
-        event.stopPropagation();
+        if(event) event.stopPropagation();
         bersihkanSorotanMenu();
-        event.currentTarget.classList.add('selected');
+        if(event && event.currentTarget) event.currentTarget.classList.add('selected');
         
-        // 1. Sembunyikan SEMUA modul yang sudah jadi agar tidak bocor/numpuk
-        document.getElementById('modul_nonops').classList.add('hidden');
-        document.getElementById('modul_ops').classList.add('hidden');
-        document.getElementById('modul_pemeliharaan').classList.add('hidden');
-        document.getElementById('modul_pengajuan_perbaikan').classList.add('hidden'); // Modul 4
-        document.getElementById('modul_barang_rusak').classList.add('hidden'); // Modul 5 (Barang Rusak)
-        // Nanti jika ada modul baru lagi, tambahkan baris '.add('hidden');' di sini
+        // 1. Sembunyikan SEMUA modul menggunakan Array yang aman (Anti-Blank Error)
+        const semuaModul = ['modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak'];
+        semuaModul.forEach(id => {
+            const elemen = document.getElementById(id);
+            if(elemen) elemen.classList.add('hidden'); 
+        });
         
         // 2. Tampilkan area default (area pesan pengembangan)
-        document.getElementById('defaultContent').classList.remove('hidden');
+        const defContent = document.getElementById('defaultContent');
+        if(defContent) defContent.classList.remove('hidden');
         
         // 3. Ubah isi teks menjadi peringatan "Tahap Pengembangan" yang elegan
-        document.getElementById('contentTitle').innerText = menuName;
-        document.getElementById('contentBody').innerHTML = `
-            <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 40px 20px; text-align: center; margin-top: 20px;">
-                <span class="material-symbols-outlined" style="font-size: 64px; color: #d97706; margin-bottom: 16px;">construction</span>
-                <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 20px;">Modul Dalam Tahap Pengembangan</h3>
-                <p style="margin: 0 auto; color: #b45309; font-size: 15px; max-width: 500px; line-height: 1.6;">
-                    Fitur <b>${menuName}</b> saat ini sedang dalam proses perancangan dan belum diluncurkan. 
-                    Silakan nantikan pembaruan sistem SISRI pada versi berikutnya.
-                </p>
-            </div>
-        `;
+        const contentTitle = document.getElementById('contentTitle');
+        if(contentTitle) contentTitle.innerText = menuName;
+        
+        const contentBody = document.getElementById('contentBody');
+        if(contentBody) {
+            contentBody.innerHTML = `
+                <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 40px 20px; text-align: center; margin-top: 20px;">
+                    <span class="material-symbols-outlined" style="font-size: 64px; color: #d97706; margin-bottom: 16px;">construction</span>
+                    <h3 style="margin: 0 0 12px 0; color: #92400e; font-size: 20px;">Modul Dalam Tahap Pengembangan</h3>
+                    <p style="margin: 0 auto; color: #b45309; font-size: 15px; max-width: 500px; line-height: 1.6;">
+                        Fitur <b>${menuName}</b> saat ini sedang dalam proses perancangan dan belum diluncurkan. 
+                        Silakan nantikan pembaruan sistem SISRI pada versi berikutnya.
+                    </p>
+                </div>
+            `;
+        }
         
         closeSidebarMobile();
     }
