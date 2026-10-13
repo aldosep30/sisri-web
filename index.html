@@ -239,6 +239,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- LIBRARY CHART.JS UNTUK GRAFIK DASHBOARD -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Library SheetJS untuk Baca Excel di Browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -656,6 +658,112 @@
                             <tr><td colspan="10" style="text-align:center;">Memuat data...</td></tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <!-- ================================================= -->
+            <!-- MODUL DATA SISWA (MASTER DATABASE)                -->
+            <!-- ================================================= -->
+            <div id="modul_data_siswa" class="hidden main-content">
+                <div class="page-header">
+                    <div>
+                        <h2>Data Siswa</h2>
+                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Pusat manajemen biodata dan rekam fisik/kesehatan siswa.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-outline" style="display: flex; align-items: center; gap: 6px; color: #166534; border-color: #bbf7d0; background: #f0fdf4;" onclick="downloadExcelSiswa()">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Download Excel
+                        </button>
+                        
+                        <!-- Tombol Upload & Tambah (Dibatasi hak akses via class admin-action) -->
+                        <button class="btn-outline admin-action" style="display: flex; align-items: center; gap: 6px; color: #0284c7; border-color: #bae6fd; background: #e0f2fe;" onclick="document.getElementById('uploadExcelSiswa').click()">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">upload</span> Upload Update
+                        </button>
+                        <input type="file" id="uploadExcelSiswa" accept=".xlsx, .xls, .csv" style="display: none;" onchange="prosesUploadSiswa(event)">
+                        
+                        <button class="btn-add admin-action" onclick="bukaModalSiswa()">
+                            <span class="material-symbols-outlined icon" style="font-size: 18px;">person_add</span> Tambah Siswa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card" style="padding: 0;">
+                    <div class="table-responsive">
+                        <table id="tabelDataSiswa">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NISN</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Jenjang</th>
+                                    <th>Kelas</th>
+                                    <th>Wali Asuh</th>
+                                    <th>Status Gizi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyTableSiswa">
+                                <tr><td colspan="8" style="text-align: center;">Mencari data siswa...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL FORMULIR DATA SISWA (Pop-up) -->
+            <div id="modalFormSiswa" class="modal-overlay hidden">
+                <div class="modal-card" style="max-width: 850px;">
+                    <div class="modal-header">
+                        <h3 id="modalSiswaTitle">Formulir Data Siswa</h3>
+                        <button class="close-btn" onclick="tutupModalSiswa()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formSiswa">
+                            <input type="hidden" id="siswa_id">
+                            
+                            <h4 style="margin: 0 0 16px 0; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 8px;">I. Biodata Siswa</h4>
+                            <div class="form-grid">
+                                <div class="form-group full-width"><label>Nama Lengkap</label><input type="text" id="siswa_nama" required></div>
+                                <div class="form-group"><label>NISN</label><input type="text" id="siswa_nisn" required placeholder="Gunakan NISN valid"></div>
+                                <div class="form-group"><label>NIK</label><input type="number" id="siswa_nik"></div>
+                                <div class="form-group"><label>Nomor KK</label><input type="number" id="siswa_kk"></div>
+                                <div class="form-group"><label>Tempat Lahir</label><input type="text" id="siswa_tempat_lahir"></div>
+                                <div class="form-group"><label>Tanggal Lahir</label><input type="date" id="siswa_tgl_lahir" onchange="hitungUsia()"></div>
+                                <div class="form-group"><label>Usia (Otomatis)</label><input type="text" id="siswa_usia" readonly style="background: #e2e8f0; font-weight: bold;"></div>
+                                <div class="form-group"><label>Jenis Kelamin</label>
+                                    <select id="siswa_jk"><option value="">-- Pilih --</option><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select>
+                                </div>
+                                <div class="form-group"><label>Agama</label>
+                                    <select id="siswa_agama"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Konghucu">Konghucu</option></select>
+                                </div>
+                                <div class="form-group"><label>Anak Ke-</label><input type="number" id="siswa_anak_ke"></div>
+                                <div class="form-group full-width"><label>Alamat Lengkap</label><textarea id="siswa_alamat" rows="2"></textarea></div>
+                                <div class="form-group"><label>Jenjang</label>
+                                    <select id="siswa_jenjang"><option value="">-- Pilih --</option><option value="SRMP">SRMP (Menengah Pertama)</option><option value="SRMA">SRMA (Menengah Atas)</option></select>
+                                </div>
+                                <div class="form-group"><label>Kelas</label><input type="text" id="siswa_kelas" placeholder="Cth: 7A / 10 MIPA"></div>
+                                <div class="form-group"><label>Wali Asuh</label><input type="text" id="siswa_wali"></div>
+                                <div class="form-group"><label>Asrama</label><input type="text" id="siswa_asrama"></div>
+                            </div>
+
+                            <h4 style="margin: 32px 0 16px 0; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 8px;">II. Data Kesehatan & Fisik</h4>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Tinggi Badan (cm)</label><input type="number" id="siswa_tinggi" oninput="hitungIMT()" placeholder="Cth: 165"></div>
+                                <div class="form-group"><label>Berat Badan (kg)</label><input type="number" id="siswa_berat" step="0.1" oninput="hitungIMT()" placeholder="Cth: 55.5"></div>
+                                <div class="form-group"><label>IMT (Otomatis)</label><input type="text" id="siswa_imt" readonly style="background: #e2e8f0; font-weight: bold;"></div>
+                                <div class="form-group"><label>Status Gizi (Otomatis)</label><input type="text" id="siswa_gizi" readonly style="background: #e2e8f0; font-weight: bold;"></div>
+                                <div class="form-group full-width"><label>Kondisi Fisik Khusus (Penyakit/Alergi)</label><input type="text" id="siswa_kondisi_fisik" placeholder="Kosongkan jika sehat normal"></div>
+                                <div class="form-group"><label>Ukuran Baju</label>
+                                    <select id="siswa_baju"><option value="">Pilih</option><option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option><option value="XXL">XXL</option><option value="3XL">3XL</option></select>
+                                </div>
+                                <div class="form-group"><label>Ukuran Celana</label><input type="number" id="siswa_celana"></div>
+                                <div class="form-group"><label>Ukuran Sepatu</label><input type="number" id="siswa_sepatu"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-outline" onclick="tutupModalSiswa()">Batal</button>
+                        <button type="button" class="btn-add admin-action" onclick="simpanDataSiswa()">Simpan Data</button>
+                    </div>
                 </div>
             </div>
 <!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
@@ -1251,7 +1359,7 @@
         sessionStorage.setItem('lastModule', menuName);
         
         // 1. Sembunyikan SEMUA modul (PASTIKAN modul_development ADA DI SINI JUGA)
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1282,7 +1390,7 @@
         }
         
         // KUNCI PERBAIKAN: modul_development sudah masuk di dalam daftar ini untuk disembunyikan
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1291,6 +1399,9 @@
         if(modulName === 'dashboard') {
             document.getElementById('defaultContent').classList.remove('hidden');
         } 
+        else if(modulName === 'data_siswa') {
+            document.getElementById('modul_data_siswa').classList.remove('hidden');
+        }
         else if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
@@ -1342,7 +1453,7 @@
         sessionStorage.setItem('lastModule', menuName);
         
         // KUNCI PERBAIKAN: Semua wadah disembunyikan sebelum memunculkan halaman pengembangan
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -2117,6 +2228,62 @@
     function updateStatusPerbaikan(kode) {
         alert("Fitur update status perbaikan untuk kode " + kode + " akan segera diintegrasikan dengan database!");
         // Di sini nantinya kita buat popup untuk mengubah status (misal dari "Sedang Diperbaiki" ke "Selesai")
+    }
+    // ==========================================
+    // LOGIKA MODUL DATA SISWA
+    // ==========================================
+    
+    function bukaModalSiswa() {
+        document.getElementById('formSiswa').reset();
+        document.getElementById('siswa_id').value = "";
+        document.getElementById('modalSiswaTitle').innerText = "Tambah Data Siswa Baru";
+        document.getElementById('modalFormSiswa').classList.remove('hidden');
+    }
+    
+    function tutupModalSiswa() { document.getElementById('modalFormSiswa').classList.add('hidden'); }
+
+    // Hitung Usia dari Tanggal Lahir
+    function hitungUsia() {
+        const tglLahir = document.getElementById('siswa_tgl_lahir').value;
+        if(tglLahir) {
+            const birthDate = new Date(tglLahir); const today = new Date();
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let ageMonths = today.getMonth() - birthDate.getMonth();
+            if (ageMonths < 0 || (ageMonths === 0 && today.getDate() < birthDate.getDate())) { ageYears--; ageMonths += 12; }
+            if (today.getDate() < birthDate.getDate()) ageMonths--;
+            document.getElementById('siswa_usia').value = `${ageYears} Thn, ${ageMonths} Bln`;
+        }
+    }
+
+    // Hitung IMT & Status Gizi
+    function hitungIMT() {
+        const tinggi = parseFloat(document.getElementById('siswa_tinggi').value);
+        const berat = parseFloat(document.getElementById('siswa_berat').value);
+        if (tinggi > 0 && berat > 0) {
+            const imt = berat / ((tinggi/100) * (tinggi/100));
+            document.getElementById('siswa_imt').value = imt.toFixed(1);
+            let status = "Obesitas";
+            if (imt < 17.0) status = "Kurus (Tingkat Berat)";
+            else if (imt <= 18.4) status = "Kurus (Tingkat Ringan)";
+            else if (imt <= 25.0) status = "Normal (Sehat)";
+            else if (imt <= 27.0) status = "Gemuk (Kelebihan Ringan)";
+            document.getElementById('siswa_gizi').value = status;
+        } else {
+            document.getElementById('siswa_imt').value = ""; document.getElementById('siswa_gizi').value = "";
+        }
+    }
+
+    // Kunci Akses Pengeditan Excel (Panggil ini di dalam fungsi window.onload nanti)
+    function periksaHakAksesEdit() {
+        const levelDizinkan = ["Kepala Sekolah", "Wakasek Kesiswaan", "Operator Sekolah"];
+        const elemenAdmin = document.querySelectorAll('.admin-action');
+        const userLevel = sessionStorage.getItem('level');
+        
+        if (!levelDizinkan.includes(userLevel)) {
+            elemenAdmin.forEach(el => el.style.display = 'none');
+        } else {
+            elemenAdmin.forEach(el => el.style.display = '');
+        }
     }
 </script>
 </body>
