@@ -245,7 +245,7 @@
                         </div>
                         <ul class="sub-submenu">
                             <li onclick="openModule('pengajuan_perbaikan', event)"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
-                            <li onclick="alert('Fitur Daftar Barang Rusak segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
+                           <li onclick="openModule('barang_rusak', event)"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
                             <li onclick="alert('Fitur Daftar Pemeliharaan segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
                         </ul>
                     </li>
@@ -458,7 +458,7 @@
                         <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Formulir permohonan perbaikan aset rusak oleh unit kerja/guru.</p>
                     </div>
                     
-                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="alert('Masuk ke daftar barang rusak')">
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('barang_rusak', event)">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                             <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">broken_image</span></div>
                             <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Daftar Barang Rusak</h3>
@@ -533,7 +533,39 @@
                     </table>
                 </div>
             </div> <!-- PENUTUP MODUL 4 -->
+<!-- ================================================= -->
+            <!-- MODULE 5: DAFTAR BARANG RUSAK                     -->
+            <!-- ================================================= -->
+            <div id="modul_barang_rusak" class="hidden">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <button class="btn-outline" style="border:none; padding:0; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; cursor:pointer;" onclick="openModule('pemeliharaan', event)">
+                            <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">arrow_back</span> Kembali ke Dashboard
+                        </button>
+                        <h2 style="margin:0; font-size:20px; color:var(--text-main);">Daftar Barang / Aset Rusak</h2>
+                    </div>
+                </div>
+                
+                <!-- Kotak Info Khusus -->
+                <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                    <span class="material-symbols-outlined" style="color: #dc2626; font-size: 28px;">warning</span>
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; color: #991b1b; font-size: 14px;">Identifikasi Kerusakan</h4>
+                        <p style="margin: 0; color: #b91c1c; font-size: 13px;">Data di bawah ini ditarik secara otomatis dari modul Gudang Non Ops (Aset) dan Ops (Habis Pakai) yang berstatus "Rusak".</p>
+                    </div>
+                </div>
 
+                <div class="table-responsive">
+                    <table id="tabelBarangRusak">
+                        <thead>
+                            <tr><th>No</th><th>Terdeteksi Rusak</th><th>Kategori Gudang</th><th>Kode Barang</th><th>Nama Aset/Barang</th><th>Ruangan / Lokasi</th><th>Kondisi</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="tbodyBarangRusak">
+                            <tr><td colspan="8" style="text-align:center;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- PENUTUP MODUL 5 -->
         </div> <!-- PENUTUP main-content (default content area) -->
     </div> <!-- PENUTUP dashboard-wrapper -->
 </div> <!-- PENUTUP container UTAMA -->
@@ -937,11 +969,13 @@
             event.currentTarget.classList.add('selected');
         }
         
-        // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU (Menggunakan sistem Array agar aman)
-        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan'];
+        // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU 
+        // (Perhatikan: 'modul_barang_rusak' sudah saya tambahkan di ujung daftar ini)
+        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak'];
+        
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
-            if(elemen) elemen.classList.add('hidden'); // Sembunyikan jika elemennya ada
+            if(elemen) elemen.classList.add('hidden'); 
         });
         
         // 2. TAMPILKAN HANYA YANG DIPILIH
@@ -962,8 +996,14 @@
             if(wadahPerbaikan) {
                 wadahPerbaikan.classList.remove('hidden');
                 if(typeof muatDataPerbaikan === 'function') muatDataPerbaikan();
-            } else {
-                alert("Wadah tabel Pengajuan Perbaikan belum terpasang di HTML Anda!");
+            }
+        }
+        // ---> INI DIA LOGIKA BARU UNTUK MEMANGGIL DAFTAR BARANG RUSAK <---
+        else if(modulName === 'barang_rusak') {
+            const wadahRusak = document.getElementById('modul_barang_rusak');
+            if(wadahRusak) {
+                wadahRusak.classList.remove('hidden');
+                if(typeof muatDataBarangRusak === 'function') muatDataBarangRusak();
             }
         }
         
@@ -1574,6 +1614,59 @@
                 document.getElementById('inKeluhanPerbaikan').value = '';
             } else { alert("Gagal: " + data.pesan); }
         });
+    }
+    // ==========================================
+    // LOGIKA DAFTAR BARANG RUSAK 
+    // ==========================================
+    function muatDataBarangRusak() {
+        document.getElementById('tbodyBarangRusak').innerHTML = '<tr><td colspan="8" style="text-align:center;">Menarik data kerusakan dari gudang...</td></tr>';
+        
+        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_barang_rusak" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                const tbody = document.getElementById('tbodyBarangRusak');
+                tbody.innerHTML = '';
+                
+                if(data.data.length === 0) { 
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px;"><span class="material-symbols-outlined" style="font-size:40px; color:#d1d5db; display:block; margin-bottom:8px;">check_circle</span>Tidak ada barang rusak. Gudang aman!</td></tr>'; 
+                    return; 
+                }
+                
+                data.data.forEach((row, index) => {
+                    // Beri label sumber berbeda warna (Biru utk Aset, Ungu utk Ops)
+                    let warnaSumber = row.sumber.includes("Aset") ? 'background:#e0f2fe; color:#0369a1;' : 'background:#f3e8ff; color:#7e22ce;';
+                    
+                    tbody.innerHTML += `<tr>
+                        <td>${index + 1}</td>
+                        <td style="color:var(--text-muted); font-size:12px;">${row.tanggal}</td>
+                        <td><span style="${warnaSumber} padding:4px 8px; border-radius:4px; font-size:11px; font-weight:600;">${row.sumber}</span></td>
+                        <td>${row.kode_barang}</td>
+                        <td><b>${row.nama_barang}</b></td>
+                        <td>${row.ruangan}</td>
+                        <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold;">${row.kondisi}</span></td>
+                        <td>
+                            <button class="btn-outline" style="border-color:#dc2626; color:#dc2626; font-size:11px; padding:4px 8px; display:flex; align-items:center; gap:4px;" onclick="ajukanDariBarangRusak('${row.kode_barang}')">
+                                <span class="material-symbols-outlined" style="font-size:14px;">build</span> Ajukan Perbaikan
+                            </button>
+                        </td>
+                    </tr>`;
+                });
+            }
+        });
+    }
+
+    // Fitur UX Spesial: Klik tombol "Ajukan" -> Langsung Buka Form Perbaikan Otomatis
+    function ajukanDariBarangRusak(kode_barang) {
+        // 1. Pindah Halaman ke Pengajuan
+        openModule('pengajuan_perbaikan', null);
+        
+        // 2. Beri jeda 0.5 detik agar halaman selesai dimuat, lalu buka form dan isi kodenya
+        setTimeout(() => {
+            bukaModalPerbaikan(); 
+            document.getElementById('inKodePerbaikan').value = kode_barang;
+            // 3. Langsung jalankan pencarian Auto-Fill
+            cekKodeBarang(); 
+        }, 500);
     }
 </script>
 </body>
