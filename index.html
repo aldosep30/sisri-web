@@ -163,11 +163,11 @@
         /* --- DESAIN BARU DASHBOARD ENTERPRISE (SISRI MODERN) --- */
         /* ========================================================= */
 
-        .hero-banner { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); border-radius: 20px; padding: 40px; margin-bottom: 24px; position: relative; overflow: hidden; color: #ffffff !important; box-shadow: 0 10px 25px rgba(127, 29, 29, 0.2); }
-        .hero-banner::after { content: ''; position: absolute; right: -50px; bottom: -50px; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; }
-        .hero-welcome { margin: 0 0 4px 0; font-size: 13px; font-weight: 600; letter-spacing: 2px; color: #fde047 !important; text-transform: uppercase; }
-        .hero-name { margin: 0 0 16px 0; font-size: 36px; font-weight: 700; color: #ffffff !important; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .hero-desc { margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #f8fafc !important; max-width: 580px; font-weight: 400; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .hero-banner { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); border-radius: 20px; padding: 56px 48px; margin-bottom: 24px; position: relative; overflow: hidden; color: #ffffff !important; box-shadow: 0 10px 25px rgba(127, 29, 29, 0.2); min-height: 220px; display: flex; align-items: center; }
+        .hero-banner::after { content: ''; position: absolute; right: -50px; bottom: -50px; width: 400px; height: 400px; background: rgba(255, 255, 255, 0.04); border-radius: 50%; }
+        .hero-welcome { margin: 0 0 -2px 0; font-size: 26px !important; color: #e2e8f0 !important; text-transform: none !important; letter-spacing: 1px !important; font-family: 'Dancing Script', 'Caveat', 'Segoe Script', cursive; font-weight: 500; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .hero-name { margin: 0 0 20px 0; font-size: 42px; font-weight: 700; color: #ffffff !important; text-shadow: 0 2px 4px rgba(0,0,0,0.3); letter-spacing: -0.5px; }
+        .hero-desc { margin: 0 0 32px 0; font-size: 16.5px; line-height: 1.7; color: #f8fafc !important; max-width: 650px; font-weight: 400; text-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .hero-badges { display: flex; gap: 12px; }
         .badge { background: rgba(0, 0, 0, 0.2); padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); }
         .badge .material-symbols-outlined { font-size: 16px; }
@@ -443,7 +443,7 @@
                 <!-- HERO BANNER MELENGKUNG -->
                 <div class="hero-banner">
                     <div class="hero-content">
-                        <p class="hero-welcome">SELAMAT DATANG,</p>
+                        <p class="hero-welcome" style="font-family: 'Dancing Script', 'Caveat', cursive; font-size: 26px; color: #e2e8f0 !important; font-weight: 500; text-transform: none; letter-spacing: 1px;">Selamat Datang,</p>
                         <h2 class="hero-name" id="dashUserName">Pengguna!</h2>
                         <p class="hero-desc">Tingkatkan efisiensi, akurasi, dan transparansi tata kelola pendidikan. Sistem terpadu ini dirancang secara eksklusif untuk mengoptimalkan layanan operasional <b>SRT 6 Kota Bogor</b>.<br><span style="font-size: 12.5px; opacity: 0.85; font-weight: 400; margin-top: 10px; display: inline-block; letter-spacing: 0.5px;"><i>Produced by: Aldo Septrianto</i></span></p>
                         
@@ -470,8 +470,8 @@
                         <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined" style="color: #0284c7;">draft</span></div>
                         <div class="stat-info">
                             <p class="stat-title">Sistem Persuratan</p>
-                            <h3 class="stat-value" id="statSurat">Aktif</h3>
-                            <p class="stat-desc">Siap digunakan</p>
+                            <h3 class="stat-value" id="statSurat" style="color: #d97706;">Pending</h3>
+                            <p class="stat-desc">Menunggu rilis modul</p>
                         </div>
                     </div>
                     <!-- Stat 3 -->
@@ -483,16 +483,18 @@
                             <p class="stat-desc">Aset dalam perbaikan</p>
                         </div>
                     </div>
-                    <!-- Stat 4 -->
-                    <div class="stat-card">
-                        <div class="stat-icon bg-light-purple"><span class="material-symbols-outlined" style="color: #7e22ce;">payments</span></div>
-                        <div class="stat-info">
-                            <p class="stat-title">Anggaran Ops</p>
-                            <h3 class="stat-value">Tersedia</h3>
-                            <p class="stat-desc">Siklus tahun berjalan</p>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Stat 4: Jumlah Siswa Aktif -->
+                 <div class="stat-card">
+                     <div class="stat-icon bg-light-purple"><span class="material-symbols-outlined" style="color: #7e22ce;">groups</span></div>
+                     <div class="stat-info">
+                         <p class="stat-title">Jumlah Siswa Aktif</p>
+                         <h3 class="stat-value" id="statSiswa">0</h3>
+                         <div class="stat-desc" style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                             <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SRMP: <span id="valSRMP">0</span></span>
+                             <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SRMA: <span id="valSRMA">0</span></span>
+                         </div>
+                     </div>
+                 </div>
 
                 <!-- BAGIAN LAYANAN UTAMA -->
                 <div class="service-section">
