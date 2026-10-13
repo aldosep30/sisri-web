@@ -246,7 +246,7 @@
                         <ul class="sub-submenu">
                             <li onclick="openModule('pengajuan_perbaikan', event)"><span class="material-symbols-outlined submenu-icon">home_repair_service</span>Pengajuan Perbaikan</li>
                            <li onclick="openModule('barang_rusak', event)"><span class="material-symbols-outlined submenu-icon">broken_image</span>Daftar Barang Rusak</li>
-                            <li onclick="alert('Fitur Daftar Pemeliharaan segera hadir!'); event.stopPropagation();"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
+                            <li onclick="openModule('daftar_pemeliharaan', event)"><span class="material-symbols-outlined submenu-icon">engineering</span>Daftar Pemeliharaan</li>
                         </ul>
                     </li>
                 </ul>
@@ -466,7 +466,7 @@
                         <p style="margin: 0; font-size: 12px; color: var(--text-muted); line-height: 1.5;">Rekapitulasi inventaris yang sedang dalam kondisi rusak/tidak layak.</p>
                     </div>
 
-                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="alert('Masuk ke daftar pemeliharaan')">
+                    <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(169,52,55,0.1)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';" onclick="openModule('daftar_pemeliharaan', event)">
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                             <div style="background: #e0f2fe; color: #0284c7; padding: 10px; border-radius: 8px; display: flex;"><span class="material-symbols-outlined">engineering</span></div>
                             <h3 style="margin: 0; font-size: 15px; color: var(--text-main);">Daftar Pemeliharaan</h3>
@@ -566,6 +566,39 @@
                     </table>
                 </div>
             </div> <!-- PENUTUP MODUL 5 -->
+            <!-- ================================================= -->
+            <!-- MODULE 6: DAFTAR PEMELIHARAAN BERJALAN            -->
+            <!-- ================================================= -->
+            <div id="modul_daftar_pemeliharaan" class="hidden">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <button class="btn-outline" style="border:none; padding:0; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; cursor:pointer;" onclick="openModule('pemeliharaan', event)">
+                            <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">arrow_back</span> Kembali ke Dashboard
+                        </button>
+                        <h2 style="margin:0; font-size:20px; color:var(--text-main);">Pantauan Pemeliharaan Berjalan</h2>
+                    </div>
+                </div>
+                
+                <!-- Kotak Info Khusus -->
+                <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                    <span class="material-symbols-outlined" style="color: #166534; font-size: 28px;">engineering</span>
+                    <div>
+                        <h4 style="margin: 0 0 4px 0; color: #14532d; font-size: 14px;">Status Perbaikan Aset</h4>
+                        <p style="margin: 0; color: #15803d; font-size: 13px;">Daftar ini memantau secara real-time aset yang sedang dalam proses perbaikan atau sedang menunggu penanganan teknisi.</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="tabelDaftarPemeliharaan">
+                        <thead>
+                            <tr><th>No</th><th>Tgl Pengajuan</th><th>Kode Barang</th><th>Nama Barang</th><th>Ruangan / Lokasi</th><th>Keluhan</th><th>Status</th><th>Pelapor</th></tr>
+                        </thead>
+                        <tbody id="tbodyDaftarPemeliharaan">
+                            <tr><td colspan="8" style="text-align:center;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- PENUTUP MODUL 6 -->
         </div> <!-- PENUTUP main-content (default content area) -->
     </div> <!-- PENUTUP dashboard-wrapper -->
 </div> <!-- PENUTUP container UTAMA -->
@@ -939,8 +972,9 @@
         document.getElementById('modul_nonops').classList.add('hidden');
         document.getElementById('modul_ops').classList.add('hidden');
         document.getElementById('modul_pemeliharaan').classList.add('hidden');
-        document.getElementById('modul_pengajuan_perbaikan').classList.add('hidden'); // <--- TAMBAHAN
-        document.getElementById('modul_barang_rusak').classList.add('hidden'); // <--- TAMBAHAN
+        document.getElementById('modul_pengajuan_perbaikan').classList.add('hidden'); // Modul 4
+        document.getElementById('modul_barang_rusak').classList.add('hidden'); // Modul 5 (Barang Rusak)
+        // Nanti jika ada modul baru lagi, tambahkan baris '.add('hidden');' di sini
         
         // 2. Tampilkan area default (area pesan pengembangan)
         document.getElementById('defaultContent').classList.remove('hidden');
