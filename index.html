@@ -1274,28 +1274,23 @@
         if(event) event.stopPropagation();
         bersihkanSorotanMenu();
         
-        // --- TAMBAHKAN DUA BARIS PEREKAM INI ---
         sessionStorage.setItem('lastType', 'module');
         sessionStorage.setItem('lastModule', modulName);
-        // ---------------------------------------
         
-        // Tambahkan efek sorotan/warna (hanya jika yang diklik adalah menu sidebar)
         if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
             event.currentTarget.classList.add('selected');
         }
         
-        // 1. SEMBUNYIKAN SEMUA WADAH TERLEBIH DAHULU 
-        const semuaModul = ['defaultContent', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
-        
+        // KUNCI PERBAIKAN: modul_development sudah masuk di dalam daftar ini untuk disembunyikan
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
         });
         
-        // 2. TAMPILKAN HANYA YANG DIPILIH
         if(modulName === 'dashboard') {
             document.getElementById('defaultContent').classList.remove('hidden');
-        }
+        } 
         else if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
@@ -1308,18 +1303,13 @@
             document.getElementById('modul_pemeliharaan').classList.remove('hidden');
             if(typeof renderGrafikPemeliharaan === 'function') renderGrafikPemeliharaan();
         } 
-        
-        // ---> PERUBAHAN TAHAP AKHIR ADA DI SINI <---
         else if(modulName === 'pengajuan_perbaikan') {
             const wadahPerbaikan = document.getElementById('modul_pengajuan_perbaikan');
             if(wadahPerbaikan) {
                 wadahPerbaikan.classList.remove('hidden');
-                // Sistem memanggil 'siapkanForm' bukan 'muatData' lagi
                 if(typeof siapkanFormPerbaikan === 'function') siapkanFormPerbaikan();
             }
         }
-        // -------------------------------------------
-        
         else if(modulName === 'barang_rusak') {
             const wadahRusak = document.getElementById('modul_barang_rusak');
             if(wadahRusak) {
@@ -1332,6 +1322,37 @@
             if(wadahDaftarPemeliharaan) {
                 wadahDaftarPemeliharaan.classList.remove('hidden');
                 if(typeof muatDataDaftarPemeliharaan === 'function') muatDataDaftarPemeliharaan();
+            }
+        }
+        
+        closeSidebarMobile();
+    }
+
+    // ==========================================
+    // 2. FUNGSI BUKA KONTEN (MODUL TAHAP PENGEMBANGAN)
+    // ==========================================
+    function openContent(menuName, event) {
+        if(event) event.stopPropagation();
+        bersihkanSorotanMenu();
+        if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
+            event.currentTarget.classList.add('selected');
+        }
+        
+        sessionStorage.setItem('lastType', 'content');
+        sessionStorage.setItem('lastModule', menuName);
+        
+        // KUNCI PERBAIKAN: Semua wadah disembunyikan sebelum memunculkan halaman pengembangan
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan'];
+        semuaModul.forEach(id => {
+            const elemen = document.getElementById(id);
+            if(elemen) elemen.classList.add('hidden'); 
+        });
+        
+        const devPage = document.getElementById('modul_development');
+        if(devPage) {
+            devPage.classList.remove('hidden');
+            if(document.getElementById('devModuleName')) {
+                document.getElementById('devModuleName').innerText = menuName;
             }
         }
         
