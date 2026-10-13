@@ -368,22 +368,22 @@
 
             <!-- Modul Non Ops (Tabel Data) -->
             <div id="modul_nonops" class="hidden">
-               <div class="page-header">
+               <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
                     <h2>Pengelolaan Inventaris (Non Ops)</h2>
                     
-                    <!-- Wadah (flex) agar tombol sejajar ke samping -->
-                    <div style="display: flex; gap: 10px;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <!-- FITUR PENCARIAN -->
+                        <div style="display:flex; align-items:center; background:white; border:1px solid var(--border); border-radius:6px; padding:4px 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                            <span class="material-symbols-outlined" style="color:var(--text-muted); font-size:18px; margin-right:8px;">search</span>
+                            <input type="text" id="searchNonOps" onkeyup="renderTabelNonOps()" placeholder="Cari UAPKPB, Ruangan, Barang..." style="border:none; outline:none; background:transparent; width:220px; font-size:13px; padding:4px 0;">
+                        </div>
                         
-                        <!-- 1. Tombol Upload Excel -->
                         <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcel()">
                             <span class="material-symbols-outlined icon" style="font-size:18px;">upload_file</span>Upload Excel
                         </button>
-                        
-                        <!-- 2. Tombol Input Manual (TETAP ADA) -->
                         <button class="btn-add" onclick="bukaModalNonOps()">
                             <span class="material-symbols-outlined icon">add</span>Tambah Data
                         </button>
-                        
                     </div>
                 </div>
                 
@@ -414,9 +414,16 @@
             </div>
 <!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
             <div id="modul_ops" class="hidden">
-                <div class="page-header">
+                <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
                     <h2>Pengelolaan Inventaris (Ops / Habis Pakai)</h2>
-                    <div style="display: flex; gap: 10px;">
+                    
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <!-- FITUR PENCARIAN -->
+                        <div style="display:flex; align-items:center; background:white; border:1px solid var(--border); border-radius:6px; padding:4px 12px; transition: 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+                            <span class="material-symbols-outlined" style="color:var(--text-muted); font-size:18px; margin-right:8px;">search</span>
+                            <input type="text" id="searchOps" onkeyup="renderTabelOps()" placeholder="Cari Barang, Merk, Ruangan..." style="border:none; outline:none; background:transparent; width:220px; font-size:13px; padding:4px 0;">
+                        </div>
+
                         <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcelOps()">
                             <span class="material-symbols-outlined icon" style="font-size:18px;">upload_file</span>Upload Excel
                         </button>
@@ -997,36 +1004,67 @@
         const tbody = document.getElementById('tbodyNonOps');
         const kop = document.getElementById('kopUAPKPB');
         
+        // 1. Cek Hak Akses Edit (Hanya 3 level ini yang diizinkan)
+        const userLevel = sessionStorage.getItem('level');
+        const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
+        
+        // 2. Ambil Kata Kunci Pencarian
+        const searchInput = document.getElementById('searchNonOps');
+        const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+        
         let filteredData = dataNonOpsGlobal.filter(item => item.jenis === tabAktif);
+        
+        // 3. Proses Penyaringan Data (Real-time Filtering)
+        if (keyword) {
+            filteredData = filteredData.filter(item => 
+                (item.nama_barang || "").toString().toLowerCase().includes(keyword) ||
+                (item.kode_barang || "").toString().toLowerCase().includes(keyword) ||
+                (item.ruangan || "").toString().toLowerCase().includes(keyword) ||
+                (item.uapkpb || "").toString().toLowerCase().includes(keyword) ||
+                (item.kode_uapkpb || "").toString().toLowerCase().includes(keyword) ||
+                (item.kode_ruangan || "").toString().toLowerCase().includes(keyword) ||
+                (item.merk || "").toString().toLowerCase().includes(keyword)
+            );
+        }
+
         tbody.innerHTML = '';
         
         if (tabAktif === 'Aset') {
             kop.style.display = 'block';
             thead.innerHTML = `<tr><th>No</th><th>No. Pendaftaran</th><th>Nama Barang</th><th>Merk/Type</th><th>Kode Barang</th><th>Tahun</th><th>Jumlah</th><th>Kondisi</th><th>Aksi</th></tr>`;
             
+            // 4. KOP DINAMIS: Identitas KOP berubah mengikuti baris pertama dari data yang sedang dicari/difilter
             if(filteredData.length > 0) {
                 document.getElementById('lbl_namaUapkpb').innerText = filteredData[0].uapkpb || '-';
                 document.getElementById('lbl_kodeUapkpb').innerText = filteredData[0].kode_uapkpb || '-';
                 document.getElementById('lbl_namaRuang').innerText = filteredData[0].ruangan || '-';
                 document.getElementById('lbl_kodeRuang').innerText = filteredData[0].kode_ruangan || '-';
+            } else {
+                document.getElementById('lbl_namaUapkpb').innerText = '-';
+                document.getElementById('lbl_kodeUapkpb').innerText = '-';
+                document.getElementById('lbl_namaRuang').innerText = '-';
+                document.getElementById('lbl_kodeRuang').innerText = '-';
             }
             
-            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada data Aset.</td></tr>';
+            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>';
             
             filteredData.forEach((row, index) => {
+                // Tampilkan ikon Aksi HANYA jika canEdit = true
+                let actionHtml = canEdit ? `
+                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                    <button class="btn-icon" title="Keluarkan"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
+                ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
+
                 tbody.innerHTML += `<tr>
                     <td>${index + 1}</td>
-                    <td>${row.no_urut}</td>
+                    <td>${row.no_urut || '-'}</td>
                     <td><b>${row.nama_barang}</b></td>
                     <td>${row.merk}</td>
                     <td>${row.kode_barang}</td>
                     <td>${row.tahun}</td>
                     <td>${row.jumlah} ${row.satuan}</td>
                     <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
-                    <td class="action-btns">
-                        <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                        <button class="btn-icon" title="Keluarkan"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
-                    </td>
+                    <td class="action-btns">${actionHtml}</td>
                 </tr>`;
             });
             
@@ -1034,9 +1072,14 @@
             kop.style.display = 'none';
             thead.innerHTML = `<tr><th>No</th><th>Nama Barang</th><th>Merk/Type</th><th>Stok</th><th>Satuan</th><th>Lokasi/Gudang</th><th>Keterangan</th><th>Aksi</th></tr>`;
             
-            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Belum ada data Barang Habis Pakai.</td></tr>';
+            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>';
             
             filteredData.forEach((row, index) => {
+                let actionHtml = canEdit ? `
+                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                    <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
+                ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
+
                 tbody.innerHTML += `<tr>
                     <td>${index + 1}</td>
                     <td><b>${row.nama_barang}</b></td>
@@ -1045,10 +1088,7 @@
                     <td>${row.satuan}</td>
                     <td>${row.ruangan}</td>
                     <td>${row.keterangan}</td>
-                    <td class="action-btns">
-                        <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                        <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
-                    </td>
+                    <td class="action-btns">${actionHtml}</td>
                 </tr>`;
             });
         }
@@ -1258,23 +1298,50 @@
 
     function renderTabelOps() {
         const tbody = document.getElementById('tbodyOps');
-        tbody.innerHTML = '';
-        if(dataOpsGlobal.length === 0) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada data Barang Ops.</td></tr>'; return; }
         
-        dataOpsGlobal.forEach((row, index) => {
+        // 1. Cek Hak Akses Edit
+        const userLevel = sessionStorage.getItem('level');
+        const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
+        
+        // 2. Ambil Kata Kunci Pencarian
+        const searchInput = document.getElementById('searchOps');
+        const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+        
+        let filteredData = dataOpsGlobal;
+        
+        // 3. Filter Data Berdasarkan Pencarian
+        if (keyword) {
+            filteredData = filteredData.filter(item => 
+                (item.nama_barang || "").toString().toLowerCase().includes(keyword) ||
+                (item.kode_barang || "").toString().toLowerCase().includes(keyword) ||
+                (item.ruangan || "").toString().toLowerCase().includes(keyword) ||
+                (item.merk || "").toString().toLowerCase().includes(keyword)
+            );
+        }
+
+        tbody.innerHTML = '';
+        if(filteredData.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>'; 
+            return; 
+        }
+        
+        filteredData.forEach((row, index) => {
+            // Tampilkan tombol Aksi jika hak akses sesuai
+            let actionHtml = canEdit ? `
+                <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
+            ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
+
             tbody.innerHTML += `<tr>
                 <td>${index + 1}</td>
+                <td>${row.kode_barang || '-'}</td>
                 <td><b>${row.nama_barang}</b></td>
                 <td>${row.merk}</td>
                 <td style="font-weight:bold; color:var(--primary);">${row.jumlah}</td>
                 <td>${row.satuan}</td>
                 <td>${row.ruangan}</td>
                 <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
-                <td>${row.keterangan}</td>
-                <td class="action-btns">
-                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                    <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
-                </td>
+                <td class="action-btns">${actionHtml}</td>
             </tr>`;
         });
     }
