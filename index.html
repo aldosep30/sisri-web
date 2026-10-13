@@ -159,7 +159,17 @@
         .sidebar.collapsed .sidebar-header { justify-content: center; padding: 24px 10px; }
         .sidebar.collapsed .user-info { display: none !important; }
         .sidebar.collapsed .sidebar-header::before { display: none !important; }
+    /* --- ANTI-GLITCH LOGIN SCREEN --- */
+        html.user-logged-in body { background-color: var(--bg-body) !important; }
+        html.user-logged-in #authArea { display: none !important; }
+        html.user-logged-in #dashboardArea { display: flex !important; }
     </style>
+    <!-- SCRIPT CEGATAN SEBELUM RENDER (ANTI-GLITCH) -->
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            document.documentElement.classList.add('user-logged-in');
+        }
+    </script>
     <!-- LIBRARY SHEETJS UNTUK BACA/TULIS EXCEL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- LIBRARY CHART.JS UNTUK GRAFIK DASHBOARD -->
