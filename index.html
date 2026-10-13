@@ -154,6 +154,11 @@
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
         }
+        /* --- PERBAIKAN LOGO SIDEBAR --- */
+        .sidebar-header { display: flex; align-items: center; gap: 14px; padding: 24px 20px; }
+        .sidebar.collapsed .sidebar-header { justify-content: center; padding: 24px 10px; }
+        .sidebar.collapsed .user-info { display: none !important; }
+        .sidebar.collapsed .sidebar-header::before { display: none !important; }
     </style>
     <!-- LIBRARY SHEETJS UNTUK BACA/TULIS EXCEL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -218,9 +223,12 @@
     <!-- Sidebar UTUH (Berdasarkan HTML Lama) -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h3 id="displayName">Nama User</h3>
-            <p id="displayLevel">Level Akses</p>
-        </div>
+         <img src="logo SR.png" alt="Logo SR" style="width: 42px; height: auto;">
+         <div class="user-info">
+             <h3 id="displayName">Nama User</h3>
+             <p id="displayLevel">Level Akses</p>
+         </div>
+     </div>
 
         <ul class="menu-list" id="mainMenu">
             
