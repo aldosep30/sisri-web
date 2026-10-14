@@ -1079,7 +1079,21 @@
         </div> <!-- PENUTUP main-content (default content area) -->
     </div> <!-- PENUTUP dashboard-wrapper -->
 </div> <!-- PENUTUP container UTAMA -->
-
+<!-- ============================================== -->
+<!-- POP-UP MODAL KONFIRMASI AKSI (YAKIN / BELUM)   -->
+<!-- ============================================== -->
+<div class="modal-overlay hidden" id="modalKonfirmasiAksi" style="z-index: 9999;">
+    <div class="modal-card" style="max-width: 400px; text-align: center; padding: 32px 24px;">
+        <span class="material-symbols-outlined" style="font-size: 56px; color: #d97706; margin-bottom: 16px;">warning</span>
+        <h3 style="margin: 0 0 8px 0; color: var(--text-main); font-size: 20px;">Apakah Anda yakin?</h3>
+        <p id="teksKonfirmasiAksi" style="color: var(--text-muted); font-size: 14px; margin-bottom: 32px; line-height: 1.5;">Perubahan ini akan mempengaruhi data inventaris di dalam sistem.</p>
+        
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button class="btn-outline" style="width: 120px; border-color: #d1d5db; color: #4b5563; font-size: 15px;" onclick="tutupKonfirmasiAksi()">Belum</button>
+            <button class="btn-primary" style="width: 120px; margin: 0; background-color: #dc2626; font-size: 15px;" onclick="prosesKonfirmasiAksi()">Yakin</button>
+        </div>
+    </div>
+</div>
 <!-- ============================================== -->
 <!-- POP-UP MODAL UPLOAD EXCEL                      -->
 <!-- ============================================== -->
@@ -1645,13 +1659,16 @@
                 document.getElementById('lbl_kodeRuang').innerText = '-';
             }
             
-            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>';
+            if(filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>'; 
+                return;
+            }
             
             filteredData.forEach((row, index) => {
-                // Tampilkan ikon Aksi HANYA jika canEdit = true
+                // Tampilkan ikon Aksi HANYA jika canEdit = true (DENGAN FUNGSI KLIK)
                 let actionHtml = canEdit ? `
-                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                    <button class="btn-icon" title="Keluarkan"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
+                    <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit Aset: ${row.nama_barang}?', 'EditAset', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                    <button class="btn-icon" title="Keluarkan / Hapus" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengeluarkan Aset: ${row.nama_barang} dari sistem?', 'HapusAset', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
                 ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
 
                 tbody.innerHTML += `<tr>
@@ -1671,12 +1688,16 @@
             kop.style.display = 'none';
             thead.innerHTML = `<tr><th>No</th><th>Nama Barang</th><th>Merk/Type</th><th>Stok</th><th>Satuan</th><th>Lokasi/Gudang</th><th>Keterangan</th><th>Aksi</th></tr>`;
             
-            if(filteredData.length === 0) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>';
+            if(filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>'; 
+                return;
+            }
             
             filteredData.forEach((row, index) => {
+                // TOMBOL AKSI NON OPS (HABIS PAKAI)
                 let actionHtml = canEdit ? `
-                    <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                    <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
+                    <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Barang: ${row.nama_barang}?', 'EditHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                    <button class="btn-icon" title="Keluarkan / Kurangi" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengurangi/mengeluarkan stok Barang: ${row.nama_barang}?', 'HapusHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
                 ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
 
                 tbody.innerHTML += `<tr>
@@ -1895,7 +1916,7 @@
         }).catch(err => { document.getElementById('tbodyOps').innerHTML = '<tr><td colspan="9" style="text-align:center;color:red;">Gagal mengambil data.</td></tr>'; });
     }
 
-    function renderTabelOps() {
+function renderTabelOps() {
         const tbody = document.getElementById('tbodyOps');
         
         // 1. Cek Hak Akses Edit
@@ -1925,6 +1946,27 @@
         }
         
         filteredData.forEach((row, index) => {
+            // Tampilkan tombol Aksi (DENGAN FUNGSI KLIK)
+            let actionHtml = canEdit ? `
+                <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Ops: ${row.nama_barang}?', 'EditOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                <button class="btn-icon" title="Keluarkan / Hapus" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengeluarkan stok Ops: ${row.nama_barang}?', 'HapusOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
+            ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
+
+            tbody.innerHTML += `<tr>
+                <td>${index + 1}</td>
+                <td>${row.kode_barang || '-'}</td>
+                <td><b>${row.nama_barang}</b></td>
+                <td>${row.merk}</td>
+                <td style="font-weight:bold; color:var(--primary);">${row.jumlah}</td>
+                <td>${row.satuan}</td>
+                <td>${row.ruangan}</td>
+                <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
+                <td class="action-btns">${actionHtml}</td>
+            </tr>`;
+        });
+    }
+        
+        filteredData.forEach((row, index) => {
             // Tampilkan tombol Aksi jika hak akses sesuai
             let actionHtml = canEdit ? `
                 <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
@@ -1943,7 +1985,6 @@
                 <td class="action-btns">${actionHtml}</td>
             </tr>`;
         });
-    }
 
     function bukaModalOps() { document.getElementById('modalOps').classList.remove('hidden'); }
     
@@ -2681,6 +2722,43 @@
                 </td>
             </tr>`;
         });
+    }
+// ==========================================
+    // LOGIKA VALIDASI AKSI (YAKIN / BELUM)
+    // ==========================================
+    let aksiPending = null; 
+    let idTargetPending = "";
+
+    function bukaKonfirmasiAksi(pesan, jenisAksi, idTarget) {
+        document.getElementById('teksKonfirmasiAksi').innerText = pesan;
+        aksiPending = jenisAksi;          // Simpan jenis operasi
+        idTargetPending = idTarget;       // Simpan kode barangnya
+        document.getElementById('modalKonfirmasiAksi').classList.remove('hidden');
+    }
+
+    function tutupKonfirmasiAksi() {
+        document.getElementById('modalKonfirmasiAksi').classList.add('hidden');
+        aksiPending = null;
+        idTargetPending = "";
+    }
+
+    function prosesKonfirmasiAksi() {
+        tutupKonfirmasiAksi(); // Sembunyikan Pop-up
+        
+        // Eksekusi lanjutan sesuai aksi yang dikonfirmasi pengguna
+        if (aksiPending === 'EditAset') {
+            alert("Fitur Form Edit untuk Aset [" + idTargetPending + "] segera siap.");
+        } else if (aksiPending === 'HapusAset') {
+            alert("Data Aset [" + idTargetPending + "] siap dihapus dari sistem.");
+        } else if (aksiPending === 'EditHabisPakai') {
+            alert("Fitur Form Edit untuk Barang [" + idTargetPending + "] segera siap.");
+        } else if (aksiPending === 'HapusHabisPakai') {
+            alert("Stok Barang [" + idTargetPending + "] siap dikurangi.");
+        } else if (aksiPending === 'EditOps') {
+            alert("Fitur Form Edit Ops [" + idTargetPending + "] segera siap.");
+        } else if (aksiPending === 'HapusOps') {
+            alert("Data Ops [" + idTargetPending + "] siap dihapus dari sistem.");
+        }
     }
 </script>
 </body>
