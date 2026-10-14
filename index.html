@@ -241,6 +241,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Library SheetJS untuk Baca Excel di Browser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -660,51 +661,48 @@
                     </table>
                 </div>
             </div>
+           <!-- ================================================= -->
+            <!-- MODUL DATA SISWA (PUSAT KENDALI EXCEL)            -->
             <!-- ================================================= -->
-            <!-- MODUL DATA SISWA (MASTER DATABASE)                -->
-            <!-- ================================================= -->
-            <div id="modalFormSiswa" class="modal-overlay hidden">
+            <div id="modul_data_siswa" class="hidden main-content">
                 <div class="page-header">
                     <div>
-                        <h2>Data Siswa</h2>
-                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Pusat manajemen biodata dan rekam fisik/kesehatan siswa.</p>
+                        <h2>Pusat Data Siswa</h2>
+                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Gunakan template Excel untuk memperbarui data secara massal (Auto-Update via NISN).</p>
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="btn-outline" style="display: flex; align-items: center; gap: 6px; color: #166534; border-color: #bbf7d0; background: #f0fdf4;" onclick="downloadExcelSiswa()">
-                            <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Download Excel
+                        <!-- Tombol Download (Sekarang Terkunci dengan class 'admin-siswa') -->
+                        <button class="btn-outline admin-siswa" style="display: flex; align-items: center; gap: 6px; color: #166534; border-color: #bbf7d0; background: #f0fdf4;" onclick="alert('Fitur download template segera diaktifkan')">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Download Template
                         </button>
                         
-                        <!-- Tombol Upload & Tambah (Dibatasi hak akses via class admin-action) -->
-                        <button class="btn-outline admin-action" style="display: flex; align-items: center; gap: 6px; color: #0284c7; border-color: #bae6fd; background: #e0f2fe;" onclick="document.getElementById('uploadExcelSiswa').click()">
-                            <span class="material-symbols-outlined" style="font-size: 18px;">upload</span> Upload Update
+                        <!-- Tombol Upload (Terkunci dengan class 'admin-siswa') -->
+                        <button class="btn-add admin-siswa" style="display: flex; align-items: center; gap: 6px; background: #0284c7;" onclick="document.getElementById('uploadExcelSiswa').click()">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">upload</span> Upload Excel
                         </button>
-                        <input type="file" id="uploadExcelSiswa" accept=".xlsx, .xls, .csv" style="display: none;" onchange="prosesUploadSiswa(event)">
-                        
-                        <button class="btn-add admin-action" onclick="bukaModalSiswa()">
-                            <span class="material-symbols-outlined icon" style="font-size: 18px;">person_add</span> Tambah Siswa
-                        </button>
+                        <input type="file" id="uploadExcelSiswa" accept=".xlsx, .xls" style="display: none;" onchange="prosesUploadSiswa(event)">
                     </div>
                 </div>
 
-                <div class="content-card" style="padding: 0;">
-                    <div class="table-responsive">
-                        <table id="tabelDataSiswa">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>NISN</th>
-                                    <th>Nama Lengkap</th>
-                                    <th>Jenjang</th>
-                                    <th>Kelas</th>
-                                    <th>Wali Asuh</th>
-                                    <th>Status Gizi</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bodyTableSiswa">
-                                <tr><td colspan="8" style="text-align: center;">Mencari data siswa...</td></tr>
-                            </tbody>
-                        </table>
+                <!-- Notifikasi Status Upload -->
+                <div id="statusUploadSiswa" style="margin-bottom: 24px; padding: 16px; border-radius: 12px; display: none; text-align: center; font-weight: 600; font-size: 15px;"></div>
+
+                <!-- Tombol Shortcut ke Submenu SRMP & SRMA -->
+                <div class="stats-grid">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openModule('siswa_srmp', event)">
+                        <div class="stat-icon bg-light-green"><span class="material-symbols-outlined text-green">school</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title text-green">Lihat Data SRMP</p>
+                            <h3 class="stat-value" style="font-size: 20px;">Siswa SMP</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openModule('siswa_srma', event)">
+                        <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined text-blue">school</span></div>
+                        <div class="stat-info">
+                            <p class="stat-title text-blue">Lihat Data SRMA</p>
+                            <h3 class="stat-value" style="font-size: 20px;">Siswa SMA</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1437,6 +1435,7 @@
             const wadahSiswa = document.getElementById('modul_data_siswa');
             if(wadahSiswa) {
                 wadahSiswa.classList.remove('hidden');
+                cekAksesDataSiswa(); // <-- Panggil fungsi pengecek akses di sini!
             }
         }
         
@@ -2287,6 +2286,76 @@
         } else {
             elemenAdmin.forEach(el => el.style.display = '');
         }
+    }
+// ==========================================
+    // LOGIKA KEAMANAN & UPLOAD DATA SISWA
+    // ==========================================
+    
+    // 1. Fungsi Cek Hak Akses (Menyembunyikan tombol upload untuk level biasa)
+    function cekAksesDataSiswa() {
+        const userLevel = sessionStorage.getItem('level');
+        const levelDizinkan = ["Kepala Sekolah", "Wakasek Kesiswaan", "Operator Sekolah"];
+        const tombolAdmin = document.querySelectorAll('.admin-siswa');
+        
+        tombolAdmin.forEach(tombol => {
+            if (levelDizinkan.includes(userLevel)) {
+                tombol.style.display = 'flex'; // Munculkan jika berhak
+            } else {
+                tombol.style.display = 'none'; // Sembunyikan jika tidak berhak
+            }
+        });
+    }
+
+    // 2. Mesin Pembaca dan Pengirim Excel (Anti-Double NISN)
+    function prosesUploadSiswa(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const statusDiv = document.getElementById('statusUploadSiswa');
+        statusDiv.style.display = 'block';
+        statusDiv.style.backgroundColor = '#e0f2fe';
+        statusDiv.style.color = '#0284c7';
+        statusDiv.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">sync</span>Membaca file Excel dan menyinkronkan data... Mohon tunggu.';
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            
+            // Konversi Excel ke JSON
+            const dataJSON = XLSX.utils.sheet_to_json(firstSheet, {defval: ""});
+
+            if(dataJSON.length === 0) {
+                statusDiv.style.backgroundColor = '#fee2e2'; statusDiv.style.color = '#dc2626';
+                statusDiv.innerText = 'Gagal: File Excel kosong atau format tidak sesuai.';
+                return;
+            }
+
+            // Kirim ke Google Apps Script (Kode.gs)
+            fetch(scriptURL, { 
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "sinkronisasi_siswa", data: dataJSON })
+            })
+            .then(res => res.json())
+            .then(hasil => {
+                if(hasil.status === 'berhasil') {
+                    statusDiv.style.backgroundColor = '#dcfce7'; statusDiv.style.color = '#15803d';
+                    statusDiv.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">check_circle</span>Berhasil! ' + hasil.pesan;
+                } else {
+                    statusDiv.style.backgroundColor = '#fee2e2'; statusDiv.style.color = '#dc2626';
+                    statusDiv.innerText = 'Gagal: ' + hasil.pesan;
+                }
+                document.getElementById('uploadExcelSiswa').value = ""; // Reset input
+            })
+            .catch(err => {
+                statusDiv.style.backgroundColor = '#fee2e2'; statusDiv.style.color = '#dc2626';
+                statusDiv.innerText = 'Terjadi kesalahan jaringan saat mengunggah.';
+                document.getElementById('uploadExcelSiswa').value = "";
+            });
+        };
+        reader.readAsArrayBuffer(file);
     }
 </script>
 </body>
