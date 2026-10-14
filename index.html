@@ -663,25 +663,30 @@
                 </div>
             </div>
            <!-- ================================================= -->
-            <!-- MODUL DATA SISWA (PUSAT KENDALI EXCEL)            -->
+            <!-- MODUL DATA SISWA (PUSAT KENDALI EXCEL & MANUAL)   -->
             <!-- ================================================= -->
-            <div id="modul_data_siswa" class="hidden">
+            <div id="modul_data_siswa" class="hidden main-content">
                 <div class="page-header">
                     <div>
                         <h2>Pusat Data Siswa</h2>
-                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Gunakan template Excel untuk memperbarui data secara massal (Auto-Update via NISN).</p>
+                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Kelola data siswa secara manual atau gunakan template Excel untuk update massal.</p>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <!-- Tombol Download (Sekarang Terkunci dengan class 'admin-siswa') -->
-                        <button class="btn-outline admin-siswa" style="display: flex; align-items: center; gap: 6px; color: #166534; border-color: #bbf7d0; background: #f0fdf4;" onclick="alert('Fitur download template segera diaktifkan')">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <!-- Tombol Download Template (Terkunci) -->
+                        <button class="btn-outline admin-siswa" style="display: flex; align-items: center; gap: 6px; color: #166534; border-color: #bbf7d0; background: #f0fdf4;" onclick="unduhTemplateExcelSiswa()">
                             <span class="material-symbols-outlined" style="font-size: 18px;">download</span> Download Template
                         </button>
                         
-                        <!-- Tombol Upload (Terkunci dengan class 'admin-siswa') -->
-                        <button class="btn-add admin-siswa" style="display: flex; align-items: center; gap: 6px; background: #0284c7;" onclick="document.getElementById('uploadExcelSiswa').click()">
+                        <!-- Tombol Upload Excel (Terkunci) -->
+                        <button class="btn-outline admin-siswa" style="display: flex; align-items: center; gap: 6px; color: #0284c7; border-color: #bae6fd; background: #e0f2fe;" onclick="document.getElementById('uploadExcelSiswa').click()">
                             <span class="material-symbols-outlined" style="font-size: 18px;">upload</span> Upload Excel
                         </button>
                         <input type="file" id="uploadExcelSiswa" accept=".xlsx, .xls" style="display: none;" onchange="prosesUploadSiswa(event)">
+                        
+                        <!-- Tombol Tambah Manual (Terkunci) -->
+                        <button class="btn-add admin-siswa" onclick="bukaModalSiswa()">
+                            <span class="material-symbols-outlined icon" style="font-size: 18px;">person_add</span> Tambah Siswa
+                        </button>
                     </div>
                 </div>
 
@@ -691,29 +696,61 @@
                 <!-- Tombol Shortcut ke Submenu SRMP & SRMA -->
                 <div class="stats-grid">
                     <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openContent('Siswa SRMP', event)">
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openContent('Siswa SRMA', event)"></div>
                         <div class="stat-icon bg-light-green"><span class="material-symbols-outlined text-green">school</span></div>
                         <div class="stat-info">
-                            <p class="stat-title text-green">Lihat Data SRMP</p>
+                            <p class="stat-title text-green">Lihat Data Khusus</p>
                             <h3 class="stat-value" style="font-size: 20px;">Siswa SMP</h3>
                         </div>
                     </div>
                     
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openModule('siswa_srma', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openContent('Siswa SRMA', event)">
                         <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined text-blue">school</span></div>
                         <div class="stat-info">
-                            <p class="stat-title text-blue">Lihat Data SRMA</p>
+                            <p class="stat-title text-blue">Lihat Data Khusus</p>
                             <h3 class="stat-value" style="font-size: 20px;">Siswa SMA</h3>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- MODAL FORMULIR DATA SISWA (Pop-up) -->
+                <!-- TABEL RINGKASAN SELURUH DATA SISWA -->
+                <div class="content-card" style="padding: 0; margin-top: 24px;">
+                    <div class="page-header" style="padding: 16px 24px; border-bottom: 1px solid var(--border); margin:0; display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin: 0; font-size: 16px; color: var(--text-main);">Daftar Rekapitulasi Seluruh Siswa</h3>
+                        <div style="display:flex; align-items:center; background:#f9fafb; border:1px solid var(--border); border-radius:6px; padding:4px 12px;">
+                            <span class="material-symbols-outlined" style="color:var(--text-muted); font-size:18px; margin-right:8px;">search</span>
+                            <input type="text" id="searchSiswa" onkeyup="renderTabelSiswa()" placeholder="Cari Nama, NISN, Kelas..." style="border:none; outline:none; background:transparent; width:200px; font-size:13px; padding:4px 0;">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="tabelDataSiswa">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>NISN</th>
+                                    <th>Jenjang</th>
+                                    <th>Kelas</th>
+                                    <th>Asrama</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Wali Asuh</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyDataSiswa">
+                                <tr><td colspan="9" style="text-align: center; padding: 20px;">Mengambil data dari server...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- PENUTUP MODUL DATA SISWA -->
+
+            <!-- ================================================= -->
+            <!-- MODAL FORMULIR DATA SISWA (Pop-up Input Manual)   -->
+            <!-- ================================================= -->
             <div id="modalFormSiswa" class="modal-overlay hidden">
                 <div class="modal-card" style="max-width: 850px;">
                     <div class="modal-header">
-                        <h3 id="modalSiswaTitle">Formulir Data Siswa</h3>
+                        <h3 id="modalSiswaTitle">Formulir Input Data Siswa</h3>
                         <button class="close-btn" onclick="tutupModalSiswa()">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -722,8 +759,8 @@
                             
                             <h4 style="margin: 0 0 16px 0; color: var(--primary); border-bottom: 2px solid var(--primary-light); padding-bottom: 8px;">I. Biodata Siswa</h4>
                             <div class="form-grid">
-                                <div class="form-group full-width"><label>Nama Lengkap</label><input type="text" id="siswa_nama" required></div>
-                                <div class="form-group"><label>NISN</label><input type="text" id="siswa_nisn" required placeholder="Gunakan NISN valid"></div>
+                                <div class="form-group full-width"><label>Nama Lengkap *</label><input type="text" id="siswa_nama" required></div>
+                                <div class="form-group"><label>NISN *</label><input type="text" id="siswa_nisn" required placeholder="Nomor unik sistem"></div>
                                 <div class="form-group"><label>NIK</label><input type="number" id="siswa_nik"></div>
                                 <div class="form-group"><label>Nomor KK</label><input type="number" id="siswa_kk"></div>
                                 <div class="form-group"><label>Tempat Lahir</label><input type="text" id="siswa_tempat_lahir"></div>
@@ -737,8 +774,8 @@
                                 </div>
                                 <div class="form-group"><label>Anak Ke-</label><input type="number" id="siswa_anak_ke"></div>
                                 <div class="form-group full-width"><label>Alamat Lengkap</label><textarea id="siswa_alamat" rows="2"></textarea></div>
-                                <div class="form-group"><label>Jenjang</label>
-                                    <select id="siswa_jenjang"><option value="">-- Pilih --</option><option value="SRMP">SRMP (Menengah Pertama)</option><option value="SRMA">SRMA (Menengah Atas)</option></select>
+                                <div class="form-group"><label>Jenjang *</label>
+                                    <select id="siswa_jenjang" required><option value="">-- Pilih --</option><option value="SRMP">SRMP (Menengah Pertama)</option><option value="SRMA">SRMA (Menengah Atas)</option></select>
                                 </div>
                                 <div class="form-group"><label>Kelas</label><input type="text" id="siswa_kelas" placeholder="Cth: 7A / 10 MIPA"></div>
                                 <div class="form-group"><label>Wali Asuh</label><input type="text" id="siswa_wali"></div>
@@ -762,10 +799,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn-outline" onclick="tutupModalSiswa()">Batal</button>
-                        <button type="button" class="btn-add admin-action" onclick="simpanDataSiswa()">Simpan Data</button>
+                        <button type="button" class="btn-add admin-siswa" onclick="simpanDataSiswa()" id="btnSimpanSiswa">Simpan Data Siswa</button>
                     </div>
                 </div>
-            </div>
+            </div> <!-- PENUTUP MODAL FORM SISWA -->
 <!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
             <div id="modul_ops" class="hidden">
                 <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
@@ -1437,7 +1474,8 @@
             const wadahSiswa = document.getElementById('modul_data_siswa');
             if(wadahSiswa) {
                 wadahSiswa.classList.remove('hidden');
-                cekAksesDataSiswa(); // <-- Panggil fungsi pengecek akses di sini!
+                cekAksesDataSiswa(); // Cek gembok keamanan
+                if(typeof muatDataSiswa === 'function') muatDataSiswa(); // Tarik data untuk tabel
             }
         }
         
@@ -2358,6 +2396,150 @@
             });
         };
         reader.readAsArrayBuffer(file);
+    }
+// ==========================================
+    // LOGIKA MODUL DATA SISWA (MASTER & FORMULIR)
+    // ==========================================
+    
+    let dataSiswaGlobal = [];
+
+    // 1. Fungsi Unduh Template Excel Otomatis (Menggunakan SheetJS)
+    function unduhTemplateExcelSiswa() {
+        // Baris 1 wajib sama persis dengan judul kolom di Google Sheets
+        let ws_data = [[
+            'ID_Siswa', 'Nama_Lengkap', 'NISN', 'NIK', 'No_KK', 'Tempat_Lahir', 'Tanggal_Lahir', 'Usia', 
+            'Jenis_Kelamin', 'Agama', 'Anak_Ke', 'Alamat', 'Jenjang', 'Kelas', 'Wali_Asuh', 'Asrama', 
+            'Tinggi_Badan', 'Berat_Badan', 'IMT', 'Status_Gizi', 'Kondisi_Fisik', 'Ukuran_Baju', 'Ukuran_Celana', 'Ukuran_Sepatu'
+        ]];
+        
+        // Baris 2 berisi contoh pengisian
+        ws_data.push([
+            '', 'Budi Santoso', '0051234567', '3271012345678901', '3271019876543210', 'Bogor', '2008-05-15', '18 Tahun',
+            'Laki-laki', 'Islam', '1', 'Jl. Merdeka No.1', 'SRMA', '10 MIPA 1', 'Pak Ali', 'Asrama Putra 1',
+            '165', '55.5', '20.4', 'Normal (Sehat)', 'Tidak ada', 'L', '32', '42'
+        ]);
+
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template_Siswa");
+        
+        // Lebarkan kolom agar rapi
+        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
+        
+        XLSX.writeFile(wb, "Template_Upload_Data_Siswa.xlsx");
+    }
+
+    // 2. Fungsi Menarik Data Siswa dari Server untuk Tabel
+    function muatDataSiswa() {
+        document.getElementById('tbodyDataSiswa').innerHTML = '<tr><td colspan="9" style="text-align:center;">Mengambil data siswa dari server...</td></tr>';
+        
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "get_siswa" }) // Nanti kita buat fungsi get_siswa di Kode.gs
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                dataSiswaGlobal = data.data; 
+                renderTabelSiswa(); 
+            } else {
+                document.getElementById('tbodyDataSiswa').innerHTML = '<tr><td colspan="9" style="text-align:center;">Belum ada data siswa di database.</td></tr>';
+            }
+        }).catch(err => {
+            document.getElementById('tbodyDataSiswa').innerHTML = '<tr><td colspan="9" style="text-align:center;color:red;">Belum ada data / Gagal terhubung ke server.</td></tr>';
+        });
+    }
+
+    // 3. Fungsi Menampilkan Data Siswa ke Tabel HTML (Real-time Filter)
+    function renderTabelSiswa() {
+        const tbody = document.getElementById('tbodyDataSiswa');
+        const userLevel = sessionStorage.getItem('level');
+        const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Kesiswaan'].includes(userLevel);
+        
+        const searchInput = document.getElementById('searchSiswa');
+        const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+        
+        let filteredData = dataSiswaGlobal;
+        
+        if (keyword) {
+            filteredData = filteredData.filter(item => 
+                (item.Nama_Lengkap || "").toString().toLowerCase().includes(keyword) ||
+                (item.NISN || "").toString().toLowerCase().includes(keyword) ||
+                (item.Kelas || "").toString().toLowerCase().includes(keyword) ||
+                (item.Jenjang || "").toString().toLowerCase().includes(keyword)
+            );
+        }
+
+        tbody.innerHTML = '';
+        
+        if(filteredData.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data siswa tidak ditemukan.</td></tr>'; 
+            return; 
+        }
+        
+        filteredData.forEach((row, index) => {
+            let actionHtml = canEdit ? `
+                <button class="btn-icon" title="Edit Data" onclick="alert('Fitur edit satuan segera diaktifkan')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+            ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600;">Hanya Lihat</span>`;
+
+            tbody.innerHTML += `<tr>
+                <td>${index + 1}</td>
+                <td><b>${row.Nama_Lengkap || '-'}</b></td>
+                <td>${row.NISN || '-'}</td>
+                <td><span style="background:#f3e8ff; color:#7e22ce; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600;">${row.Jenjang || '-'}</span></td>
+                <td>${row.Kelas || '-'}</td>
+                <td>${row.Asrama || '-'}</td>
+                <td>${row.Jenis_Kelamin || '-'}</td>
+                <td>${row.Wali_Asuh || '-'}</td>
+                <td class="action-btns">${actionHtml}</td>
+            </tr>`;
+        });
+    }
+
+    // 4. Buka / Tutup Modal Input Manual
+    function bukaModalSiswa() {
+        document.getElementById('formSiswa').reset();
+        document.getElementById('siswa_id').value = "";
+        document.getElementById('modalSiswaTitle').innerText = "Tambah Data Siswa Baru";
+        document.getElementById('modalFormSiswa').classList.remove('hidden');
+    }
+    
+    function tutupModalSiswa() { 
+        document.getElementById('modalFormSiswa').classList.add('hidden'); 
+    }
+
+    // 5. Kalkulator Usia
+    function hitungUsia() {
+        const tglLahir = document.getElementById('siswa_tgl_lahir').value;
+        if(tglLahir) {
+            const birthDate = new Date(tglLahir); const today = new Date();
+            let ageYears = today.getFullYear() - birthDate.getFullYear();
+            let ageMonths = today.getMonth() - birthDate.getMonth();
+            if (ageMonths < 0 || (ageMonths === 0 && today.getDate() < birthDate.getDate())) { ageYears--; ageMonths += 12; }
+            if (today.getDate() < birthDate.getDate()) ageMonths--;
+            document.getElementById('siswa_usia').value = `${ageYears} Thn, ${ageMonths} Bln`;
+        }
+    }
+
+    // 6. Kalkulator IMT
+    function hitungIMT() {
+        const tinggi = parseFloat(document.getElementById('siswa_tinggi').value);
+        const berat = parseFloat(document.getElementById('siswa_berat').value);
+        if (tinggi > 0 && berat > 0) {
+            const imt = berat / ((tinggi/100) * (tinggi/100));
+            document.getElementById('siswa_imt').value = imt.toFixed(1);
+            let status = "Obesitas";
+            if (imt < 17.0) status = "Kurus (Tingkat Berat)";
+            else if (imt <= 18.4) status = "Kurus (Tingkat Ringan)";
+            else if (imt <= 25.0) status = "Normal (Sehat)";
+            else if (imt <= 27.0) status = "Gemuk (Kelebihan Ringan)";
+            document.getElementById('siswa_gizi').value = status;
+        } else {
+            document.getElementById('siswa_imt').value = ""; document.getElementById('siswa_gizi').value = "";
+        }
+    }
+
+    // 7. Simpan Input Manual (Belum dikirim ke backend, menunggu backend siap)
+    function simpanDataSiswa() {
+        alert("Fitur simpan manual akan segera diaktifkan setelah database siap!");
     }
 </script>
 </body>
