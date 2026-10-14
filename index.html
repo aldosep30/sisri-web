@@ -1715,50 +1715,50 @@
         }
     }
 
-    function bukaModalNonOps() {
+  function bukaModalNonOps() {
         document.getElementById('modalNonOps').classList.remove('hidden');
         document.getElementById('inJenis').value = tabAktif; 
         sesuaikanFormInput();
+        
+        // Reset jika form dibuka untuk TAMBAH BARU (bukan edit)
+        if(aksiPending === null) {
+            document.getElementById('modalTitle').innerText = "Tambah Inventaris Baru";
+            const btn = document.getElementById('btnSimpanNonOps');
+            btn.innerText = "Simpan Data";
+            btn.removeAttribute('data-edit-id');
+            document.querySelectorAll('#modalNonOps input, #modalNonOps textarea').forEach(el => el.value = '');
+        }
     }
-    function tutupModalNonOps() { document.getElementById('modalNonOps').classList.add('hidden'); }
+    
+    function tutupModalNonOps() { 
+        document.getElementById('modalNonOps').classList.add('hidden'); 
+        aksiPending = null; 
+    }
     
     function sesuaikanFormInput() {
         const jenis = document.getElementById('inJenis').value;
         const elemenAset = document.querySelectorAll('.aset-only');
-        const selectKondisi = document.getElementById('inKondisi'); // Penambahan elemen dropdown
+        const selectKondisi = document.getElementById('inKondisi'); 
         
         if(jenis === 'Habis Pakai') {
-            // Pengaturan UI khusus Habis Pakai
             elemenAset.forEach(el => el.style.display = 'none');
             document.getElementById('labelRuangan').innerText = "Lokasi Penyimpanan (Gudang/Dapur)";
-            
-            // Ubah opsi Kondisi hanya jadi 2 pilihan
-            selectKondisi.innerHTML = `
-                <option value="Baik">Baik</option>
-                <option value="Rusak">Rusak</option>
-            `;
+            selectKondisi.innerHTML = `<option value="Baik">Baik</option><option value="Rusak">Rusak</option>`;
         } else {
-            // Pengaturan UI khusus Aset (KIR)
             elemenAset.forEach(el => el.style.display = 'block');
             document.getElementById('labelRuangan').innerText = "Nama Ruangan";
-            
-            // Kembalikan opsi Kondisi lengkap 3 pilihan
-            selectKondisi.innerHTML = `
-                <option value="Baik">Baik</option>
-                <option value="Dalam Perbaikan">Dalam Perbaikan</option>
-                <option value="Rusak">Rusak</option>
-            `;
+            selectKondisi.innerHTML = `<option value="Baik">Baik</option><option value="Dalam Perbaikan">Dalam Perbaikan</option><option value="Rusak">Rusak</option>`;
         }
     }
 
     function simpanDataNonOps() {
         const btn = document.getElementById('btnSimpanNonOps');
-        const userLog = sessionStorage.getItem('username');
-        const levelLog = sessionStorage.getItem('level');
+        const editId = btn.getAttribute('data-edit-id'); // Mengecek apakah mode EDIT atau TAMBAH BARU
         
         const payload = {
-            action: "add_nonops",
-            user_penginput: userLog, user_level: levelLog,
+            action: editId ? "edit_nonops" : "add_nonops",
+            id_target: editId || "", // Menyimpan ID Barang lama yang mau diedit
+            user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'),
             jenis: document.getElementById('inJenis').value,
             uapkpb: document.getElementById('inUapkpb').value,
             kode_uapkpb: document.getElementById('inKodeUapkpb').value,
@@ -1783,12 +1783,11 @@
             method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payload)
         }).then(res => res.json()).then(data => {
-            btn.disabled = false; btn.innerText = "Simpan Data";
+            btn.disabled = false; btn.innerText = editId ? "Update Data" : "Simpan Data";
             if(data.status === "berhasil") {
                 tutupModalNonOps();
                 muatDataNonOps(); 
-                alert("Data berhasil ditambahkan!");
-                document.getElementById('inNama').value = ''; document.getElementById('inJumlah').value = '';
+                alert(editId ? "Data berhasil di-update!" : "Data berhasil ditambahkan!");
             } else { alert("Gagal: " + data.pesan); }
         }).catch(err => { btn.disabled = false; btn.innerText = "Simpan Data"; alert("Error koneksi!"); });
     }
@@ -1967,27 +1966,41 @@ function renderTabelOps() {
         });
     }
 
-    function bukaModalOps() { document.getElementById('modalOps').classList.remove('hidden'); }
+   function bukaModalOps() { 
+        document.getElementById('modalOps').classList.remove('hidden'); 
+        
+        if(aksiPending === null) {
+            document.querySelector('#modalOps h3').innerText = "Tambah Barang Ops Baru";
+            const btn = document.getElementById('btnSimpanOps');
+            btn.innerText = "Simpan Data";
+            btn.removeAttribute('data-edit-id');
+            document.querySelectorAll('#modalOps input, #modalOps textarea').forEach(el => el.value = '');
+        }
+    }
     
     function simpanDataOps() {
         const btn = document.getElementById('btnSimpanOps');
+        const editId = btn.getAttribute('data-edit-id');
+        
         const payload = {
-            action: "add_ops",
+            action: editId ? "edit_ops" : "add_ops",
+            id_target: editId || "",
             user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'),
             nama_barang: document.getElementById('inNamaOps').value, merk: document.getElementById('inMerkOps').value,
             ruangan: document.getElementById('inRuanganOps').value, jumlah: document.getElementById('inJumlahOps').value,
             satuan: document.getElementById('inSatuanOps').value, kondisi: document.getElementById('inKondisiOps').value,
             keterangan: document.getElementById('inKeteranganOps').value
         };
+        
         if(!payload.nama_barang || !payload.jumlah) { alert("Nama barang dan Jumlah wajib diisi!"); return; }
         btn.disabled = true; btn.innerText = "Menyimpan...";
         fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
         }).then(res => res.json()).then(data => {
-            btn.disabled = false; btn.innerText = "Simpan Data";
+            btn.disabled = false; btn.innerText = editId ? "Update Data" : "Simpan Data";
             if(data.status === "berhasil") {
                 document.getElementById('modalOps').classList.add('hidden');
-                alert("Data berhasil ditambahkan!"); muatDataOps(); 
-                document.getElementById('inNamaOps').value = ''; document.getElementById('inJumlahOps').value = '';
+                aksiPending = null;
+                alert(editId ? "Data berhasil di-update!" : "Data berhasil ditambahkan!"); muatDataOps(); 
             } else { alert("Gagal: " + data.pesan); }
         }).catch(err => { btn.disabled = false; btn.innerText = "Simpan Data"; alert("Error koneksi!"); });
     }
@@ -2726,20 +2739,84 @@ function renderTabelOps() {
     function prosesKonfirmasiAksi() {
         tutupKonfirmasiAksi(); // Sembunyikan Pop-up
         
-        // Eksekusi lanjutan sesuai aksi yang dikonfirmasi pengguna
-        if (aksiPending === 'EditAset') {
-            alert("Fitur Form Edit untuk Aset [" + idTargetPending + "] segera siap.");
-        } else if (aksiPending === 'HapusAset') {
-            alert("Data Aset [" + idTargetPending + "] siap dihapus dari sistem.");
-        } else if (aksiPending === 'EditHabisPakai') {
-            alert("Fitur Form Edit untuk Barang [" + idTargetPending + "] segera siap.");
-        } else if (aksiPending === 'HapusHabisPakai') {
-            alert("Stok Barang [" + idTargetPending + "] siap dikurangi.");
-        } else if (aksiPending === 'EditOps') {
-            alert("Fitur Form Edit Ops [" + idTargetPending + "] segera siap.");
+        // 1. JIKA AKSI ADALAH EDIT (NON OPS / ASET)
+        if (aksiPending === 'EditAset' || aksiPending === 'EditHabisPakai') {
+            const item = dataNonOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === idTargetPending);
+            if(item) {
+                bukaModalNonOps(); // Buka Form
+                document.getElementById('modalTitle').innerText = "Edit Data Inventaris";
+                document.getElementById('inJenis').value = item.jenis;
+                sesuaikanFormInput();
+                
+                // Isi form dengan data lama
+                document.getElementById('inUapkpb').value = item.uapkpb || "";
+                document.getElementById('inKodeUapkpb').value = item.kode_uapkpb || "";
+                document.getElementById('inNoUrut').value = item.no_urut || "";
+                document.getElementById('inKodeBarang').value = item.kode_barang || "";
+                document.getElementById('inTahun').value = item.tahun || "";
+                document.getElementById('inNama').value = item.nama_barang || "";
+                document.getElementById('inMerk').value = item.merk || "";
+                document.getElementById('inRuangan').value = item.ruangan || "";
+                document.getElementById('inKodeRuang').value = item.kode_ruangan || "";
+                document.getElementById('inJumlah').value = item.jumlah || "";
+                document.getElementById('inSatuan').value = item.satuan || "";
+                document.getElementById('inPenguasaan').value = item.penguasaan || "";
+                document.getElementById('inKondisi').value = item.kondisi || "";
+                document.getElementById('inKeterangan').value = item.keterangan || "";
+                
+                // Ubah status tombol simpan menjadi mode Update
+                const btn = document.getElementById('btnSimpanNonOps');
+                btn.innerText = "Update Data";
+                btn.setAttribute('data-edit-id', idTargetPending);
+            }
+        } 
+        // 2. JIKA AKSI ADALAH EDIT (OPS / HABIS PAKAI)
+        else if (aksiPending === 'EditOps') {
+            const item = dataOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === idTargetPending);
+            if(item) {
+                bukaModalOps();
+                document.querySelector('#modalOps h3').innerText = "Edit Barang Ops";
+                
+                document.getElementById('inNamaOps').value = item.nama_barang || "";
+                document.getElementById('inMerkOps').value = item.merk || "";
+                document.getElementById('inRuanganOps').value = item.ruangan || "";
+                document.getElementById('inJumlahOps').value = item.jumlah || "";
+                document.getElementById('inSatuanOps').value = item.satuan || "";
+                document.getElementById('inKondisiOps').value = item.kondisi || "";
+                document.getElementById('inKeteranganOps').value = item.keterangan || "";
+                
+                const btn = document.getElementById('btnSimpanOps');
+                btn.innerText = "Update Data";
+                btn.setAttribute('data-edit-id', idTargetPending);
+            }
+        } 
+        // 3. JIKA AKSI ADALAH HAPUS/KELUARKAN
+        else if (aksiPending === 'HapusAset' || aksiPending === 'HapusHabisPakai') {
+            kirimSinyalHapus("hapus_nonops", idTargetPending);
         } else if (aksiPending === 'HapusOps') {
-            alert("Data Ops [" + idTargetPending + "] siap dihapus dari sistem.");
+            kirimSinyalHapus("hapus_ops", idTargetPending);
         }
+    }
+
+    // Fungsi Mengirim Sinyal Hapus ke Google Script
+    function kirimSinyalHapus(actionName, idTarget) {
+        document.getElementById('teksKonfirmasiAksi').innerText = "Sedang menghapus data dari sistem...";
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ 
+                action: actionName, 
+                id_target: idTarget, 
+                user_penginput: sessionStorage.getItem('username'), 
+                user_level: sessionStorage.getItem('level') 
+            })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                alert("Berhasil! Data telah dikeluarkan dari sistem.");
+                if(actionName === "hapus_nonops") muatDataNonOps(); else muatDataOps();
+            } else {
+                alert("Gagal menghapus: " + data.pesan);
+            }
+        }).catch(err => { alert("Kesalahan jaringan saat menghapus data."); });
     }
 </script>
 </body>
