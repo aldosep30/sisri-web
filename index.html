@@ -663,7 +663,7 @@
             <!-- ================================================= -->
             <!-- MODUL DATA SISWA (MASTER DATABASE)                -->
             <!-- ================================================= -->
-            <div id="modul_data_siswa" class="hidden main-content">
+            <div id="modalFormSiswa" class="modal-overlay hidden">
                 <div class="page-header">
                     <div>
                         <h2>Data Siswa</h2>
@@ -1389,21 +1389,17 @@
             event.currentTarget.classList.add('selected');
         }
         
-        // KUNCI PERBAIKAN: modul_development sudah masuk di dalam daftar ini untuk disembunyikan
+        // Sembunyikan semua wadah (modul_data_siswa sudah masuk)
         const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
         });
         
+        // Tampilkan hanya modul yang diklik
         if(modulName === 'dashboard') {
             document.getElementById('defaultContent').classList.remove('hidden');
         } 
-        else if(modulName === 'data_siswa') {
-            const wadahSiswa = document.getElementById('modul_data_siswa');
-            if(wadahSiswa) {
-                wadahSiswa.classList.remove('hidden');
-        }
         else if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
             if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
@@ -1437,6 +1433,12 @@
                 if(typeof muatDataDaftarPemeliharaan === 'function') muatDataDaftarPemeliharaan();
             }
         }
+        else if(modulName === 'data_siswa') {
+            const wadahSiswa = document.getElementById('modul_data_siswa');
+            if(wadahSiswa) {
+                wadahSiswa.classList.remove('hidden');
+            }
+        }
         
         closeSidebarMobile();
     }
@@ -1454,7 +1456,6 @@
         sessionStorage.setItem('lastType', 'content');
         sessionStorage.setItem('lastModule', menuName);
         
-        // KUNCI PERBAIKAN: Semua wadah disembunyikan sebelum memunculkan halaman pengembangan
         const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
