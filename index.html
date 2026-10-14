@@ -385,14 +385,15 @@
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
                 </div>
                 <ul class="submenu">
-                    <li class="submenu-item" onclick="toggleSubMenu(this, event)">
-                        <div class="submenu-label">
+                    <li class="submenu-item" id="menuDataSiswa">
+                        <!-- Klik label ini akan melebarkan menu (dropdown) sekaligus membuka Pusat Data Siswa -->
+                        <div class="submenu-label" onclick="toggleSubMenu(document.getElementById('menuDataSiswa'), event); openModule('data_siswa', event);">
                             <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">groups</span><span class="submenu-text">Data Siswa</span></div>
                             <span class="material-symbols-outlined chevron-icon">expand_more</span>
                         </div>
                         <ul class="sub-submenu">
-                            <li onclick="openModule('Data Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
-                            <li onclick="openModule('Data Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
+                            <li onclick="openContent('Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
+                            <li onclick="openContent('Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
                         </ul>
                     </li>
                     <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">
@@ -664,7 +665,7 @@
            <!-- ================================================= -->
             <!-- MODUL DATA SISWA (PUSAT KENDALI EXCEL)            -->
             <!-- ================================================= -->
-            <div id="modul_data_siswa" class="hidden main-content">
+            <div id="modul_data_siswa" class="hidden">
                 <div class="page-header">
                     <div>
                         <h2>Pusat Data Siswa</h2>
@@ -689,7 +690,8 @@
 
                 <!-- Tombol Shortcut ke Submenu SRMP & SRMA -->
                 <div class="stats-grid">
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openModule('siswa_srmp', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openContent('Siswa SRMP', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openContent('Siswa SRMA', event)"></div>
                         <div class="stat-icon bg-light-green"><span class="material-symbols-outlined text-green">school</span></div>
                         <div class="stat-info">
                             <p class="stat-title text-green">Lihat Data SRMP</p>
