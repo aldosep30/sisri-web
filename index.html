@@ -1666,6 +1666,7 @@
             
             filteredData.forEach((row, index) => {
                 // Tampilkan ikon Aksi HANYA jika canEdit = true (DENGAN FUNGSI KLIK)
+                // Tampilkan ikon Aksi HANYA jika canEdit = true (DENGAN FUNGSI KLIK YANG BENAR)
                 let actionHtml = canEdit ? `
                     <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit Aset: ${row.nama_barang}?', 'EditAset', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
                     <button class="btn-icon" title="Keluarkan / Hapus" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengeluarkan Aset: ${row.nama_barang} dari sistem?', 'HapusAset', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
@@ -1694,7 +1695,7 @@
             }
             
             filteredData.forEach((row, index) => {
-                // TOMBOL AKSI NON OPS (HABIS PAKAI)
+                // TOMBOL AKSI NON OPS (HABIS PAKAI) - DIPERBAIKI
                 let actionHtml = canEdit ? `
                     <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Barang: ${row.nama_barang}?', 'EditHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
                     <button class="btn-icon" title="Keluarkan / Kurangi" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengurangi/mengeluarkan stok Barang: ${row.nama_barang}?', 'HapusHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
@@ -1946,7 +1947,7 @@ function renderTabelOps() {
         }
         
         filteredData.forEach((row, index) => {
-            // Tampilkan tombol Aksi (DENGAN FUNGSI KLIK)
+            // Tampilkan tombol Aksi (DENGAN FUNGSI KLIK YANG BENAR)
             let actionHtml = canEdit ? `
                 <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Ops: ${row.nama_barang}?', 'EditOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
                 <button class="btn-icon" title="Keluarkan / Hapus" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengeluarkan stok Ops: ${row.nama_barang}?', 'HapusOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
@@ -1965,26 +1966,6 @@ function renderTabelOps() {
             </tr>`;
         });
     }
-        
-        filteredData.forEach((row, index) => {
-            // Tampilkan tombol Aksi jika hak akses sesuai
-            let actionHtml = canEdit ? `
-                <button class="btn-icon" title="Edit"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                <button class="btn-icon" title="Ambil/Kurangi Stok"><span class="material-symbols-outlined" style="font-size:18px;">remove_shopping_cart</span></button>
-            ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
-
-            tbody.innerHTML += `<tr>
-                <td>${index + 1}</td>
-                <td>${row.kode_barang || '-'}</td>
-                <td><b>${row.nama_barang}</b></td>
-                <td>${row.merk}</td>
-                <td style="font-weight:bold; color:var(--primary);">${row.jumlah}</td>
-                <td>${row.satuan}</td>
-                <td>${row.ruangan}</td>
-                <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
-                <td class="action-btns">${actionHtml}</td>
-            </tr>`;
-        });
 
     function bukaModalOps() { document.getElementById('modalOps').classList.remove('hidden'); }
     
