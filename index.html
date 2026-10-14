@@ -1475,7 +1475,7 @@
             event.currentTarget.classList.add('selected');
         }
         
-        // Sembunyikan semua wadah (modul_data_siswa sudah masuk)
+        // Sembunyikan semua wadah
         const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
@@ -1526,6 +1526,7 @@
                 cekAksesDataSiswa(); // Cek gembok keamanan
                 if(typeof muatDataSiswa === 'function') muatDataSiswa(); // Tarik data untuk tabel
             }
+        } // <--- TANDA KURUNG INI YANG TADI HILANG!
         else if(modulName === 'siswa_srmp') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
             bukaModulJenjang('SRMP');
@@ -1533,7 +1534,6 @@
         else if(modulName === 'siswa_srma') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
             bukaModulJenjang('SRMA');
-        }
         }
         
         closeSidebarMobile();
