@@ -392,8 +392,8 @@
                             <span class="material-symbols-outlined chevron-icon">expand_more</span>
                         </div>
                         <ul class="sub-submenu">
-                            <li onclick="openContent('Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
-                            <li onclick="openContent('Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
+                            <li onclick="openModule('siswa_srmp', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
+                            <li onclick="openModule('siswa_srma', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
                         </ul>
                     </li>
                     <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">
@@ -695,7 +695,7 @@
 
                 <!-- Tombol Shortcut ke Submenu SRMP & SRMA -->
                 <div class="stats-grid">
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openContent('Siswa SRMP', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openModule('siswa_srmp', event)">
                         <div class="stat-icon bg-light-green"><span class="material-symbols-outlined text-green">school</span></div>
                         <div class="stat-info">
                             <p class="stat-title text-green">Lihat Data Khusus</p>
@@ -703,7 +703,7 @@
                         </div>
                     </div>
                     
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openContent('Siswa SRMA', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openModule('siswa_srma', event)">
                         <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined text-blue">school</span></div>
                         <div class="stat-info">
                             <p class="stat-title text-blue">Lihat Data Khusus</p>
@@ -803,6 +803,55 @@
                     </div>
                 </div>
             </div> <!-- PENUTUP MODAL FORM SISWA -->
+            <!-- ================================================= -->
+            <!-- MODUL DATA SISWA PER JENJANG (SRMP / SRMA)        -->
+            <!-- ================================================= -->
+            <div id="modul_siswa_jenjang" class="hidden main-content">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <button class="btn-outline" style="border:none; padding:0; color:var(--primary); margin-bottom:8px; display:flex; align-items:center; cursor:pointer;" onclick="openModule('data_siswa', event)">
+                            <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">arrow_back</span> Kembali ke Pusat Data
+                        </button>
+                        <h2 id="titleJenjang" style="margin:0; font-size:22px; color:var(--text-main);">Data Siswa ...</h2>
+                    </div>
+                    
+                    <!-- Tombol Download Absensi (Tahap Pengembangan) -->
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:#b45309; border-color:#fde68a; background:#fffbeb;" onclick="alert('Fitur Download Format Absensi Siswa sedang dalam tahap pengembangan tim IT.')">
+                            <span class="material-symbols-outlined" style="font-size:18px;">event_note</span> Download Absensi
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card" style="padding: 0;">
+                    <div class="page-header" style="padding: 16px 24px; border-bottom: 1px solid var(--border); margin:0; display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+                        
+                        <!-- Filter Otomatis per Kelas -->
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <label style="margin:0; font-weight:600; color:var(--text-main); font-size: 13px;">Filter Kelas:</label>
+                            <select id="filterKelasJenjang" onchange="renderTabelJenjang()" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); min-width: 150px;">
+                                <option value="Semua">Semua Kelas</option>
+                            </select>
+                        </div>
+
+                        <div style="display:flex; align-items:center; background:#f9fafb; border:1px solid var(--border); border-radius:6px; padding:4px 12px;">
+                            <span class="material-symbols-outlined" style="color:var(--text-muted); font-size:18px; margin-right:8px;">search</span>
+                            <input type="text" id="searchJenjang" onkeyup="renderTabelJenjang()" placeholder="Cari Nama / NISN..." style="border:none; outline:none; background:transparent; width:200px; font-size:13px; padding:4px 0;">
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table id="tabelDataJenjang">
+                            <thead>
+                                <tr><th>No</th><th>Nama Lengkap</th><th>NISN</th><th>Kelas</th><th>Asrama</th><th>L/P</th><th>Wali Asuh</th><th>Aksi</th></tr>
+                            </thead>
+                            <tbody id="tbodyDataJenjang">
+                                <tr><td colspan="8" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- PENUTUP MODUL JENJANG -->
 <!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
             <div id="modul_ops" class="hidden">
                 <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
@@ -1396,7 +1445,7 @@
         sessionStorage.setItem('lastModule', menuName);
         
         // 1. Sembunyikan SEMUA modul (PASTIKAN modul_development ADA DI SINI JUGA)
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1427,7 +1476,7 @@
         }
         
         // Sembunyikan semua wadah (modul_data_siswa sudah masuk)
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1477,6 +1526,14 @@
                 cekAksesDataSiswa(); // Cek gembok keamanan
                 if(typeof muatDataSiswa === 'function') muatDataSiswa(); // Tarik data untuk tabel
             }
+        else if(modulName === 'siswa_srmp') {
+            document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
+            bukaModulJenjang('SRMP');
+        }
+        else if(modulName === 'siswa_srma') {
+            document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
+            bukaModulJenjang('SRMA');
+        }
         }
         
         closeSidebarMobile();
@@ -1495,7 +1552,7 @@
         sessionStorage.setItem('lastType', 'content');
         sessionStorage.setItem('lastModule', menuName);
         
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -2540,6 +2597,90 @@
     // 7. Simpan Input Manual (Belum dikirim ke backend, menunggu backend siap)
     function simpanDataSiswa() {
         alert("Fitur simpan manual akan segera diaktifkan setelah database siap!");
+    }
+// ==========================================
+    // LOGIKA FILTER SUB-MENU (SRMP & SRMA)
+    // ==========================================
+    let aktifJenjang = "";
+
+    function bukaModulJenjang(jenjang) {
+        aktifJenjang = jenjang; // Set apakah ini SRMP atau SRMA
+        document.getElementById('titleJenjang').innerText = "Daftar Siswa " + jenjang;
+        document.getElementById('searchJenjang').value = ""; // Reset pencarian
+        
+        const dropdown = document.getElementById('filterKelasJenjang');
+        dropdown.innerHTML = '<option value="Semua">Semua Kelas</option>';
+        
+        if (dataSiswaGlobal && dataSiswaGlobal.length > 0) {
+            // Deteksi otomatis kelas apa saja yang ada di jenjang ini
+            const kelasUnik = [...new Set(dataSiswaGlobal.filter(s => s.Jenjang === jenjang && s.Kelas).map(s => s.Kelas))];
+            kelasUnik.sort().forEach(kls => {
+                dropdown.innerHTML += `<option value="${kls}">${kls}</option>`;
+            });
+            renderTabelJenjang();
+        } else {
+            // Jika data global belum termuat, muat dulu dari server
+            document.getElementById('tbodyDataJenjang').innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">Mengambil data dari server...</td></tr>';
+            fetch(scriptURL, {
+                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "get_siswa" })
+            }).then(res => res.json()).then(data => {
+                if(data.status === "berhasil") {
+                    dataSiswaGlobal = data.data; 
+                    bukaModulJenjang(jenjang); // Ulangi eksekusi setelah data dapat
+                } else {
+                    document.getElementById('tbodyDataJenjang').innerHTML = '<tr><td colspan="8" style="text-align:center;">Belum ada data siswa.</td></tr>';
+                }
+            }).catch(err => {
+                document.getElementById('tbodyDataJenjang').innerHTML = '<tr><td colspan="8" style="text-align:center;color:red;">Gagal terhubung ke server.</td></tr>';
+            });
+        }
+    }
+
+    function renderTabelJenjang() {
+        const tbody = document.getElementById('tbodyDataJenjang');
+        const filterKelas = document.getElementById('filterKelasJenjang').value;
+        const keyword = document.getElementById('searchJenjang').value.toLowerCase();
+        
+        // 1. Saring berdasarkan Jenjang
+        let filteredData = dataSiswaGlobal.filter(item => item.Jenjang === aktifJenjang);
+        
+        // 2. Saring berdasarkan Kelas
+        if (filterKelas !== "Semua") {
+            filteredData = filteredData.filter(item => item.Kelas === filterKelas);
+        }
+        
+        // 3. Saring berdasarkan Kolom Pencarian
+        if (keyword) {
+            filteredData = filteredData.filter(item => 
+                (item.Nama_Lengkap || "").toString().toLowerCase().includes(keyword) ||
+                (item.NISN || "").toString().toLowerCase().includes(keyword)
+            );
+        }
+
+        tbody.innerHTML = '';
+        if(filteredData.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:20px;">Data tidak ditemukan pada kelas ini.</td></tr>'; 
+            return; 
+        }
+        
+        filteredData.forEach((row, index) => {
+            // Ubah Laki-laki jadi L, Perempuan jadi P untuk singkatan
+            let gender = row.Jenis_Kelamin === 'Laki-laki' ? 'L' : (row.Jenis_Kelamin === 'Perempuan' ? 'P' : '-');
+            
+            tbody.innerHTML += `<tr>
+                <td>${index + 1}</td>
+                <td><b>${row.Nama_Lengkap || '-'}</b></td>
+                <td>${row.NISN || '-'}</td>
+                <td><span style="background:#f3f4f6; padding:2px 6px; border-radius:4px; font-weight:600; border: 1px solid #e5e7eb;">${row.Kelas || '-'}</span></td>
+                <td>${row.Asrama || '-'}</td>
+                <td style="text-align:center; font-weight:bold;">${gender}</td>
+                <td>${row.Wali_Asuh || '-'}</td>
+                <td>
+                    <button class="btn-icon" title="Lihat Profil" onclick="alert('Fitur Profil Siswa segera diaktifkan')"><span class="material-symbols-outlined" style="font-size:18px;">visibility</span></button>
+                </td>
+            </tr>`;
+        });
     }
 </script>
 </body>
