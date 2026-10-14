@@ -390,8 +390,8 @@
                             <span class="material-symbols-outlined chevron-icon">expand_more</span>
                         </div>
                         <ul class="sub-submenu">
-                            <li onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
-                            <li onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
+                            <li onclick="openModule('Data Siswa SRMP', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
+                            <li onclick="openModule('Data Siswa SRMA', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
                         </ul>
                     </li>
                     <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">
@@ -1400,7 +1400,9 @@
             document.getElementById('defaultContent').classList.remove('hidden');
         } 
         else if(modulName === 'data_siswa') {
-            document.getElementById('modul_data_siswa').classList.remove('hidden');
+            const wadahSiswa = document.getElementById('modul_data_siswa');
+            if(wadahSiswa) {
+                wadahSiswa.classList.remove('hidden');
         }
         else if(modulName === 'nonops') {
             document.getElementById('modul_nonops').classList.remove('hidden');
