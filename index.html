@@ -2737,18 +2737,24 @@ function renderTabelOps() {
     }
 
     function prosesKonfirmasiAksi() {
-        tutupKonfirmasiAksi(); // Sembunyikan Pop-up
+        // SELAMATKAN DULU nilainya ke variabel lokal sebelum memori dihapus
+        const aksi = aksiPending;
+        const target = idTargetPending;
+        
+        // Sembunyikan Pop-up Konfirmasi secara visual (tanpa menghapus memori aksiPending)
+        document.getElementById('modalKonfirmasiAksi').classList.add('hidden');
         
         // 1. JIKA AKSI ADALAH EDIT (NON OPS / ASET)
-        if (aksiPending === 'EditAset' || aksiPending === 'EditHabisPakai') {
-            const item = dataNonOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === idTargetPending);
+        if (aksi === 'EditAset' || aksi === 'EditHabisPakai') {
+            const item = dataNonOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === target);
             if(item) {
                 bukaModalNonOps(); // Buka Form
+                
                 document.getElementById('modalTitle').innerText = "Edit Data Inventaris";
-                document.getElementById('inJenis').value = item.jenis;
+                document.getElementById('inJenis').value = item.jenis || tabAktif;
                 sesuaikanFormInput();
                 
-                // Isi form dengan data lama
+                // Isi form otomatis dengan data lama
                 document.getElementById('inUapkpb').value = item.uapkpb || "";
                 document.getElementById('inKodeUapkpb').value = item.kode_uapkpb || "";
                 document.getElementById('inNoUrut').value = item.no_urut || "";
@@ -2767,16 +2773,17 @@ function renderTabelOps() {
                 // Ubah status tombol simpan menjadi mode Update
                 const btn = document.getElementById('btnSimpanNonOps');
                 btn.innerText = "Update Data";
-                btn.setAttribute('data-edit-id', idTargetPending);
+                btn.setAttribute('data-edit-id', target);
             }
         } 
         // 2. JIKA AKSI ADALAH EDIT (OPS / HABIS PAKAI)
-        else if (aksiPending === 'EditOps') {
-            const item = dataOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === idTargetPending);
+        else if (aksi === 'EditOps') {
+            const item = dataOpsGlobal.find(d => (d.kode_barang || d.nama_barang) === target);
             if(item) {
                 bukaModalOps();
                 document.querySelector('#modalOps h3').innerText = "Edit Barang Ops";
                 
+                // Isi form otomatis dengan data lama
                 document.getElementById('inNamaOps').value = item.nama_barang || "";
                 document.getElementById('inMerkOps').value = item.merk || "";
                 document.getElementById('inRuanganOps').value = item.ruangan || "";
@@ -2787,15 +2794,19 @@ function renderTabelOps() {
                 
                 const btn = document.getElementById('btnSimpanOps');
                 btn.innerText = "Update Data";
-                btn.setAttribute('data-edit-id', idTargetPending);
+                btn.setAttribute('data-edit-id', target);
             }
         } 
         // 3. JIKA AKSI ADALAH HAPUS/KELUARKAN
-        else if (aksiPending === 'HapusAset' || aksiPending === 'HapusHabisPakai') {
-            kirimSinyalHapus("hapus_nonops", idTargetPending);
-        } else if (aksiPending === 'HapusOps') {
-            kirimSinyalHapus("hapus_ops", idTargetPending);
+        else if (aksi === 'HapusAset' || aksi === 'HapusHabisPakai') {
+            kirimSinyalHapus("hapus_nonops", target);
+        } else if (aksi === 'HapusOps') {
+            kirimSinyalHapus("hapus_ops", target);
         }
+
+        // Setelah semua data dikerjakan, baru kita hapus "ingatan" aksi pendingnya
+        aksiPending = null;
+        idTargetPending = "";
     }
 
     // Fungsi Mengirim Sinyal Hapus ke Google Script
