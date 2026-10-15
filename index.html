@@ -1112,10 +1112,10 @@
                 </select>
             </div>
             
-            <!-- FITUR BARU: DROPDOWN OPSI UNDUHAN PINTAR -->
+            <!-- FITUR: DROPDOWN OPSI UNDUHAN PINTAR -->
             <div id="filterRuanganContainer" class="form-group">
                 <label>Pilih Opsi Unduhan Template</label>
-                <select id="pilihRuanganExcel">
+                <select id="pilihRuanganExcel" style="font-weight: 600; color: #1f2937;">
                     <!-- Opsi akan disuntikkan secara otomatis oleh JavaScript -->
                 </select>
             </div>
@@ -1127,7 +1127,7 @@
                     <li>Update/Tambah data Anda mulai dari baris ke-2.</li>
                     <li>Pilih file Excel yang sudah diedit, lalu klik Proses.</li>
                 </ol>
-                <button class="btn-outline admin-sarpras" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcel()">Unduh Data / Template <span id="labelTemplate">Aset</span></button>
+                <button class="btn-outline admin-sarpras" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcel()">Unduh Template / Data</button>
             </div>
 
             <div class="form-group">
@@ -1232,9 +1232,9 @@
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label>Pilih Opsi Unduhan</label>
-                <select id="pilihOpsiOps">
-                    <option value="KOSONG">Template Kosong (Input Data Baru)</option>
+                <label>Pilih Opsi Unduhan Template</label>
+                <select id="pilihOpsiOps" style="font-weight: 600; color: #1f2937;">
+                    <option value="KOSONG">Template Kosong Baru (Tanpa Data)</option>
                     <option value="SEMUA">Download Seluruh Data Ops</option>
                 </select>
             </div>
@@ -1244,7 +1244,7 @@
                     <li>Isi data tanpa mengubah judul kolom.</li>
                     <li>Pilih file lalu klik Proses Upload.</li>
                 </ol>
-                <button class="btn-outline admin-sarpras" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcelOps()">Unduh Template Ops</button>
+                <button class="btn-outline admin-sarpras" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcelOps()">Unduh Template / Data</button>
             </div>
             <div class="form-group"><label>Pilih File Excel (.xlsx)</label><input type="file" id="fileExcelOps" accept=".xlsx, .xls"></div>
         </div>
