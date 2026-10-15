@@ -628,10 +628,10 @@
                             <input type="text" id="searchNonOps" onkeyup="renderTabelNonOps()" placeholder="Cari UAPKPB, Ruangan, Barang..." style="border:none; outline:none; background:transparent; width:220px; font-size:13px; padding:4px 0;">
                         </div>
                         
-                        <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcel()">
+                        <button class="btn-outline admin-sarpras" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcel()">
                             <span class="material-symbols-outlined icon" style="font-size:18px;">upload_file</span>Upload Excel
                         </button>
-                        <button class="btn-add" onclick="bukaModalNonOps()">
+                        <button class="btn-add admin-sarpras" onclick="bukaModalNonOps()">
                             <span class="material-symbols-outlined icon">add</span>Tambah Data
                         </button>
                     </div>
@@ -864,10 +864,10 @@
                             <input type="text" id="searchOps" onkeyup="renderTabelOps()" placeholder="Cari Barang, Merk, Ruangan..." style="border:none; outline:none; background:transparent; width:220px; font-size:13px; padding:4px 0;">
                         </div>
 
-                        <button class="btn-outline" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcelOps()">
+                       <button class="btn-outline admin-sarpras" style="display:flex; align-items:center; gap:6px; color:var(--primary); border-color:var(--primary);" onclick="bukaModalUploadExcelOps()">
                             <span class="material-symbols-outlined icon" style="font-size:18px;">upload_file</span>Upload Excel
                         </button>
-                        <button class="btn-add" onclick="bukaModalOps()"><span class="material-symbols-outlined icon">add</span>Tambah Data</button>
+                        <button class="btn-add admin-sarpras" onclick="bukaModalOps()"><span class="material-symbols-outlined icon">add</span>Tambah Data</button>
                     </div>
                 </div>
                 
@@ -1112,14 +1112,21 @@
                 </select>
             </div>
             
+            <!-- FITUR BARU: DROPDOWN PENCARIAN RUANGAN KHUSUS ASET -->
+            <div id="filterRuanganContainer" class="form-group">
+                <label>Pilih Ruangan (Khusus Download Data Lama)</label>
+                <input list="listRuangan" id="pilihRuanganExcel" placeholder="Ketik/Pilih Ruangan (Kosongkan untuk Template Baru)">
+                <datalist id="listRuangan"></datalist>
+            </div>
+            
             <div style="background-color:#eff6ff; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; color:#1e40af; border:1px solid #bfdbfe;">
                 <p style="margin-top:0; font-weight:600;">Langkah-langkah:</p>
                 <ol style="margin-bottom:0; padding-left:16px;">
-                    <li>Unduh template Excel sesuai jenis data.</li>
-                    <li>Isi data Anda mulai dari baris ke-2 (Jangan ubah judul kolom di baris 1).</li>
-                    <li>Pilih file Excel yang sudah diisi, lalu klik Proses.</li>
+                    <li>Unduh template Excel (Data lama akan ikut terunduh jika Ruangan dipilih).</li>
+                    <li>Update/Tambah data Anda mulai dari baris ke-2.</li>
+                    <li>Pilih file Excel yang sudah diedit, lalu klik Proses.</li>
                 </ol>
-                <button class="btn-outline" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcel()">Unduh Template <span id="labelTemplate">Aset</span></button>
+                <button class="btn-outline" style="width:100%; margin-top:12px; font-size:12px; border-color:#93c5fd; color:#1d4ed8;" onclick="unduhTemplateExcel()">Unduh Data / Template <span id="labelTemplate">Aset</span></button>
             </div>
 
             <div class="form-group">
@@ -1407,12 +1414,27 @@
     }
 
     function aturHakAksesMenu(userLevel) {
-        // Menyembunyikan/menampilkan Menu Sidebar DAN Kartu Dashboard sesuai level
+        // 1. Hak Akses Menu Sidebar dan Dashboard (Semua yang berhak, tetap bisa lihat menunya)
         document.querySelectorAll('.menu-item, .dash-card').forEach(el => {
             const allowedRoles = el.getAttribute('data-role');
             if (allowedRoles) {
                 if (allowedRoles === "Seluruh" || allowedRoles.includes(userLevel)) { el.style.display = ""; } 
                 else { el.style.display = "none"; }
+            }
+        });
+        
+        // 2. PENGAMANAN TOMBOL AKSI SARPRAS (Upload, Download, Tambah)
+        const canEditSarpras = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
+        document.querySelectorAll('.admin-sarpras').forEach(el => {
+            if (!canEditSarpras) {
+                el.style.display = 'none'; // Sembunyikan tombol untuk Guru/dll
+            } else {
+                // Tampilkan kembali tombol untuk 3 level admin
+                if(el.classList.contains('btn-outline')) {
+                    el.style.display = 'flex'; // Khusus tombol outline pakai flex agar icon sejajar
+                } else {
+                    el.style.display = '';
+                }
             }
         });
     }
@@ -1793,7 +1815,7 @@
     }
 
     // ==========================================
-    // LOGIKA UPLOAD EXCEL (SHEETJS)
+    // LOGIKA UPLOAD EXCEL & DOWNLOAD TEMPLATE (SHEETJS)
     // ==========================================
     function bukaModalUploadExcel() {
         document.getElementById('modalUploadExcel').classList.remove('hidden');
@@ -1803,221 +1825,120 @@
     }
     
     function ubahInfoTemplateExcel() {
-        document.getElementById('labelTemplate').innerText = document.getElementById('jenisUploadExcel').value;
+        const jenis = document.getElementById('jenisUploadExcel').value;
+        document.getElementById('labelTemplate').innerText = jenis;
+        
+        const wadahRuangan = document.getElementById('filterRuanganContainer');
+        if (jenis === 'Aset') {
+            wadahRuangan.style.display = 'block';
+            // Isi dropdown pencarian dengan daftar ruangan yang ada dari database
+            const listRuangan = document.getElementById('listRuangan');
+            listRuangan.innerHTML = '';
+            if (dataNonOpsGlobal.length > 0) {
+                const ruanganUnik = [...new Set(dataNonOpsGlobal.filter(s => s.jenis === 'Aset' && s.kode_ruangan).map(s => s.kode_ruangan + " - " + s.ruangan))];
+                ruanganUnik.forEach(r => listRuangan.innerHTML += `<option value="${r}">`);
+            }
+        } else {
+            wadahRuangan.style.display = 'none'; // Sembunyikan untuk Habis Pakai
+        }
     }
 
-    // 1. Fungsi Membuat dan Mendownload Template Kosong Otomatis
+    // 1. Fungsi Unduh Template Non Ops (Menarik Data Lama)
     function unduhTemplateExcel() {
         const jenis = document.getElementById('jenisUploadExcel').value;
         let ws_data = [];
         
         if (jenis === 'Aset') {
-            ws_data = [['Nama UAPKPB', 'Kode UAPKPB', 'Nama Ruangan', 'Kode Ruangan', 'No Urut', 'Nama Barang', 'Merk/Type', 'Kode Barang', 'Tahun Peroleh', 'Jumlah', 'Satuan', 'Penguasaan', 'Kondisi', 'Keterangan']];
+            ws_data.push(['ID_Sistem', 'Nama UAPKPB', 'Kode UAPKPB', 'Nama Ruangan', 'Kode Ruangan', 'No Urut', 'Nama Barang', 'Merk/Type', 'Kode Barang', 'Tahun Peroleh', 'Jumlah', 'Satuan', 'Penguasaan', 'Kondisi', 'Keterangan']);
+            
+            const pilihan = document.getElementById('pilihRuanganExcel').value;
+            const kodePilih = pilihan.split(" - ")[0]; // Tarik kodenya saja
+            
+            let dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Aset');
+            if(kodePilih) dataExport = dataExport.filter(item => item.kode_ruangan === kodePilih);
+            else dataExport = []; // Kosongkan jika tidak memilih ruangan
+            
+            if (dataExport.length > 0) {
+                dataExport.forEach(item => {
+                    ws_data.push([item.id || "", item.uapkpb || "", item.kode_uapkpb || "", item.ruangan || "", item.kode_ruangan || "", item.no_urut || "", item.nama_barang || "", item.merk || "", item.kode_barang || "", item.tahun || "", item.jumlah || "", item.satuan || "", item.penguasaan || "", item.kondisi || "", item.keterangan || ""]);
+                });
+            } else {
+                ws_data.push(['', 'Sekolah Rakyat', '027.01', 'Ruang Kepala Sekolah', 'KS001', '1', 'Meja Kepala Sekolah', 'Olympic', 'SR-MBL-KS01', '2026', '1', 'Unit', 'Milik Sendiri', 'Baik', '-']);
+            }
         } else {
-            ws_data = [['Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']];
+            ws_data.push(['ID_Sistem', 'Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']);
+            let dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Habis Pakai');
+            if (dataExport.length > 0) {
+                dataExport.forEach(item => ws_data.push([item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""]));
+            } else {
+                ws_data.push(['', 'Spidol Hitam', 'Snowman', 'Gudang ATK', '12', 'Pcs', 'Baik', 'Dana BOS']);
+            }
         }
         
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Template");
-        
         ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
-        
-        XLSX.writeFile(wb, "Template_Upload_" + jenis.replace(" ", "_") + ".xlsx");
+        XLSX.writeFile(wb, "Data_" + jenis.replace(" ", "_") + ".xlsx");
     }
 
-    // 2. Fungsi Membaca File dan Mengirim ke API
     function prosesUploadExcel() {
         const fileInput = document.getElementById('fileExcel');
         const jenis = document.getElementById('jenisUploadExcel').value;
         const btn = document.getElementById('btnProsesExcel');
-        
         if (!fileInput.files.length) { alert("Silakan pilih file Excel terlebih dahulu!"); return; }
         
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        
         btn.disabled = true; btn.innerText = "Membaca File...";
+        const reader = new FileReader();
         
         reader.onload = function(e) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, {type: 'array'});
-            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rawJSON = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {defval: ""});
             
-            const rawJSON = XLSX.utils.sheet_to_json(firstSheet, {defval: ""});
-            
-            if(rawJSON.length === 0) {
-                alert("File Excel kosong (Tidak ada data di bawah judul kolom).");
-                btn.disabled = false; btn.innerText = "Proses Upload";
-                return;
-            }
+            if(rawJSON.length === 0) { alert("File kosong."); btn.disabled = false; btn.innerText = "Proses Upload"; return; }
 
             let mappedData = [];
             rawJSON.forEach(row => {
                 if (jenis === 'Aset') {
-                    mappedData.push({
-                        uapkpb: row['Nama UAPKPB'], kode_uapkpb: row['Kode UAPKPB'],
-                        ruangan: row['Nama Ruangan'], kode_ruangan: row['Kode Ruangan'],
-                        no_urut: row['No Urut'], nama_barang: row['Nama Barang'],
-                        merk: row['Merk/Type'], kode_barang: row['Kode Barang'],
-                        tahun: row['Tahun Peroleh'], jumlah: row['Jumlah'],
-                        satuan: row['Satuan'], penguasaan: row['Penguasaan'],
-                        kondisi: row['Kondisi'], keterangan: row['Keterangan']
-                    });
+                    mappedData.push({ id_sistem: row['ID_Sistem'], uapkpb: row['Nama UAPKPB'], kode_uapkpb: row['Kode UAPKPB'], ruangan: row['Nama Ruangan'], kode_ruangan: row['Kode Ruangan'], no_urut: row['No Urut'], nama_barang: row['Nama Barang'], merk: row['Merk/Type'], kode_barang: row['Kode Barang'], tahun: row['Tahun Peroleh'], jumlah: row['Jumlah'], satuan: row['Satuan'], penguasaan: row['Penguasaan'], kondisi: row['Kondisi'], keterangan: row['Keterangan'] });
                 } else {
-                    mappedData.push({
-                        nama_barang: row['Nama Barang'], merk: row['Merk/Type'],
-                        ruangan: row['Lokasi Gudang'], jumlah: row['Jumlah'],
-                        satuan: row['Satuan'], kondisi: row['Kondisi'],
-                        keterangan: row['Keterangan']
-                    });
+                    mappedData.push({ id_sistem: row['ID_Sistem'], nama_barang: row['Nama Barang'], merk: row['Merk/Type'], ruangan: row['Lokasi Gudang'], jumlah: row['Jumlah'], satuan: row['Satuan'], kondisi: row['Kondisi'], keterangan: row['Keterangan'] });
                 }
             });
 
-            btn.innerText = "Mengunggah ke Database...";
-            
+            btn.innerText = "Sinkronisasi Data...";
             fetch(scriptURL, {
                 method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({
-                    action: "bulk_add_nonops",
-                    jenis: jenis,
-                    user_penginput: sessionStorage.getItem('username'),
-                    user_level: sessionStorage.getItem('level'),
-                    data: mappedData
-                })
+                body: JSON.stringify({ action: "bulk_add_nonops", jenis: jenis, user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'), data: mappedData })
             }).then(res => res.json()).then(resData => {
                 btn.disabled = false; btn.innerText = "Proses Upload";
-                if(resData.status === "berhasil") {
-                    document.getElementById('modalUploadExcel').classList.add('hidden');
-                    alert(resData.pesan);
-                    muatDataNonOps(); 
-                } else { alert("Gagal: " + resData.pesan); }
-            }).catch(err => {
-                btn.disabled = false; btn.innerText = "Proses Upload";
-                alert("Error saat menghubungi server.");
-            });
+                if(resData.status === "berhasil") { document.getElementById('modalUploadExcel').classList.add('hidden'); alert(resData.pesan); muatDataNonOps(); } 
+                else { alert("Gagal: " + resData.pesan); }
+            }).catch(err => { btn.disabled = false; btn.innerText = "Proses Upload"; alert("Error koneksi!"); });
         };
-        
-        reader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(fileInput.files[0]);
     }
 
-    // ==========================================
-    // LOGIKA MODUL OPS (BARANG HABIS PAKAI)
-    // ==========================================
-    let dataOpsGlobal = [];
-
-    function muatDataOps() {
-        document.getElementById('tbodyOps').innerHTML = '<tr><td colspan="9" style="text-align:center;">Mengambil data dari server...</td></tr>';
-        fetch(scriptURL, {
-            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: "get_ops" })
-        }).then(res => res.json()).then(data => {
-            if(data.status === "berhasil") { dataOpsGlobal = data.data; renderTabelOps(); }
-        }).catch(err => { document.getElementById('tbodyOps').innerHTML = '<tr><td colspan="9" style="text-align:center;color:red;">Gagal mengambil data.</td></tr>'; });
-    }
-
-function renderTabelOps() {
-        const tbody = document.getElementById('tbodyOps');
-        
-        // 1. Cek Hak Akses Edit
-        const userLevel = sessionStorage.getItem('level');
-        const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
-        
-        // 2. Ambil Kata Kunci Pencarian
-        const searchInput = document.getElementById('searchOps');
-        const keyword = searchInput ? searchInput.value.toLowerCase() : "";
-        
-        let filteredData = dataOpsGlobal;
-        
-        // 3. Filter Data Berdasarkan Pencarian
-        if (keyword) {
-            filteredData = filteredData.filter(item => 
-                (item.nama_barang || "").toString().toLowerCase().includes(keyword) ||
-                (item.kode_barang || "").toString().toLowerCase().includes(keyword) ||
-                (item.ruangan || "").toString().toLowerCase().includes(keyword) ||
-                (item.merk || "").toString().toLowerCase().includes(keyword)
-            );
-        }
-
-        tbody.innerHTML = '';
-        if(filteredData.length === 0) { 
-            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:20px;">Data tidak ditemukan.</td></tr>'; 
-            return; 
-        }
-        
-        filteredData.forEach((row, index) => {
-            // Tampilkan tombol Aksi (DENGAN FUNGSI KLIK YANG BENAR)
-            let actionHtml = canEdit ? `
-                <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Ops: ${row.nama_barang}?', 'EditOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                <button class="btn-icon" title="Keluarkan / Hapus" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengeluarkan stok Ops: ${row.nama_barang}?', 'HapusOps', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
-            ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
-
-            tbody.innerHTML += `<tr>
-                <td>${index + 1}</td>
-                <td>${row.kode_barang || '-'}</td>
-                <td><b>${row.nama_barang}</b></td>
-                <td>${row.merk}</td>
-                <td style="font-weight:bold; color:var(--primary);">${row.jumlah}</td>
-                <td>${row.satuan}</td>
-                <td>${row.ruangan}</td>
-                <td><span style="background:#fef2f2; color:#991b1b; padding:4px 8px; border-radius:4px; font-size:11px;">${row.kondisi}</span></td>
-                <td class="action-btns">${actionHtml}</td>
-            </tr>`;
-        });
-    }
-
-   function bukaModalOps() { 
-        document.getElementById('modalOps').classList.remove('hidden'); 
-        
-        if(aksiPending === null) {
-            document.querySelector('#modalOps h3').innerText = "Tambah Barang Ops Baru";
-            const btn = document.getElementById('btnSimpanOps');
-            btn.innerText = "Simpan Data";
-            btn.removeAttribute('data-edit-id');
-            document.querySelectorAll('#modalOps input, #modalOps textarea').forEach(el => el.value = '');
-        }
-    }
-    
-    function simpanDataOps() {
-        const btn = document.getElementById('btnSimpanOps');
-        const editId = btn.getAttribute('data-edit-id');
-        
-        const payload = {
-            action: editId ? "edit_ops" : "add_ops",
-            id_target: editId || "",
-            user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'),
-            nama_barang: document.getElementById('inNamaOps').value, merk: document.getElementById('inMerkOps').value,
-            ruangan: document.getElementById('inRuanganOps').value, jumlah: document.getElementById('inJumlahOps').value,
-            satuan: document.getElementById('inSatuanOps').value, kondisi: document.getElementById('inKondisiOps').value,
-            keterangan: document.getElementById('inKeteranganOps').value
-        };
-        
-        if(!payload.nama_barang || !payload.jumlah) { alert("Nama barang dan Jumlah wajib diisi!"); return; }
-        btn.disabled = true; btn.innerText = "Menyimpan...";
-        fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
-        }).then(res => res.json()).then(data => {
-            btn.disabled = false; btn.innerText = editId ? "Update Data" : "Simpan Data";
-            if(data.status === "berhasil") {
-                document.getElementById('modalOps').classList.add('hidden');
-                aksiPending = null;
-                alert(editId ? "Data berhasil di-update!" : "Data berhasil ditambahkan!"); muatDataOps(); 
-            } else { alert("Gagal: " + data.pesan); }
-        }).catch(err => { btn.disabled = false; btn.innerText = "Simpan Data"; alert("Error koneksi!"); });
-    }
-
-    // UPLOAD EXCEL OPS
+    // 2. Fungsi Unduh & Upload Ops
     function bukaModalUploadExcelOps() {
         document.getElementById('modalUploadExcelOps').classList.remove('hidden');
         document.getElementById('fileExcelOps').value = ''; 
     }
 
     function unduhTemplateExcelOps() {
-        let ws_data = [['Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']];
+        let ws_data = [['ID_Sistem', 'Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']];
+        if (dataOpsGlobal.length > 0) {
+            dataOpsGlobal.forEach(item => ws_data.push([item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""]));
+        } else {
+            ws_data.push(['', 'Kertas HVS A4', 'Sidu', 'Gudang Utama', '5', 'Rim', 'Baik', '-']);
+        }
+        
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Template");
+        XLSX.utils.book_append_sheet(wb, ws, "Data_Ops");
         ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
-        XLSX.writeFile(wb, "Template_Upload_Ops.xlsx");
+        XLSX.writeFile(wb, "Data_Update_Ops.xlsx");
     }
 
     function prosesUploadExcelOps() {
@@ -2036,23 +1957,17 @@ function renderTabelOps() {
 
             let mappedData = [];
             rawJSON.forEach(row => {
-                mappedData.push({
-                    nama_barang: row['Nama Barang'], merk: row['Merk/Type'],
-                    ruangan: row['Lokasi Gudang'], jumlah: row['Jumlah'],
-                    satuan: row['Satuan'], kondisi: row['Kondisi'], keterangan: row['Keterangan']
-                });
+                mappedData.push({ id_sistem: row['ID_Sistem'], nama_barang: row['Nama Barang'], merk: row['Merk/Type'], ruangan: row['Lokasi Gudang'], jumlah: row['Jumlah'], satuan: row['Satuan'], kondisi: row['Kondisi'], keterangan: row['Keterangan'] });
             });
 
-            btn.innerText = "Mengunggah...";
+            btn.innerText = "Sinkronisasi...";
             fetch(scriptURL, {
                 method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify({ action: "bulk_add_ops", user_penginput: sessionStorage.getItem('username'), user_level: sessionStorage.getItem('level'), data: mappedData })
             }).then(res => res.json()).then(resData => {
                 btn.disabled = false; btn.innerText = "Proses Upload";
-                if(resData.status === "berhasil") {
-                    document.getElementById('modalUploadExcelOps').classList.add('hidden');
-                    alert(resData.pesan); muatDataOps(); 
-                } else { alert("Gagal: " + resData.pesan); }
+                if(resData.status === "berhasil") { document.getElementById('modalUploadExcelOps').classList.add('hidden'); alert(resData.pesan); muatDataOps(); } 
+                else { alert("Gagal: " + resData.pesan); }
             }).catch(err => { btn.disabled = false; btn.innerText = "Proses Upload"; alert("Error koneksi!"); });
         };
         reader.readAsArrayBuffer(fileInput.files[0]);
