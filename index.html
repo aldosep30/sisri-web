@@ -1655,7 +1655,7 @@
 
     function renderTabelNonOps() {
         const container = document.getElementById('containerTabelNonOps');
-        if (!container) return; 
+        if (!container) return; // Mencegah error jika elemen belum dirender
         
         const userLevel = sessionStorage.getItem('level');
         const canEdit = ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
@@ -1677,14 +1677,38 @@
         }
 
         container.innerHTML = '';
-        
-        if(filteredData.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:40px; background:white; border-radius:8px; border:1px solid #e5e7eb;">Data tidak ditemukan.</div>'; 
-            return;
-        }
 
         if (tabAktif === 'Aset') {
-            // Mengelompokkan data berdasarkan Ruangan & UAPKPB
+            
+            // JIKA DATA ASET KOSONG (TETAP TAMPILKAN HEADER TABEL)
+            if(filteredData.length === 0) {
+                container.innerHTML = `
+                    <div style="background:white; border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <div class="table-responsive">
+                            <table style="margin:0; border:none; width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">No</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">No. Pendaftaran</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Nama Barang</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Merk/Type</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Kode Barang</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Tahun</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Jumlah</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Kondisi</th>
+                                        <th style="padding: 12px 16px; background-color: #f9fafb; font-weight: 600; color: var(--text-main); text-align: left; border-bottom: 1px solid var(--border);">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="9" style="text-align:center; padding:24px; color:var(--text-muted);">Data Aset belum tersedia.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`; 
+                return;
+            }
+
+            // Kelompokkan data berdasarkan Ruangan & UAPKPB
             const groups = {};
             filteredData.forEach(row => {
                 const kRuang = row.kode_ruangan || "Tanpa_Kode";
@@ -1701,7 +1725,7 @@
                 groups[key].items.push(row);
             });
 
-            // Cetak setiap grup menjadi "Kartu Tabel" terpisah
+            // Render setiap grup menjadi tabel terpisah yang melayang (dinamis)
             for (const key in groups) {
                 const group = groups[key];
                 let tableHtml = `
@@ -1777,23 +1801,30 @@
                             </thead>
                             <tbody>
             `;
-            filteredData.forEach((row, index) => {
-                let actionHtml = canEdit ? `
-                    <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Barang: ${row.nama_barang}?', 'EditHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
-                    <button class="btn-icon" title="Keluarkan / Kurangi" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengurangi/mengeluarkan stok Barang: ${row.nama_barang}?', 'HapusHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
-                ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
+            
+            // JIKA DATA HABIS PAKAI KOSONG (TETAP TAMPILKAN HEADERNYA)
+            if(filteredData.length === 0) {
+                tableHtml += `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">Data Barang Habis Pakai belum tersedia.</td></tr>`;
+            } else {
+                filteredData.forEach((row, index) => {
+                    let actionHtml = canEdit ? `
+                        <button class="btn-icon" title="Edit Data" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengedit data Barang: ${row.nama_barang}?', 'EditHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
+                        <button class="btn-icon" title="Keluarkan / Kurangi" onclick="bukaKonfirmasiAksi('Apakah Anda yakin ingin mengurangi/mengeluarkan stok Barang: ${row.nama_barang}?', 'HapusHabisPakai', '${row.kode_barang || row.nama_barang}')"><span class="material-symbols-outlined" style="font-size:18px;">output</span></button>
+                    ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600; padding:4px;">Hanya Lihat</span>`;
 
-                tableHtml += `<tr>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${index + 1}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);"><b>${row.nama_barang}</b></td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.merk}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight:bold; color:var(--primary);">${row.jumlah}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.satuan}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.ruangan}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.keterangan}</td>
-                    <td class="action-btns" style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${actionHtml}</td>
-                </tr>`;
-            });
+                    tableHtml += `<tr>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${index + 1}</td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);"><b>${row.nama_barang}</b></td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.merk}</td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border); font-weight:bold; color:var(--primary);">${row.jumlah}</td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.satuan}</td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.ruangan}</td>
+                        <td style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${row.keterangan}</td>
+                        <td class="action-btns" style="padding: 12px 16px; border-bottom: 1px solid var(--border);">${actionHtml}</td>
+                    </tr>`;
+                });
+            }
+            
             tableHtml += `</tbody></table></div></div>`;
             container.innerHTML = tableHtml;
         }
