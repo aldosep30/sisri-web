@@ -2499,30 +2499,42 @@ function renderTabelOps() {
     
     let dataSiswaGlobal = [];
 
-    // 1. Fungsi Unduh Template Excel Otomatis (Menggunakan SheetJS)
+  // 1. Fungsi Unduh Excel (Otomatis Menarik Data yang Sudah Ada di Database)
     function unduhTemplateExcelSiswa() {
-        // Baris 1 wajib sama persis dengan judul kolom di Google Sheets
-        let ws_data = [[
+        const headers = [
             'ID_Siswa', 'Nama_Lengkap', 'NISN', 'NIK', 'No_KK', 'Tempat_Lahir', 'Tanggal_Lahir', 'Usia', 
             'Jenis_Kelamin', 'Agama', 'Anak_Ke', 'Alamat', 'Jenjang', 'Kelas', 'Wali_Asuh', 'Asrama', 
             'Tinggi_Badan', 'Berat_Badan', 'IMT', 'Status_Gizi', 'Kondisi_Fisik', 'Ukuran_Baju', 'Ukuran_Celana', 'Ukuran_Sepatu'
-        ]];
+        ];
         
-        // Baris 2 berisi contoh pengisian
-        ws_data.push([
-            '', 'Budi Santoso', '0051234567', '3271012345678901', '3271019876543210', 'Bogor', '2008-05-15', '18 Tahun',
-            'Laki-laki', 'Islam', '1', 'Jl. Merdeka No.1', 'SRMA', '10 MIPA 1', 'Pak Ali', 'Asrama Putra 1',
-            '165', '55.5', '20.4', 'Normal (Sehat)', 'Tidak ada', 'L', '32', '42'
-        ]);
+        let ws_data = [headers];
+        
+        // Cek apakah database memiliki data siswa
+        if (dataSiswaGlobal && dataSiswaGlobal.length > 0) {
+            // Tarik seluruh data yang ada ke dalam Excel (Siap diedit)
+            dataSiswaGlobal.forEach(siswa => {
+                let baris = [];
+                headers.forEach(kolom => {
+                    baris.push(siswa[kolom] || ""); 
+                });
+                ws_data.push(baris);
+            });
+        } else {
+            // Jika kosong melompong, berikan baris contoh
+            ws_data.push([
+                '', 'Budi Santoso', '0051234567', '3271012345678901', '3271019876543210', 'Bogor', '2008-05-15', '18 Tahun',
+                'Laki-laki', 'Islam', '1', 'Jl. Merdeka No.1', 'SRMA', '10 MIPA 1', 'Pak Ali', 'Asrama Putra 1',
+                '165', '55.5', '20.4', 'Normal (Sehat)', 'Tidak ada', 'L', '32', '42'
+            ]);
+        }
 
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Template_Siswa");
+        XLSX.utils.book_append_sheet(wb, ws, "Data_Siswa");
         
-        // Lebarkan kolom agar rapi
-        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
+        ws['!cols'] = Array(headers.length).fill({ wch: 15 });
         
-        XLSX.writeFile(wb, "Template_Upload_Data_Siswa.xlsx");
+        XLSX.writeFile(wb, "Data_Siswa_Update.xlsx");
     }
 
     // 2. Fungsi Menarik Data Siswa dari Server untuk Tabel
