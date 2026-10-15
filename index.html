@@ -2464,17 +2464,21 @@ function renderTabelOps() {
                 return;
             }
 
-            // Kirim ke Google Apps Script (Kode.gs)
+            // PERBAIKAN: Menghapus "request.data" yang bikin Error dan Menggunakan "dataJSON"
             fetch(scriptURL, { 
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "sinkronisasi_siswa", data: dataJSON })
+                body: JSON.stringify({ 
+                    action: "sinkronisasi_siswa", 
+                    data: dataJSON // <--- INILAH DATA DARI EXCEL
+                })
             })
             .then(res => res.json())
             .then(hasil => {
                 if(hasil.status === 'berhasil') {
                     statusDiv.style.backgroundColor = '#dcfce7'; statusDiv.style.color = '#15803d';
                     statusDiv.innerHTML = '<span class="material-symbols-outlined" style="vertical-align: middle; margin-right: 8px;">check_circle</span>Berhasil! ' + hasil.pesan;
+                    muatDataSiswa(); // Refresh otomatis
                 } else {
                     statusDiv.style.backgroundColor = '#fee2e2'; statusDiv.style.color = '#dc2626';
                     statusDiv.innerText = 'Gagal: ' + hasil.pesan;
