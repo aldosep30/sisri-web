@@ -1291,19 +1291,48 @@
 
             // Menarik Angka Statistik secara Real-Time (Tanpa Mengganggu UI Utama)
             if(document.getElementById('statAset')) {
+                // Tampilkan indikator loading sementara
+                document.getElementById('statAset').innerText = "...";
+                document.getElementById('statPerbaikan').innerText = "...";
+                document.getElementById('statSiswa').innerText = "...";
+
                 Promise.all([
                     fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_nonops" }) }).then(res => res.json()),
-                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_ops" }) }).then(res => res.json()),
-                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json())
-                ]).then(([rNon, rOps, rPerbaikan]) => {
-                    let tAset = 0; let tPerbaikan = 0;
-                    if(rNon.status === "berhasil") tAset += rNon.data.length;
-                    if(rOps.status === "berhasil") tAset += rOps.data.length;
-                    if(rPerbaikan.status === "berhasil") tPerbaikan += rPerbaikan.data.filter(item => item.status === "Sedang Diperbaiki").length;
+                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json()),
+                    fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_siswa" }) }).then(res => res.json())
+                ]).then(([rNon, rPerbaikan, rSiswa]) => {
                     
+                    // 1. Kalkulasi Total Aset (Hanya dari Data Non Ops yang jenisnya "Aset")
+                    let tAset = 0;
+                    if(rNon.status === "berhasil") {
+                        tAset = rNon.data.filter(item => item.jenis === "Aset").length;
+                    }
                     document.getElementById('statAset').innerText = tAset;
+
+                    // 2. Kalkulasi Sistem Pemeliharaan (Hanya yang sedang diperbaiki)
+                    let tPerbaikan = 0;
+                    if(rPerbaikan.status === "berhasil") {
+                        tPerbaikan = rPerbaikan.data.filter(item => item.status === "Sedang Diperbaiki").length;
+                    }
                     document.getElementById('statPerbaikan').innerText = tPerbaikan;
-                }).catch(err => console.log("Gagal memuat statistik."));
+
+                    // 3. Kalkulasi Data Siswa (Total, Siswa SRMP, dan Siswa SRMA)
+                    let tSiswa = 0, tSRMP = 0, tSRMA = 0;
+                    if(rSiswa.status === "berhasil") {
+                        tSiswa = rSiswa.data.length;
+                        tSRMP = rSiswa.data.filter(item => item.Jenjang === "SRMP").length;
+                        tSRMA = rSiswa.data.filter(item => item.Jenjang === "SRMA").length;
+                    }
+                    document.getElementById('statSiswa').innerText = tSiswa;
+                    document.getElementById('valSRMP').innerText = tSRMP;
+                    document.getElementById('valSRMA').innerText = tSRMA;
+
+                }).catch(err => {
+                    console.log("Gagal memuat statistik dashboard.", err);
+                    document.getElementById('statAset').innerText = "0";
+                    document.getElementById('statPerbaikan').innerText = "0";
+                    document.getElementById('statSiswa').innerText = "0";
+                });
             }
             if (lastType === 'module' && lastModule) {
                 openModule(lastModule, null);
