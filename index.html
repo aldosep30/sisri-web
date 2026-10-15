@@ -1825,7 +1825,13 @@
     // ==========================================
     // LOGIKA UPLOAD EXCEL & DOWNLOAD TEMPLATE (SHEETJS)
     // ==========================================
+    function userPunyaHakAkses() {
+        const userLevel = sessionStorage.getItem('level');
+        return ['Kepala Sekolah', 'Operator Sekolah', 'Wakasek Sarpras'].includes(userLevel);
+    }
+
     function bukaModalUploadExcel() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
         document.getElementById('modalUploadExcel').classList.remove('hidden');
         document.getElementById('jenisUploadExcel').value = tabAktif; 
         ubahInfoTemplateExcel();
@@ -1834,63 +1840,115 @@
     
     function ubahInfoTemplateExcel() {
         const jenis = document.getElementById('jenisUploadExcel').value;
-        document.getElementById('labelTemplate').innerText = jenis;
-        
-        const wadahRuangan = document.getElementById('filterRuanganContainer');
+        const selectRuangan = document.getElementById('pilihRuanganExcel');
+        if (!selectRuangan) return;
+
+        // Bersihkan isi dropdown
+        selectRuangan.innerHTML = '';
+
+        // Opsi 1: Template Kosong (Benar-benar kosong untuk input baru)
+        const optKosong = document.createElement('option');
+        optKosong.value = 'KOSONG';
+        optKosong.textContent = '1. Template Baru (Kosong Tanpa Data)';
+        selectRuangan.appendChild(optKosong);
+
         if (jenis === 'Aset') {
-            wadahRuangan.style.display = 'block';
-            // Isi dropdown pencarian dengan daftar ruangan yang ada dari database
-            const listRuangan = document.getElementById('listRuangan');
-            listRuangan.innerHTML = '';
-            if (dataNonOpsGlobal.length > 0) {
-                const ruanganUnik = [...new Set(dataNonOpsGlobal.filter(s => s.jenis === 'Aset' && s.kode_ruangan).map(s => s.kode_ruangan + " - " + s.ruangan))];
-                ruanganUnik.forEach(r => listRuangan.innerHTML += `<option value="${r}">`);
+            // Kelompok Opsi 2: Ambil data aset sesuai identitas ruangan yang sudah ada
+            const daftarAset = dataNonOpsGlobal.filter(item => item.jenis === 'Aset' && (item.kode_ruangan || item.ruangan));
+            const mapRuangan = new Map();
+            
+            daftarAset.forEach(item => {
+                const kode = (item.kode_ruangan || '-').toString().trim();
+                const nama = (item.ruangan || '-').toString().trim();
+                const key = kode + '|||' + nama;
+                if (!mapRuangan.has(key)) {
+                    mapRuangan.set(key, `${kode} - ${nama}`);
+                }
+            });
+
+            if (mapRuangan.size > 0) {
+                const optGroup = document.createElement('optgroup');
+                optGroup.label = '--- 2. Update Data Aset Per Ruangan ---';
+                mapRuangan.forEach((label, key) => {
+                    const opt = document.createElement('option');
+                    opt.value = key;
+                    opt.textContent = 'Ruang: ' + label;
+                    optGroup.appendChild(opt);
+                });
+                selectRuangan.appendChild(optGroup);
             }
+
+            // Opsi 3: Unduh seluruh ruangan sekaligus
+            const optSemua = document.createElement('option');
+            optSemua.value = 'SEMUA';
+            optSemua.textContent = '3. Download Seluruh Data Aset (Semua Ruangan)';
+            selectRuangan.appendChild(optSemua);
         } else {
-            wadahRuangan.style.display = 'none'; // Sembunyikan untuk Habis Pakai
+            // Untuk Barang Habis Pakai
+            const optSemua = document.createElement('option');
+            optSemua.value = 'SEMUA';
+            optSemua.textContent = '2. Update Data (Download Seluruh Barang Habis Pakai)';
+            selectRuangan.appendChild(optSemua);
         }
     }
 
-    // 1. Fungsi Unduh Template Non Ops (Menarik Data Lama)
+    // 1. Fungsi Unduh Template / Data Non Ops (Bebas Dummy Data)
     function unduhTemplateExcel() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
         const jenis = document.getElementById('jenisUploadExcel').value;
+        const pilihan = document.getElementById('pilihRuanganExcel').value;
         let ws_data = [];
+        let namaFile = "Template_Baru_" + jenis.replace(" ", "_") + ".xlsx";
         
         if (jenis === 'Aset') {
             ws_data.push(['ID_Sistem', 'Nama UAPKPB', 'Kode UAPKPB', 'Nama Ruangan', 'Kode Ruangan', 'No Urut', 'Nama Barang', 'Merk/Type', 'Kode Barang', 'Tahun Peroleh', 'Jumlah', 'Satuan', 'Penguasaan', 'Kondisi', 'Keterangan']);
             
-            const pilihan = document.getElementById('pilihRuanganExcel').value;
-            const kodePilih = pilihan.split(" - ")[0]; // Tarik kodenya saja
-            
-            let dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Aset');
-            if(kodePilih) dataExport = dataExport.filter(item => item.kode_ruangan === kodePilih);
-            else dataExport = []; // Kosongkan jika tidak memilih ruangan
-            
-            if (dataExport.length > 0) {
-                dataExport.forEach(item => {
-                    ws_data.push([item.id || "", item.uapkpb || "", item.kode_uapkpb || "", item.ruangan || "", item.kode_ruangan || "", item.no_urut || "", item.nama_barang || "", item.merk || "", item.kode_barang || "", item.tahun || "", item.jumlah || "", item.satuan || "", item.penguasaan || "", item.kondisi || "", item.keterangan || ""]);
-                });
-            } else {
-                ws_data.push(['', 'Sekolah Rakyat', '027.01', 'Ruang Kepala Sekolah', 'KS001', '1', 'Meja Kepala Sekolah', 'Olympic', 'SR-MBL-KS01', '2026', '1', 'Unit', 'Milik Sendiri', 'Baik', '-']);
+            let dataExport = [];
+            if (pilihan === 'SEMUA') {
+                dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Aset');
+                namaFile = "Data_Aset_Semua_Ruangan.xlsx";
+            } else if (pilihan !== 'KOSONG') {
+                const [kodePilih, ruangPilih] = pilihan.split('|||');
+                dataExport = dataNonOpsGlobal.filter(item => 
+                    item.jenis === 'Aset' && 
+                    (item.kode_ruangan || '-').toString().trim() === kodePilih &&
+                    (item.ruangan || '-').toString().trim() === ruangPilih
+                );
+                namaFile = "Data_Aset_" + kodePilih.replace(/[^a-zA-Z0-9_-]/g, "_") + ".xlsx";
             }
+            
+            dataExport.forEach(item => {
+                ws_data.push([
+                    item.id || "", item.uapkpb || "", item.kode_uapkpb || "", item.ruangan || "", 
+                    item.kode_ruangan || "", item.no_urut || "", item.nama_barang || "", item.merk || "", 
+                    item.kode_barang || "", item.tahun || "", item.jumlah || "", item.satuan || "", 
+                    item.penguasaan || "", item.kondisi || "", item.keterangan || ""
+                ]);
+            });
         } else {
             ws_data.push(['ID_Sistem', 'Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']);
-            let dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Habis Pakai');
-            if (dataExport.length > 0) {
-                dataExport.forEach(item => ws_data.push([item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""]));
-            } else {
-                ws_data.push(['', 'Spidol Hitam', 'Snowman', 'Gudang ATK', '12', 'Pcs', 'Baik', 'Dana BOS']);
+            
+            if (pilihan === 'SEMUA') {
+                const dataExport = dataNonOpsGlobal.filter(item => item.jenis === 'Habis Pakai');
+                dataExport.forEach(item => {
+                    ws_data.push([
+                        item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", 
+                        item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""
+                    ]);
+                });
+                namaFile = "Data_Update_Habis_Pakai.xlsx";
             }
         }
         
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Template");
-        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
-        XLSX.writeFile(wb, "Data_" + jenis.replace(" ", "_") + ".xlsx");
+        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 18 });
+        XLSX.writeFile(wb, namaFile);
     }
 
     function prosesUploadExcel() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
         const fileInput = document.getElementById('fileExcel');
         const jenis = document.getElementById('jenisUploadExcel').value;
         const btn = document.getElementById('btnProsesExcel');
@@ -1928,28 +1986,39 @@
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
 
-    // 2. Fungsi Unduh & Upload Ops
+    // 2. Fungsi Unduh & Upload Ops (Bebas Dummy Data)
     function bukaModalUploadExcelOps() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
         document.getElementById('modalUploadExcelOps').classList.remove('hidden');
         document.getElementById('fileExcelOps').value = ''; 
     }
 
     function unduhTemplateExcelOps() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
+        const opsiElemen = document.getElementById('pilihOpsiOps');
+        const opsi = opsiElemen ? opsiElemen.value : 'KOSONG';
         let ws_data = [['ID_Sistem', 'Nama Barang', 'Merk/Type', 'Lokasi Gudang', 'Jumlah', 'Satuan', 'Kondisi', 'Keterangan']];
-        if (dataOpsGlobal.length > 0) {
-            dataOpsGlobal.forEach(item => ws_data.push([item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""]));
-        } else {
-            ws_data.push(['', 'Kertas HVS A4', 'Sidu', 'Gudang Utama', '5', 'Rim', 'Baik', '-']);
+        let namaFile = "Template_Baru_Ops.xlsx";
+
+        if (opsi === 'SEMUA' && dataOpsGlobal.length > 0) {
+            dataOpsGlobal.forEach(item => {
+                ws_data.push([
+                    item.id || "", item.nama_barang || "", item.merk || "", item.ruangan || "", 
+                    item.jumlah || "", item.satuan || "", item.kondisi || "", item.keterangan || ""
+                ]);
+            });
+            namaFile = "Data_Update_Ops.xlsx";
         }
         
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Data_Ops");
-        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 15 });
-        XLSX.writeFile(wb, "Data_Update_Ops.xlsx");
+        ws['!cols'] = Array(ws_data[0].length).fill({ wch: 18 });
+        XLSX.writeFile(wb, namaFile);
     }
 
     function prosesUploadExcelOps() {
+        if (!userPunyaHakAkses()) return alert("Anda tidak memiliki akses untuk fitur ini.");
         const fileInput = document.getElementById('fileExcelOps');
         const btn = document.getElementById('btnProsesExcelOps');
         if (!fileInput.files.length) { alert("Pilih file Excel terlebih dahulu!"); return; }
