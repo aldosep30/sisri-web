@@ -2576,11 +2576,14 @@ function renderTabelOps() {
                 <button class="btn-icon" title="Edit Data" onclick="alert('Fitur edit satuan segera diaktifkan')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
             ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600;">Hanya Lihat</span>`;
 
+            // Pewarnaan Spesifik Jenjang (SRMP Hijau, SRMA Biru)
+            let warnaJenjang = row.Jenjang === 'SRMP' ? 'background:#dcfce7; color:#15803d;' : (row.Jenjang === 'SRMA' ? 'background:#e0f2fe; color:#0369a1;' : 'background:#f3f4f6; color:#4b5563;');
+
             tbody.innerHTML += `<tr>
                 <td>${index + 1}</td>
                 <td><b>${row.Nama_Lengkap || '-'}</b></td>
                 <td>${row.NISN || '-'}</td>
-                <td><span style="background:#f3e8ff; color:#7e22ce; padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600;">${row.Jenjang || '-'}</span></td>
+                <td><span style="${warnaJenjang} padding:2px 6px; border-radius:4px; font-size:11px; font-weight:600;">${row.Jenjang || '-'}</span></td>
                 <td>${row.Kelas || '-'}</td>
                 <td>${row.Asrama || '-'}</td>
                 <td>${row.Jenis_Kelamin || '-'}</td>
@@ -2703,15 +2706,16 @@ function renderTabelOps() {
             return; 
         }
         
-        filteredData.forEach((row, index) => {
+       filteredData.forEach((row, index) => {
             // Ubah Laki-laki jadi L, Perempuan jadi P untuk singkatan
             let gender = row.Jenis_Kelamin === 'Laki-laki' ? 'L' : (row.Jenis_Kelamin === 'Perempuan' ? 'P' : '-');
+            let warnaKelas = row.Jenjang === 'SRMP' ? 'color:#15803d; border-color:#bbf7d0; background:#f0fdf4;' : 'color:#0369a1; border-color:#bae6fd; background:#f0f9ff;';
             
             tbody.innerHTML += `<tr>
                 <td>${index + 1}</td>
                 <td><b>${row.Nama_Lengkap || '-'}</b></td>
                 <td>${row.NISN || '-'}</td>
-                <td><span style="background:#f3f4f6; padding:2px 6px; border-radius:4px; font-weight:600; border: 1px solid #e5e7eb;">${row.Kelas || '-'}</span></td>
+                <td><span style="${warnaKelas} padding:2px 6px; border-radius:4px; font-weight:600; border: 1px solid;">${row.Kelas || '-'}</span></td>
                 <td>${row.Asrama || '-'}</td>
                 <td style="text-align:center; font-weight:bold;">${gender}</td>
                 <td>${row.Wali_Asuh || '-'}</td>
