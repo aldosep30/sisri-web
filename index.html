@@ -1555,7 +1555,7 @@
     }
 
    // Fungsi Buka Konten (Menu yang Masih Tahap Pengembangan)
-    function openContent(menuName, event) {
+   function openContent(menuName, event) {
         if(event) event.stopPropagation();
         bersihkanSorotanMenu();
         if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
@@ -1565,14 +1565,13 @@
         sessionStorage.setItem('lastType', 'content');
         sessionStorage.setItem('lastModule', menuName);
         
-        // 1. Sembunyikan SEMUA modul (PASTIKAN modul_development ADA DI SINI JUGA)
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
+        // --- INI YANG DITAMBAHKAN: 'modul_siswa_keluar' di akhir array ---
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
         });
         
-        // 2. Tampilkan halaman khusus pengembangan
         const devPage = document.getElementById('modul_development');
         if(devPage) {
             devPage.classList.remove('hidden');
