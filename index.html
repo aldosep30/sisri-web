@@ -394,6 +394,7 @@
                         <ul class="sub-submenu">
                             <li onclick="openModule('siswa_srmp', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
                             <li onclick="openModule('siswa_srma', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
+                            <li onclick="openModule('siswa_keluar', event)"><span class="material-symbols-outlined submenu-icon">person_remove</span>Siswa Keluar/Mundur</li>
                         </ul>
                     </li>
                     <li class="submenu-label" onclick="openContent('Data Ekstrakurikuler', event)">
@@ -834,6 +835,71 @@
                     </div>
                 </div>
             </div> <!-- PENUTUP MODUL JENJANG -->
+        <!-- ================================================= -->
+            <!-- MODUL DATA SISWA KELUAR / MENGUNDURKAN DIRI       -->
+            <!-- ================================================= -->
+            <div id="modul_siswa_keluar" class="hidden main-content">
+                <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2 style="margin:0; font-size:22px; color:var(--text-main);">Siswa Mengundurkan Diri / Keluar</h2>
+                        <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Riwayat dan arsip surat pengunduran diri siswa.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button class="btn-add admin-siswa" onclick="bukaModalSiswaKeluar()" style="background-color: #dc2626;">
+                            <span class="material-symbols-outlined icon" style="font-size: 18px;">person_remove</span> Lapor Siswa Keluar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card" style="padding: 0;">
+                    <div class="table-responsive">
+                        <table id="tabelSiswaKeluar">
+                            <thead>
+                                <tr><th>No</th><th>Tgl Keluar</th><th>Nama Siswa</th><th>NISN</th><th>Alasan</th><th>PIC Pemulangan</th><th>Surat Arsip</th></tr>
+                            </thead>
+                            <tbody id="tbodySiswaKeluar">
+                                <tr><td colspan="7" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL FORM SISWA KELUAR -->
+            <div class="modal-overlay hidden" id="modalSiswaKeluar" style="z-index: 1005;">
+                <div class="modal-card" style="max-width: 650px;">
+                    <div class="modal-header">
+                        <h3 style="color: #dc2626;">Form Pelaporan Siswa Keluar</h3>
+                        <button class="close-btn" onclick="document.getElementById('modalSiswaKeluar').classList.add('hidden')">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="background:#fee2e2; color:#991b1b; padding:12px; border-radius:8px; font-size:13px; margin-bottom:16px; border: 1px solid #fecaca; display: flex; gap: 12px; align-items: center;">
+                            <span class="material-symbols-outlined">warning</span>
+                            <div>Siswa yang dilaporkan keluar akan <b>otomatis dihapus</b> dari data siswa aktif. Proses ini tidak dapat dibatalkan.</div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Cari & Pilih Siswa *</label>
+                                <select id="inSiswaKeluarPilih" required style="font-weight: bold;"></select>
+                            </div>
+                            <div class="form-group"><label>Tanggal Keluar / Surat *</label><input type="date" id="inTglKeluar" required></div>
+                            <div class="form-group"><label>PIC Pemulangan *</label><input type="text" id="inPicKeluar" placeholder="Nama Guru/Pengurus" required></div>
+                            <div class="form-group full-width">
+                                <label>Alasan Pengunduran Diri / Dikeluarkan *</label>
+                                <textarea id="inAlasanKeluar" rows="3" placeholder="Sertakan rincian alasan dengan jelas..." required></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Upload Surat Persetujuan Orang Tua/Surat Keluar (PDF/Gambar) *</label>
+                                <input type="file" id="inFileSuratKeluar" accept=".pdf, image/*" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-outline" onclick="document.getElementById('modalSiswaKeluar').classList.add('hidden')">Batal</button>
+                        <button type="button" class="btn-primary" style="background-color: #dc2626;" onclick="simpanSiswaKeluar()" id="btnSimpanSiswaKeluar">Proses & Keluarkan Siswa</button>
+                    </div>
+                </div>
+            </div>
 <!-- MODULE 2: OPS (BARANG HABIS PAKAI) -->
             <div id="modul_ops" class="hidden">
                 <div class="page-header" style="flex-wrap: wrap; gap: 16px;">
@@ -1531,7 +1597,7 @@
         }
         
         // Sembunyikan semua wadah
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1590,7 +1656,11 @@
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
             bukaModulJenjang('SRMA');
         }
-        
+        else if(modulName === 'siswa_keluar') {
+            document.getElementById('modul_siswa_keluar').classList.remove('hidden');
+            muatSiswaKeluar();
+        }
+
         closeSidebarMobile();
     }
 
@@ -2925,6 +2995,142 @@
                 alert("Gagal menghapus: " + data.pesan);
             }
         }).catch(err => { alert("Kesalahan jaringan saat menghapus data."); });
+    }
+// ==========================================
+    // LOGIKA MODUL SISWA MENGUNDURKAN DIRI
+    // ==========================================
+    let dataSiswaKeluarGlobal = [];
+
+    function muatSiswaKeluar() {
+        document.getElementById('tbodySiswaKeluar').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Mengambil riwayat data...</td></tr>';
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "get_siswa_keluar" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                dataSiswaKeluarGlobal = data.data; 
+                renderTabelSiswaKeluar(); 
+            } else {
+                document.getElementById('tbodySiswaKeluar').innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada riwayat siswa keluar.</td></tr>';
+            }
+        }).catch(err => {
+            document.getElementById('tbodySiswaKeluar').innerHTML = '<tr><td colspan="7" style="text-align:center;color:red;">Gagal terhubung ke server.</td></tr>';
+        });
+    }
+
+    function renderTabelSiswaKeluar() {
+        const tbody = document.getElementById('tbodySiswaKeluar');
+        tbody.innerHTML = '';
+        if(dataSiswaKeluarGlobal.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px;">Belum ada riwayat siswa keluar.</td></tr>'; 
+            return; 
+        }
+        
+        dataSiswaKeluarGlobal.forEach((row, index) => {
+            // Cek apakah link surat ada
+            let linkHtml = row.link_surat ? `<a href="${row.link_surat}" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; display:flex; align-items:center; gap:4px;"><span class="material-symbols-outlined" style="font-size:16px;">description</span> Lihat Surat</a>` : `-`;
+            
+            // Format Tanggal (Optional)
+            let tglFormat = row.tanggal;
+            if (new Date(row.tanggal) !== "Invalid Date" && !isNaN(new Date(row.tanggal))) {
+                tglFormat = new Date(row.tanggal).toLocaleDateString('id-ID');
+            }
+
+            tbody.innerHTML += `<tr>
+                <td>${index + 1}</td>
+                <td><span style="background:#fee2e2; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:600; font-size:11px;">${tglFormat}</span></td>
+                <td><b>${row.nama_siswa}</b></td>
+                <td>${row.nisn}</td>
+                <td>${row.alasan}</td>
+                <td>${row.pic}</td>
+                <td>${linkHtml}</td>
+            </tr>`;
+        });
+    }
+
+    function bukaModalSiswaKeluar() {
+        // Harus ambil data siswa terbaru agar dropdown terisi anak yang masih aktif
+        document.getElementById('inSiswaKeluarPilih').innerHTML = '<option value="">Memuat data siswa...</option>';
+        document.getElementById('modalSiswaKeluar').classList.remove('hidden');
+        
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "get_siswa" })
+        }).then(res => res.json()).then(data => {
+            if(data.status === "berhasil") {
+                const selectSiswa = document.getElementById('inSiswaKeluarPilih');
+                selectSiswa.innerHTML = '<option value="">-- Cari & Pilih Siswa --</option>';
+                // Urutkan berdasarkan nama
+                let daftarnya = data.data.sort((a, b) => (a.Nama_Lengkap > b.Nama_Lengkap) ? 1 : -1);
+                daftarnya.forEach(s => {
+                    if(s.Nama_Lengkap) {
+                        selectSiswa.innerHTML += `<option value="${s.NISN}|||${s.Nama_Lengkap}">${s.Nama_Lengkap} (NISN: ${s.NISN || '-'} | Kelas: ${s.Kelas || '-'})</option>`;
+                    }
+                });
+            }
+        });
+        
+        document.getElementById('inTglKeluar').valueAsDate = new Date();
+        document.getElementById('inPicKeluar').value = '';
+        document.getElementById('inAlasanKeluar').value = '';
+        document.getElementById('inFileSuratKeluar').value = '';
+    }
+
+    function simpanSiswaKeluar() {
+        const btn = document.getElementById('btnSimpanSiswaKeluar');
+        const selectSiswa = document.getElementById('inSiswaKeluarPilih').value;
+        const tgl = document.getElementById('inTglKeluar').value;
+        const pic = document.getElementById('inPicKeluar').value;
+        const alasan = document.getElementById('inAlasanKeluar').value;
+        const fileInput = document.getElementById('inFileSuratKeluar');
+
+        if(!selectSiswa || !tgl || !pic || !alasan || !fileInput.files.length) {
+            alert("Mohon lengkapi semua data dan wajib upload file surat pengunduran diri.");
+            return;
+        }
+
+        const file = fileInput.files[0];
+        const [nisnSiswa, namaSiswa] = selectSiswa.split("|||");
+
+        btn.disabled = true; 
+        btn.innerText = "Mengupload File & Memproses...";
+
+        // Konversi File Fisik ke Base64 Teks untuk diunggah ke Google Apps Script
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const payload = {
+                action: "add_siswa_keluar",
+                user_penginput: sessionStorage.getItem('username'),
+                user_level: sessionStorage.getItem('level'),
+                nisn: nisnSiswa,
+                nama_siswa: namaSiswa,
+                tanggal: tgl,
+                pic: pic,
+                alasan: alasan,
+                fileName: file.name,
+                fileData: e.target.result // Hasil konversi Base64
+            };
+
+            fetch(scriptURL, {
+                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                btn.disabled = false; btn.innerText = "Proses & Keluarkan Siswa";
+                if(data.status === "berhasil") {
+                    alert("Sukses: " + data.pesan);
+                    document.getElementById('modalSiswaKeluar').classList.add('hidden');
+                    muatSiswaKeluar();
+                    // Paksa memuat ulang data siswa utama agar cache hilang
+                    if(typeof muatDataSiswa === 'function') muatDataSiswa(); 
+                } else {
+                    alert("Gagal: " + data.pesan);
+                }
+            }).catch(err => {
+                btn.disabled = false; btn.innerText = "Proses & Keluarkan Siswa";
+                alert("Terjadi kesalahan jaringan saat proses upload.");
+            });
+        };
+        reader.readAsDataURL(file); // Trigger pembacaan file
     }
 </script>
 </body>
