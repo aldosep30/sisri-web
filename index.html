@@ -392,8 +392,8 @@
                             <span class="material-symbols-outlined chevron-icon">expand_more</span>
                         </div>
                         <ul class="sub-submenu">
-                            <li onclick="openModule('siswa_srmp', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMP</li>
-                            <li onclick="openModule('siswa_srma', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SRMA</li>
+                            <li onclick="openModule('siswa_smp', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SMP</li>
+                            <li onclick="openModule('siswa_sma', event)"><span class="material-symbols-outlined submenu-icon">person</span>Siswa SMA</li>
                             <li onclick="openModule('siswa_keluar', event)"><span class="material-symbols-outlined submenu-icon">person_remove</span>Siswa Keluar/Mundur</li>
                         </ul>
                     </li>
@@ -508,8 +508,8 @@
                             <p class="stat-title text-purple">Jumlah Siswa Aktif</p>
                             <h3 class="stat-value" id="statSiswa">0</h3>
                             <div class="stat-desc" style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
-                                <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SRMP: <span id="valSRMP">0</span></span>
-                                <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SRMA: <span id="valSRMA">0</span></span>
+                                <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SMP: <span id="valSMP">0</span></span>
+                                <span style="background: #f3e8ff; color: #7e22ce; padding: 2px 6px; border-radius: 4px; font-weight: 600;">SMA: <span id="valSMA">0</span></span>
                             </div>
                         </div>
                     </div>
@@ -580,8 +580,8 @@
                             </div>
                             <p class="sc-desc">Data siswa, ekstrakurikuler, dan pengelolaan reservasi ruangan sekolah.</p>
                             <div class="sc-links">
-                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SRMP', event)"><span class="material-symbols-outlined">groups</span> Data SRMP <span class="material-symbols-outlined arrow">chevron_right</span></button>
-                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SRMA', event)"><span class="material-symbols-outlined">groups</span> Data SRMA <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SMP', event)"><span class="material-symbols-outlined">groups</span> Data SMP <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SMA', event)"><span class="material-symbols-outlined">groups</span> Data SMA <span class="material-symbols-outlined arrow">chevron_right</span></button>
                                 <button class="sc-btn text-green hover-green" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined">sports_soccer</span> Ekskul <span class="material-symbols-outlined arrow">chevron_right</span></button>
                                 <button class="sc-btn text-green hover-green" onclick="openContent('Pengajuan Penggunaan Ruangan', event)"><span class="material-symbols-outlined">meeting_room</span> Ruangan <span class="material-symbols-outlined arrow">chevron_right</span></button>
                             </div>
@@ -676,9 +676,9 @@
                 <!-- Notifikasi Status Upload -->
                 <div id="statusUploadSiswa" style="margin-bottom: 24px; padding: 16px; border-radius: 12px; display: none; text-align: center; font-weight: 600; font-size: 15px;"></div>
 
-                <!-- Tombol Shortcut ke Submenu SRMP & SRMA -->
+                <!-- Tombol Shortcut ke Submenu SMP & SMA -->
                 <div class="stats-grid">
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openModule('siswa_srmp', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #86efac; transition: all 0.3s;" onclick="openModule('siswa_smp', event)">
                         <div class="stat-icon bg-light-green"><span class="material-symbols-outlined text-green">school</span></div>
                         <div class="stat-info">
                             <p class="stat-title text-green">Lihat Data Khusus</p>
@@ -686,7 +686,7 @@
                         </div>
                     </div>
                     
-                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openModule('siswa_srma', event)">
+                    <div class="stat-card" style="cursor: pointer; border-left: 4px solid #7dd3fc; transition: all 0.3s;" onclick="openModule('siswa_sma', event)">
                         <div class="stat-icon bg-light-blue"><span class="material-symbols-outlined text-blue">school</span></div>
                         <div class="stat-info">
                             <p class="stat-title text-blue">Lihat Data Khusus</p>
@@ -758,7 +758,7 @@
                                 <div class="form-group"><label>Anak Ke-</label><input type="number" id="siswa_anak_ke"></div>
                                 <div class="form-group full-width"><label>Alamat Lengkap</label><textarea id="siswa_alamat" rows="2"></textarea></div>
                                 <div class="form-group"><label>Jenjang *</label>
-                                    <select id="siswa_jenjang" required><option value="">-- Pilih --</option><option value="SRMP">SRMP (Menengah Pertama)</option><option value="SRMA">SRMA (Menengah Atas)</option></select>
+                                    <select id="siswa_jenjang" required><option value="">-- Pilih --</option><option value="SMP">SMP (Sekolah Menengah Pertama)</option><option value="SMA">SMA (Sekolah Menengah Atas)</option></select>
                                 </div>
                                 <div class="form-group"><label>Kelas</label><input type="text" id="siswa_kelas" placeholder="Cth: 7A / 10 MIPA"></div>
                                 <div class="form-group"><label>Wali Asuh</label><input type="text" id="siswa_wali"></div>
@@ -787,7 +787,7 @@
                 </div>
             </div> <!-- PENUTUP MODAL FORM SISWA -->
             <!-- ================================================= -->
-            <!-- MODUL DATA SISWA PER JENJANG (SRMP / SRMA)        -->
+            <!-- MODUL DATA SISWA PER JENJANG (SMP / SMA)        -->
             <!-- ================================================= -->
             <div id="modul_siswa_jenjang" class="hidden main-content">
                 <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 16px;">
@@ -1364,16 +1364,16 @@
                     }
                     document.getElementById('statPerbaikan').innerText = tPerbaikan;
 
-                    // 3. Kalkulasi Data Siswa (Total, Siswa SRMP, dan Siswa SRMA)
-                    let tSiswa = 0, tSRMP = 0, tSRMA = 0;
+                    // 3. Kalkulasi Data Siswa (Total, Siswa SMP, dan Siswa SMA)
+                    let tSiswa = 0, tSMP = 0, tSMA = 0;
                     if(rSiswa.status === "berhasil") {
                         tSiswa = rSiswa.data.length;
-                        tSRMP = rSiswa.data.filter(item => item.Jenjang === "SRMP").length;
-                        tSRMA = rSiswa.data.filter(item => item.Jenjang === "SRMA").length;
+                        tSMP = rSiswa.data.filter(item => item.Jenjang === "SMP").length;
+                        tSMA = rSiswa.data.filter(item => item.Jenjang === "SMA").length;
                     }
                     document.getElementById('statSiswa').innerText = tSiswa;
-                    document.getElementById('valSRMP').innerText = tSRMP;
-                    document.getElementById('valSRMA').innerText = tSRMA;
+                    document.getElementById('valSMP').innerText = tSMP;
+                    document.getElementById('valSMA').innerText = tSMA;
 
                 }).catch(err => {
                     console.log("Gagal memuat statistik dashboard.", err);
@@ -1616,13 +1616,13 @@
                 if(typeof muatDataSiswa === 'function') muatDataSiswa(); 
             }
         } 
-        else if(modulName === 'siswa_srmp') {
+        else if(modulName === 'siswa_smp') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMP');
+            bukaModulJenjang('SMP');
         }
-        else if(modulName === 'siswa_srma') {
+        else if(modulName === 'siswa_sma') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMA');
+            bukaModulJenjang('SMA');
         }
         // --- INI PEMANGGILAN HALAMAN BARUNYA ---
         else if(modulName === 'siswa_keluar') {
@@ -1700,13 +1700,13 @@
                 if(typeof muatDataSiswa === 'function') muatDataSiswa(); // Tarik data untuk tabel
             }
         } // <--- TANDA KURUNG INI YANG TADI HILANG!
-        else if(modulName === 'siswa_srmp') {
+        else if(modulName === 'siswa_smp') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMP');
+            bukaModulJenjang('SMP');
         }
-        else if(modulName === 'siswa_srma') {
+        else if(modulName === 'siswa_sma') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMA');
+            bukaModulJenjang('SMA');
         }
         else if(modulName === 'siswa_keluar') {
             document.getElementById('modul_siswa_keluar').classList.remove('hidden');
@@ -1809,13 +1809,13 @@
                 if(typeof muatDataSiswa === 'function') muatDataSiswa(); 
             }
         } 
-        else if(modulName === 'siswa_srmp') {
+        else if(modulName === 'siswa_smp') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMP');
+            bukaModulJenjang('SMP');
         }
-        else if(modulName === 'siswa_srma') {
+        else if(modulName === 'siswa_sma') {
             document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
-            bukaModulJenjang('SRMA');
+            bukaModulJenjang('SMA');
         }
         else if(modulName === 'siswa_keluar') {
             const wadahSiswaKeluar = document.getElementById('modul_siswa_keluar');
@@ -2854,7 +2854,7 @@ function renderGrafikPemeliharaan() {
             // Jika kosong melompong, berikan baris contoh
             ws_data.push([
                 '', 'Budi Santoso', '0051234567', '3271012345678901', '3271019876543210', 'Bogor', '2008-05-15', '18 Tahun',
-                'Laki-laki', 'Islam', '1', 'Jl. Merdeka No.1', 'SRMA', '10 MIPA 1', 'Pak Ali', 'Asrama Putra 1',
+                'Laki-laki', 'Islam', '1', 'Jl. Merdeka No.1', 'SMA', '10 MIPA 1', 'Pak Ali', 'Asrama Putra 1',
                 '165', '55.5', '20.4', 'Normal (Sehat)', 'Tidak ada', 'L', '32', '42'
             ]);
         }
@@ -2919,8 +2919,8 @@ function renderGrafikPemeliharaan() {
                 <button class="btn-icon" title="Edit Data" onclick="alert('Fitur edit satuan segera diaktifkan')"><span class="material-symbols-outlined" style="font-size:18px;">edit</span></button>
             ` : `<span style="font-size:11px; color:#9ca3af; font-weight:600;">Hanya Lihat</span>`;
 
-            // Pewarnaan Spesifik Jenjang (SRMP Hijau, SRMA Biru)
-            let warnaJenjang = row.Jenjang === 'SRMP' ? 'background:#dcfce7; color:#15803d;' : (row.Jenjang === 'SRMA' ? 'background:#e0f2fe; color:#0369a1;' : 'background:#f3f4f6; color:#4b5563;');
+            // Pewarnaan Spesifik Jenjang (SMP Hijau, SMA Biru)
+            let warnaJenjang = row.Jenjang === 'SMP' ? 'background:#dcfce7; color:#15803d;' : (row.Jenjang === 'SMA' ? 'background:#e0f2fe; color:#0369a1;' : 'background:#f3f4f6; color:#4b5563;');
 
             tbody.innerHTML += `<tr>
                 <td>${index + 1}</td>
@@ -2984,12 +2984,12 @@ function renderGrafikPemeliharaan() {
         alert("Fitur simpan manual akan segera diaktifkan setelah database siap!");
     }
 // ==========================================
-    // LOGIKA FILTER SUB-MENU (SRMP & SRMA)
+    // LOGIKA FILTER SUB-MENU (SMP & SMA)
     // ==========================================
     let aktifJenjang = "";
 
     function bukaModulJenjang(jenjang) {
-        aktifJenjang = jenjang; // Set apakah ini SRMP atau SRMA
+        aktifJenjang = jenjang; // Set apakah ini SMP atau SMA
         document.getElementById('titleJenjang').innerText = "Daftar Siswa " + jenjang;
         document.getElementById('searchJenjang').value = ""; // Reset pencarian
         
@@ -3052,7 +3052,7 @@ function renderGrafikPemeliharaan() {
        filteredData.forEach((row, index) => {
             // Ubah Laki-laki jadi L, Perempuan jadi P untuk singkatan
             let gender = row.Jenis_Kelamin === 'Laki-laki' ? 'L' : (row.Jenis_Kelamin === 'Perempuan' ? 'P' : '-');
-            let warnaKelas = row.Jenjang === 'SRMP' ? 'color:#15803d; border-color:#bbf7d0; background:#f0fdf4;' : 'color:#0369a1; border-color:#bae6fd; background:#f0f9ff;';
+            let warnaKelas = row.Jenjang === 'SMP' ? 'color:#15803d; border-color:#bbf7d0; background:#f0fdf4;' : 'color:#0369a1; border-color:#bae6fd; background:#f0f9ff;';
             
             tbody.innerHTML += `<tr>
                 <td>${index + 1}</td>
