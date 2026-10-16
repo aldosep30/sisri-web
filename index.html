@@ -1729,7 +1729,8 @@
         sessionStorage.setItem('lastType', 'content');
         sessionStorage.setItem('lastModule', menuName);
         
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang'];
+        // PENAMBAHAN 'modul_siswa_keluar' DI SINI
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1746,6 +1747,86 @@
         closeSidebarMobile();
     }
 
+    function openModule(modulName, event) {
+        if(event) event.stopPropagation();
+        bersihkanSorotanMenu();
+        
+        sessionStorage.setItem('lastType', 'module');
+        sessionStorage.setItem('lastModule', modulName);
+        
+        if(event && event.currentTarget && (event.currentTarget.classList.contains('submenu-label') || event.currentTarget.tagName === 'LI')) {
+            event.currentTarget.classList.add('selected');
+        }
+        
+        // PENAMBAHAN 'modul_siswa_keluar' DI SINI JUGA
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar'];
+        semuaModul.forEach(id => {
+            const elemen = document.getElementById(id);
+            if(elemen) elemen.classList.add('hidden'); 
+        });
+        
+        if(modulName === 'dashboard') {
+            document.getElementById('defaultContent').classList.remove('hidden');
+        } 
+        else if(modulName === 'nonops') {
+            document.getElementById('modul_nonops').classList.remove('hidden');
+            if(typeof muatDataNonOps === 'function') muatDataNonOps(); 
+        } 
+        else if(modulName === 'ops') {
+            document.getElementById('modul_ops').classList.remove('hidden');
+            if(typeof muatDataOps === 'function') muatDataOps(); 
+        } 
+        else if(modulName === 'pemeliharaan') {
+            document.getElementById('modul_pemeliharaan').classList.remove('hidden');
+            if(typeof renderGrafikPemeliharaan === 'function') renderGrafikPemeliharaan();
+        } 
+        else if(modulName === 'pengajuan_perbaikan') {
+            const wadahPerbaikan = document.getElementById('modul_pengajuan_perbaikan');
+            if(wadahPerbaikan) {
+                wadahPerbaikan.classList.remove('hidden');
+                if(typeof siapkanFormPerbaikan === 'function') siapkanFormPerbaikan();
+            }
+        }
+        else if(modulName === 'barang_rusak') {
+            const wadahRusak = document.getElementById('modul_barang_rusak');
+            if(wadahRusak) {
+                wadahRusak.classList.remove('hidden');
+                if(typeof muatDataBarangRusak === 'function') muatDataBarangRusak();
+            }
+        }
+        else if(modulName === 'daftar_pemeliharaan') {
+            const wadahDaftarPemeliharaan = document.getElementById('modul_daftar_pemeliharaan');
+            if(wadahDaftarPemeliharaan) {
+                wadahDaftarPemeliharaan.classList.remove('hidden');
+                if(typeof muatDataDaftarPemeliharaan === 'function') muatDataDaftarPemeliharaan();
+            }
+        }
+        else if(modulName === 'data_siswa') {
+            const wadahSiswa = document.getElementById('modul_data_siswa');
+            if(wadahSiswa) {
+                wadahSiswa.classList.remove('hidden');
+                cekAksesDataSiswa(); 
+                if(typeof muatDataSiswa === 'function') muatDataSiswa(); 
+            }
+        } 
+        else if(modulName === 'siswa_srmp') {
+            document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
+            bukaModulJenjang('SRMP');
+        }
+        else if(modulName === 'siswa_srma') {
+            document.getElementById('modul_siswa_jenjang').classList.remove('hidden');
+            bukaModulJenjang('SRMA');
+        }
+        else if(modulName === 'siswa_keluar') {
+            const wadahSiswaKeluar = document.getElementById('modul_siswa_keluar');
+            if (wadahSiswaKeluar) {
+                wadahSiswaKeluar.classList.remove('hidden');
+                if(typeof muatSiswaKeluar === 'function') muatSiswaKeluar();
+            }
+        }
+        
+        closeSidebarMobile();
+    }
     // ==========================================
     // LOGIKA MODUL NON OPS (ASET)
     // ==========================================
