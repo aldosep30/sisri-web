@@ -2349,31 +2349,34 @@
         document.getElementById('valAsetRusak').innerText = "...";
         document.getElementById('valSedangDiperbaiki').innerText = "...";
 
-        // 2. Tarik 3 Database Sekaligus (Non-Ops, Ops, Perbaikan) secara bersamaan!
+        // 2. Tarik 3 Database Sekaligus (Non-Ops, Ops, Perbaikan) secara bersamaan
         Promise.all([
             fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_nonops" }) }).then(res => res.json()),
             fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_ops" }) }).then(res => res.json()),
             fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json())
         ]).then(([resNonOps, resOps, resPerbaikan]) => {
             
-            let totalAset = 0; let totalRusak = 0; let sedangDiperbaiki = 0;
+            let totalAset = 0; 
+            let totalRusak = 0; 
+            let sedangDiperbaiki = 0;
 
-            // 3. Kalkulasi Data Gudang Non Ops (Aset)
-            if(resNonOps.status === "berhasil") {
+            // 3. Kalkulasi Data Gudang Non Ops (HANYA ASET)
+            if(resNonOps.status === "berhasil" && resNonOps.data) {
+                // Filter hanya yang berjenis 'Aset'
                 const dataAset = resNonOps.data.filter(item => item.jenis === "Aset");
                 totalAset += dataAset.length;
                 totalRusak += dataAset.filter(item => item.kondisi === "Rusak").length;
             }
             
             // 4. Kalkulasi Data Gudang Ops (Habis Pakai)
-            // (Dihapus dari penjumlahan Total Aset agar nilai aset akurat, buka baris di bawah jika ingin ditambahkan)
-            // if(resOps.status === "berhasil") { totalAset += resOps.data.length; totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length; }
+            // (Opsional: Hapus tanda // di bawah ini jika barang Habis Pakai juga ingin dihitung sebagai "Aset" di angka statistik)
+            // if(resOps.status === "berhasil" && resOps.data) { totalAset += resOps.data.length; totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length; }
             
             // 5. Kalkulasi Status Pengajuan Perbaikan
             let dataPengajuan = [];
-            if(resPerbaikan.status === "berhasil") {
+            if(resPerbaikan.status === "berhasil" && resPerbaikan.data) {
                 dataPengajuan = resPerbaikan.data;
-                // Hitung yang statusnya bukan 'Selesai'
+                // Hitung yang statusnya "Sedang Diperbaiki" atau belum selesai
                 sedangDiperbaiki += dataPengajuan.filter(item => item.status !== "Selesai").length;
             }
 
@@ -2417,14 +2420,14 @@
                 }
             });
 
-            // Gunakan requestAnimationFrame untuk memastikan Canvas sudah selesai dirender oleh DOM
-            requestAnimationFrame(() => {
+            // Beri jeda kecil (setTimeout) agar HTML/DOM siap menggambar Canvas
+            setTimeout(() => {
                 // --- RENDER GRAFIK GARIS (Kerusakan Masuk) ---
-                if(chartKerusakanInstance) { chartKerusakanInstance.destroy(); }
                 const canvasRusak = document.getElementById('chartKerusakan');
                 if (canvasRusak) {
-                    const ctxRusak = canvasRusak.getContext('2d');
-                    chartKerusakanInstance = new Chart(ctxRusak, {
+                    if (chartKerusakanInstance) chartKerusakanInstance.destroy(); // Hancurkan yang lama agar tidak tumpang tindih
+                    
+                    chartKerusakanInstance = new Chart(canvasRusak.getContext('2d'), {
                         type: 'line',
                         data: {
                             labels: bulanLabels,
@@ -2440,11 +2443,11 @@
                 }
 
                 // --- RENDER GRAFIK BATANG (Perbaikan Selesai) ---
-                if(chartPerbaikanInstance) { chartPerbaikanInstance.destroy(); }
                 const canvasPerbaikan = document.getElementById('chartPerbaikan');
                 if (canvasPerbaikan) {
-                    const ctxPerbaikan = canvasPerbaikan.getContext('2d');
-                    chartPerbaikanInstance = new Chart(ctxPerbaikan, {
+                    if (chartPerbaikanInstance) chartPerbaikanInstance.destroy();
+                    
+                    chartPerbaikanInstance = new Chart(canvasPerbaikan.getContext('2d'), {
                         type: 'bar',
                         data: {
                             labels: bulanLabels,
@@ -2457,7 +2460,7 @@
                         options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
                     });
                 }
-            });
+            }, 300); // Jeda 300ms
 
         }).catch(err => {
             console.error("Gagal memuat data dashboard:", err);
