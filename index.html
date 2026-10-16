@@ -2361,28 +2361,29 @@
             let sedangDiperbaiki = 0;
 
             // 3. Kalkulasi Data Aset (Dari Sheet Non-Ops)
-            if(resNonOps.status === "berhasil" && resNonOps.data) {
-                // Saring khusus yang jenisnya "Aset"
+            if(resNonOps && resNonOps.status === "berhasil" && resNonOps.data) {
                 const dataAset = resNonOps.data.filter(item => item.jenis === "Aset");
                 totalAset += dataAset.length;
                 totalRusak += dataAset.filter(item => item.kondisi === "Rusak").length;
             }
             
-            // 4. Kalkulasi Pengajuan Perbaikan
+            // 4. Kalkulasi Data Ops (Hapus komentar if di bawah jika Ops ingin dihitung sebagai Total Aset)
+            // if(resOps && resOps.status === "berhasil" && resOps.data) { totalAset += resOps.data.length; totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length; }
+            
+            // 5. Kalkulasi Pengajuan Perbaikan
             let dataPengajuan = [];
-            if(resPerbaikan.status === "berhasil" && resPerbaikan.data) {
+            if(resPerbaikan && resPerbaikan.status === "berhasil" && resPerbaikan.data) {
                 dataPengajuan = resPerbaikan.data;
-                // Asumsi status jika tidak selesai berarti sedang dikerjakan/menunggu
                 sedangDiperbaiki += dataPengajuan.filter(item => item.status !== "Selesai").length;
             }
 
-            // 5. Tampilkan ke Layar Teks Statistik
+            // 6. Tampilkan ke Layar Teks Statistik
             document.getElementById('valTotalAset').innerText = totalAset;
             document.getElementById('valAsetRusak').innerText = totalRusak;
             document.getElementById('valSedangDiperbaiki').innerText = sedangDiperbaiki;
 
             // =====================================
-            // 6. LOGIKA GRAFIK (6 BULAN TERAKHIR)
+            // 7. LOGIKA GRAFIK (6 BULAN TERAKHIR)
             // =====================================
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
             let bulanLabels = [];
@@ -2397,7 +2398,7 @@
             }
 
             // Kelompokkan data perbaikan berdasarkan bulan
-            if(dataPengajuan.length > 0) {
+            if(dataPengajuan && dataPengajuan.length > 0) {
                 dataPengajuan.forEach(item => {
                     if(item.tanggal) {
                         let tgl = new Date(item.tanggal); 
@@ -2418,13 +2419,16 @@
                 });
             }
 
-            // 7. Proses Render Grafik menggunakan setTimeout 
-            // agar memastikan elemen HTML sudah benar-benar siap dan terlihat (visible)
+            // 8. Proses Render Grafik dengan Penundaan & Pembersihan Kanvas
             setTimeout(() => {
                 // A. Grafik Laporan Kerusakan (Garis Merah)
                 const canvasRusak = document.getElementById('chartKerusakan');
                 if (canvasRusak) {
-                    if (chartKerusakanInstance) chartKerusakanInstance.destroy(); // Hancurkan sisa cache grafik lama
+                    // Hancurkan cache grafik lama jika ada
+                    if (chartKerusakanInstance !== null) {
+                        chartKerusakanInstance.destroy();
+                    }
+                    
                     chartKerusakanInstance = new Chart(canvasRusak.getContext('2d'), {
                         type: 'line',
                         data: {
@@ -2432,8 +2436,11 @@
                             datasets: [{
                                 label: 'Laporan Kerusakan',
                                 data: dataGrafikRusak,
-                                borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                                borderWidth: 2, fill: true, tension: 0.4
+                                borderColor: '#dc2626', 
+                                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                                borderWidth: 2, 
+                                fill: true, 
+                                tension: 0.4
                             }]
                         },
                         options: { 
@@ -2447,7 +2454,10 @@
                 // B. Grafik Perbaikan Selesai (Batang Biru)
                 const canvasPerbaikan = document.getElementById('chartPerbaikan');
                 if (canvasPerbaikan) {
-                    if (chartPerbaikanInstance) chartPerbaikanInstance.destroy();
+                    if (chartPerbaikanInstance !== null) {
+                        chartPerbaikanInstance.destroy();
+                    }
+                    
                     chartPerbaikanInstance = new Chart(canvasPerbaikan.getContext('2d'), {
                         type: 'bar',
                         data: {
@@ -2455,7 +2465,8 @@
                             datasets: [{
                                 label: 'Aset Selesai Diperbaiki',
                                 data: dataGrafikSelesai,
-                                backgroundColor: '#0284c7', borderRadius: 4
+                                backgroundColor: '#0284c7', 
+                                borderRadius: 4
                             }]
                         },
                         options: { 
@@ -2465,7 +2476,7 @@
                         }
                     });
                 }
-            }, 300); // 300 milliseconds delay
+            }, 400); // 400 milliseconds delay agar DOM pasti sudah siap
 
         }).catch(err => {
             console.error("Gagal memuat data dashboard:", err);
