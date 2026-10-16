@@ -2337,154 +2337,177 @@
         };
         reader.readAsArrayBuffer(fileInput.files[0]);
     }
-    // ==========================================
-    // LOGIKA DASHBOARD PEMELIHARAAN (GRAFIK DINAMIS)
-    // ==========================================
-    let chartKerusakanInstance = null;
-    let chartPerbaikanInstance = null;
+// ==========================================================
+// PENGGANTI BLOK "LOGIKA DASHBOARD PEMELIHARAAN (GRAFIK DINAMIS)"
+// Ganti seluruh blok lama (mulai `let chartKerusakanInstance = null;`
+// sampai penutup `function renderGrafikPemeliharaan() { ... }`)
+// dengan isi file ini.
+// ==========================================================
+let chartKerusakanInstance = null;
+let chartPerbaikanInstance = null;
 
-    function renderGrafikPemeliharaan() {
-        // 1. Indikator Proses Loading
-        document.getElementById('valTotalAset').innerText = "...";
-        document.getElementById('valAsetRusak').innerText = "...";
-        document.getElementById('valSedangDiperbaiki').innerText = "...";
+const NAMA_BULAN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
 
-        // 2. Tarik Data Serentak dari Backend
-        Promise.all([
-            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_nonops" }) }).then(res => res.json()),
-            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_ops" }) }).then(res => res.json()),
-            fetch(scriptURL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "get_perbaikan" }) }).then(res => res.json())
-        ]).then(([resNonOps, resOps, resPerbaikan]) => {
-            
-            let totalAset = 0; 
-            let totalRusak = 0; 
-            let sedangDiperbaiki = 0;
+// Helper: panggil backend Apps Script
+function postApi(action) {
+    return fetch(scriptURL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: action })
+    }).then(res => res.json());
+}
 
-            // 3. Kalkulasi Data Aset (Dari Sheet Non-Ops)
-            if(resNonOps && resNonOps.status === "berhasil" && resNonOps.data) {
-                const dataAset = resNonOps.data.filter(item => item.jenis === "Aset");
-                totalAset += dataAset.length;
-                totalRusak += dataAset.filter(item => item.kondisi === "Rusak").length;
-            }
-            
-            // 4. Kalkulasi Data Ops (Hapus komentar if di bawah jika Ops ingin dihitung sebagai Total Aset)
-            // if(resOps && resOps.status === "berhasil" && resOps.data) { totalAset += resOps.data.length; totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length; }
-            
-            // 5. Kalkulasi Pengajuan Perbaikan
-            let dataPengajuan = [];
-            if(resPerbaikan && resPerbaikan.status === "berhasil" && resPerbaikan.data) {
-                dataPengajuan = resPerbaikan.data;
-                sedangDiperbaiki += dataPengajuan.filter(item => item.status !== "Selesai").length;
-            }
+// Helper: baca tanggal dari spreadsheet (ISO, Date, atau dd/mm/yyyy)
+function parseTanggal(v) {
+    if (!v) return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+    const s = String(v).trim();
+    const m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/); // dd/mm/yyyy
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    const d = new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+}
 
-            // 6. Tampilkan ke Layar Teks Statistik
-            document.getElementById('valTotalAset').innerText = totalAset;
-            document.getElementById('valAsetRusak').innerText = totalRusak;
-            document.getElementById('valSedangDiperbaiki').innerText = sedangDiperbaiki;
+// Helper: kunci bulan unik (tahun + bulan) supaya Okt 2025 tidak tercampur Okt 2026
+function kunciBulan(d) { return d.getFullYear() + '-' + d.getMonth(); }
 
-            // =====================================
-            // 7. LOGIKA GRAFIK (6 BULAN TERAKHIR)
-            // =====================================
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
-            let bulanLabels = [];
-            let dataGrafikRusak = [0, 0, 0, 0, 0, 0];
-            let dataGrafikSelesai = [0, 0, 0, 0, 0, 0];
-
-            // Setup label 6 bulan ke belakang
-            let d = new Date();
-            for (let m = 5; m >= 0; m--) {
-                let tempD = new Date(d.getFullYear(), d.getMonth() - m, 1);
-                bulanLabels.push(monthNames[tempD.getMonth()]);
-            }
-
-            // Kelompokkan data perbaikan berdasarkan bulan
-            if(dataPengajuan && dataPengajuan.length > 0) {
-                dataPengajuan.forEach(item => {
-                    if(item.tanggal) {
-                        let tgl = new Date(item.tanggal); 
-                        if(!isNaN(tgl.getTime())) {
-                            let namaBulan = monthNames[tgl.getMonth()];
-                            let indexBulan = bulanLabels.indexOf(namaBulan);
-                            
-                            // Masukkan ke array jika masuk dalam 6 bulan terakhir
-                            if(indexBulan !== -1) {
-                                if(item.status !== "Selesai") {
-                                    dataGrafikRusak[indexBulan]++; 
-                                } else {
-                                    dataGrafikSelesai[indexBulan]++; 
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // 8. Proses Render Grafik dengan Penundaan & Pembersihan Kanvas
-            setTimeout(() => {
-                // A. Grafik Laporan Kerusakan (Garis Merah)
-                const canvasRusak = document.getElementById('chartKerusakan');
-                if (canvasRusak) {
-                    // Hancurkan cache grafik lama jika ada
-                    if (chartKerusakanInstance !== null) {
-                        chartKerusakanInstance.destroy();
-                    }
-                    
-                    chartKerusakanInstance = new Chart(canvasRusak.getContext('2d'), {
-                        type: 'line',
-                        data: {
-                            labels: bulanLabels,
-                            datasets: [{
-                                label: 'Laporan Kerusakan',
-                                data: dataGrafikRusak,
-                                borderColor: '#dc2626', 
-                                backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                                borderWidth: 2, 
-                                fill: true, 
-                                tension: 0.4
-                            }]
-                        },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false, 
-                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } 
-                        }
-                    });
-                }
-
-                // B. Grafik Perbaikan Selesai (Batang Biru)
-                const canvasPerbaikan = document.getElementById('chartPerbaikan');
-                if (canvasPerbaikan) {
-                    if (chartPerbaikanInstance !== null) {
-                        chartPerbaikanInstance.destroy();
-                    }
-                    
-                    chartPerbaikanInstance = new Chart(canvasPerbaikan.getContext('2d'), {
-                        type: 'bar',
-                        data: {
-                            labels: bulanLabels,
-                            datasets: [{
-                                label: 'Aset Selesai Diperbaiki',
-                                data: dataGrafikSelesai,
-                                backgroundColor: '#0284c7', 
-                                borderRadius: 4
-                            }]
-                        },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false, 
-                            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } 
-                        }
-                    });
-                }
-            }, 400); // 400 milliseconds delay agar DOM pasti sudah siap
-
-        }).catch(err => {
-            console.error("Gagal memuat data dashboard:", err);
-            document.getElementById('valTotalAset').innerText = "0";
-            document.getElementById('valAsetRusak').innerText = "0";
-            document.getElementById('valSedangDiperbaiki').innerText = "0";
-        });
+// Menggambar / memperbarui kedua grafik
+function gambarGrafikPemeliharaan(labels, dataRusak, dataSelesai) {
+    if (typeof Chart === 'undefined') {
+        console.error('Chart.js tidak termuat. Cek tag <script> Chart.js / koneksi ke CDN.');
+        return;
     }
+
+    const opsiDasar = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: { beginAtZero: true, suggestedMax: 5, ticks: { stepSize: 1, precision: 0 } }
+        }
+    };
+
+    // A. Grafik Laporan Kerusakan (garis merah)
+    const cvRusak = document.getElementById('chartKerusakan');
+    if (cvRusak) {
+        if (chartKerusakanInstance) {
+            chartKerusakanInstance.data.labels = labels;
+            chartKerusakanInstance.data.datasets[0].data = dataRusak;
+            chartKerusakanInstance.update();
+        } else {
+            chartKerusakanInstance = new Chart(cvRusak.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Laporan Kerusakan',
+                        data: dataRusak,
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 2, fill: true, tension: 0.4
+                    }]
+                },
+                options: opsiDasar
+            });
+        }
+    }
+
+    // B. Grafik Perbaikan Selesai (batang biru)
+    const cvPerbaikan = document.getElementById('chartPerbaikan');
+    if (cvPerbaikan) {
+        if (chartPerbaikanInstance) {
+            chartPerbaikanInstance.data.labels = labels;
+            chartPerbaikanInstance.data.datasets[0].data = dataSelesai;
+            chartPerbaikanInstance.update();
+        } else {
+            chartPerbaikanInstance = new Chart(cvPerbaikan.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Aset Selesai Diperbaiki',
+                        data: dataSelesai,
+                        backgroundColor: '#0284c7', borderRadius: 4
+                    }]
+                },
+                options: opsiDasar
+            });
+        }
+    }
+}
+
+function renderGrafikPemeliharaan() {
+    // 1. Siapkan label 6 bulan terakhir (dengan tahun)
+    const now = new Date();
+    const labels = [];
+    const keys = [];
+    for (let m = 5; m >= 0; m--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - m, 1);
+        labels.push(NAMA_BULAN[d.getMonth()] + ' ' + String(d.getFullYear()).slice(2));
+        keys.push(kunciBulan(d));
+    }
+
+    // 2. GAMBAR GRAFIK KOSONG DULU (tidak menunggu server),
+    //    jadi grafik selalu tampil walau data nol / server error
+    gambarGrafikPemeliharaan(labels, [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]);
+
+    // 3. Indikator loading
+    const elTotal = document.getElementById('valTotalAset');
+    const elRusak = document.getElementById('valAsetRusak');
+    const elProses = document.getElementById('valSedangDiperbaiki');
+    elTotal.innerText = "...";
+    elRusak.innerText = "...";
+    elProses.innerText = "...";
+
+    // 4. Tarik data. allSettled: satu endpoint gagal tidak mematikan semuanya
+    Promise.allSettled([
+        postApi("get_nonops"),
+        postApi("get_ops"),
+        postApi("get_perbaikan")
+    ]).then(([rNon, rOps, rPer]) => {
+        const sukses = r => r.status === 'fulfilled' && r.value
+            && r.value.status === "berhasil" && Array.isArray(r.value.data);
+
+        if (!sukses(rNon)) console.warn("get_nonops gagal:", rNon);
+        if (!sukses(rOps)) console.warn("get_ops gagal:", rOps);
+        if (!sukses(rPer)) console.warn("get_perbaikan gagal:", rPer);
+
+        const asetNonOps = sukses(rNon) ? rNon.value.data.filter(i => i.jenis === "Aset") : [];
+        const asetOps = sukses(rOps) ? rOps.value.data : [];
+        const perbaikan = sukses(rPer) ? rPer.value.data : [];
+
+        // 5. Statistik aset (Data_NonOps + Data_Ops)
+        const semuaAset = asetNonOps.concat(asetOps);
+        const rusak = semuaAset.filter(i => String(i.kondisi || '').toLowerCase().includes('rusak')).length;
+        const diperbaiki = perbaikan.filter(i => i.status === "Sedang Diperbaiki").length;
+
+        elTotal.innerText = semuaAset.length;
+        elRusak.innerText = rusak;
+        elProses.innerText = diperbaiki;
+
+        // 6. Data grafik per bulan
+        const dataRusak = [0, 0, 0, 0, 0, 0];
+        const dataSelesai = [0, 0, 0, 0, 0, 0];
+
+        perbaikan.forEach(item => {
+            // Laporan kerusakan: semua pengajuan, dihitung berdasarkan tanggal pengajuan
+            const tglLapor = parseTanggal(item.tanggal);
+            if (tglLapor) {
+                const i = keys.indexOf(kunciBulan(tglLapor));
+                if (i !== -1) dataRusak[i]++;
+            }
+            // Penyelesaian: pakai tanggal_selesai bila ada, kalau tidak pakai tanggal
+            if (item.status === "Selesai") {
+                const tglSelesai = parseTanggal(item.tanggal_selesai) || tglLapor;
+                if (tglSelesai) {
+                    const i = keys.indexOf(kunciBulan(tglSelesai));
+                    if (i !== -1) dataSelesai[i]++;
+                }
+            }
+        });
+
+        gambarGrafikPemeliharaan(labels, dataRusak, dataSelesai);
+    });
+}
     // ==========================================
     // LOGIKA FORM PENGAJUAN PERBAIKAN (HALAMAN UTAMA)
     // ==========================================
