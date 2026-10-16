@@ -2360,21 +2360,21 @@
 
             // 3. Kalkulasi Data Gudang Non Ops (Aset)
             if(resNonOps.status === "berhasil") {
-                totalAset += resNonOps.data.length;
-                totalRusak += resNonOps.data.filter(item => item.kondisi === "Rusak").length;
+                const dataAset = resNonOps.data.filter(item => item.jenis === "Aset");
+                totalAset += dataAset.length;
+                totalRusak += dataAset.filter(item => item.kondisi === "Rusak").length;
             }
             
             // 4. Kalkulasi Data Gudang Ops (Habis Pakai)
-            if(resOps.status === "berhasil") {
-                totalAset += resOps.data.length;
-                totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length;
-            }
+            // (Dihapus dari penjumlahan Total Aset agar nilai aset akurat, buka baris di bawah jika ingin ditambahkan)
+            // if(resOps.status === "berhasil") { totalAset += resOps.data.length; totalRusak += resOps.data.filter(item => item.kondisi === "Rusak").length; }
             
             // 5. Kalkulasi Status Pengajuan Perbaikan
             let dataPengajuan = [];
             if(resPerbaikan.status === "berhasil") {
                 dataPengajuan = resPerbaikan.data;
-                sedangDiperbaiki += dataPengajuan.filter(item => item.status === "Sedang Diperbaiki").length;
+                // Hitung yang statusnya bukan 'Selesai'
+                sedangDiperbaiki += dataPengajuan.filter(item => item.status !== "Selesai").length;
             }
 
             // 6. Cetak Angka Asli ke Layar Dashboard
@@ -2417,37 +2417,46 @@
                 }
             });
 
-            // --- RENDER GRAFIK GARIS (Kerusakan Masuk) ---
-            if(chartKerusakanInstance) chartKerusakanInstance.destroy();
-            const ctxRusak = document.getElementById('chartKerusakan').getContext('2d');
-            chartKerusakanInstance = new Chart(ctxRusak, {
-                type: 'line',
-                data: {
-                    labels: bulanLabels,
-                    datasets: [{
-                        label: 'Laporan Kerusakan',
-                        data: dataGrafikRusak,
-                        borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)',
-                        borderWidth: 2, fill: true, tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-            });
+            // Gunakan requestAnimationFrame untuk memastikan Canvas sudah selesai dirender oleh DOM
+            requestAnimationFrame(() => {
+                // --- RENDER GRAFIK GARIS (Kerusakan Masuk) ---
+                if(chartKerusakanInstance) { chartKerusakanInstance.destroy(); }
+                const canvasRusak = document.getElementById('chartKerusakan');
+                if (canvasRusak) {
+                    const ctxRusak = canvasRusak.getContext('2d');
+                    chartKerusakanInstance = new Chart(ctxRusak, {
+                        type: 'line',
+                        data: {
+                            labels: bulanLabels,
+                            datasets: [{
+                                label: 'Laporan Kerusakan',
+                                data: dataGrafikRusak,
+                                borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                                borderWidth: 2, fill: true, tension: 0.4
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                    });
+                }
 
-            // --- RENDER GRAFIK BATANG (Perbaikan Selesai) ---
-            if(chartPerbaikanInstance) chartPerbaikanInstance.destroy();
-            const ctxPerbaikan = document.getElementById('chartPerbaikan').getContext('2d');
-            chartPerbaikanInstance = new Chart(ctxPerbaikan, {
-                type: 'bar',
-                data: {
-                    labels: bulanLabels,
-                    datasets: [{
-                        label: 'Aset Selesai Diperbaiki',
-                        data: dataGrafikSelesai,
-                        backgroundColor: '#0284c7', borderRadius: 4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                // --- RENDER GRAFIK BATANG (Perbaikan Selesai) ---
+                if(chartPerbaikanInstance) { chartPerbaikanInstance.destroy(); }
+                const canvasPerbaikan = document.getElementById('chartPerbaikan');
+                if (canvasPerbaikan) {
+                    const ctxPerbaikan = canvasPerbaikan.getContext('2d');
+                    chartPerbaikanInstance = new Chart(ctxPerbaikan, {
+                        type: 'bar',
+                        data: {
+                            labels: bulanLabels,
+                            datasets: [{
+                                label: 'Aset Selesai Diperbaiki',
+                                data: dataGrafikSelesai,
+                                backgroundColor: '#0284c7', borderRadius: 4
+                            }]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+                    });
+                }
             });
 
         }).catch(err => {
