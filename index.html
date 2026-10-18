@@ -344,6 +344,29 @@
             </li>
 
             <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+    <div class="menu-label">
+        <div class="menu-label-left">
+            <span class="material-symbols-outlined icon">folder_open</span>
+            <span class="menu-text">Arsip Dokumen</span>
+        </div>
+        <span class="material-symbols-outlined chevron-icon">expand_more</span>
+    </div>
+    <ul class="submenu">
+        <li class="submenu-label" onclick="openModule('arsip_bast', event)">
+            <div class="menu-label-left">
+                <span class="material-symbols-outlined submenu-icon">description</span>
+                <span class="submenu-text">BAST</span>
+            </div>
+        </li>
+        <li class="submenu-label" onclick="openModule('arsip_spby', event)">
+            <div class="menu-label-left">
+                <span class="material-symbols-outlined submenu-icon">request_quote</span>
+                <span class="submenu-text">Surat Perintah Bayar</span>
+            </div>
+        </li>
+    </ul>
+</li>
+            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">mail</span><span class="menu-text">Sistem Otomasi Surat</span></div>
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
@@ -1124,6 +1147,135 @@
                     </table>
                 </div>
             </div> <!-- PENUTUP MODUL 6 -->
+            <!-- ================================================= -->
+<!-- MODUL ARSIP BAST                                  -->
+<!-- ================================================= -->
+<div id="modul_arsip_bast" class="hidden main-content">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <h2 style="margin:0; font-size:22px; color:var(--text-main);">Arsip Digital BAST</h2>
+            <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Manajemen Berita Acara Serah Terima</p>
+        </div>
+        <button class="btn-add" onclick="document.getElementById('modalBAST').classList.remove('hidden')">
+            <span class="material-symbols-outlined icon" style="font-size: 18px;">upload_file</span> Upload BAST Baru
+        </button>
+    </div>
+    
+    <div class="content-card" style="padding: 0;">
+        <div class="table-responsive">
+            <table id="tabelBAST">
+                <thead>
+                    <tr><th>No</th><th>Tanggal</th><th>Sumber</th><th>Pihak 1</th><th>Pihak 2</th><th>Kegiatan</th><th>Aksi</th></tr>
+                </thead>
+                <tbody id="tbodyBAST">
+                    <tr><td colspan="7" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FORM BAST -->
+<div class="modal-overlay hidden" id="modalBAST" style="z-index: 1005;">
+    <div class="modal-card" style="max-width: 650px;">
+        <div class="modal-header">
+            <h3>Upload Dokumen BAST Baru</h3>
+            <button class="close-btn" onclick="document.getElementById('modalBAST').classList.add('hidden')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group"><label>Nomor BAST *</label><input type="text" id="inNoBAST" required></div>
+                <div class="form-group"><label>Tanggal *</label><input type="date" id="inTglBAST" required></div>
+                <div class="form-group"><label>Pihak 1 (Yang Menyerahkan) *</label><input type="text" id="inPihak1BAST" required></div>
+                <div class="form-group"><label>Pihak 2 (Yang Menerima) *</label><input type="text" id="inPihak2BAST" required></div>
+                <div class="form-group full-width"><label>Kegiatan *</label><textarea id="inKegiatanBAST" rows="2" required></textarea></div>
+                <div class="form-group full-width">
+                    <label>Sumber (Penentu Folder Drive) *</label>
+                    <select id="inSumberBAST" required style="font-weight:bold;">
+                        <option value="">-- Pilih Sumber --</option>
+                        <option value="Biro Umum">Biro Umum</option>
+                        <option value="PPK Wilayah 8">PPK Wilayah 8</option>
+                        <option value="Non Ops">Non Ops</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label>Upload File (PDF) *</label>
+                    <input type="file" id="inFileBAST" accept=".pdf" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-outline" onclick="document.getElementById('modalBAST').classList.add('hidden')">Batal</button>
+            <button type="button" class="btn-primary" onclick="simpanArsipBAST()" id="btnSimpanBAST">Upload BAST</button>
+        </div>
+    </div>
+</div>
+<!-- ================================================= -->
+<!-- MODUL ARSIP SURAT PERINTAH BAYAR (SPBY)           -->
+<!-- ================================================= -->
+<div id="modul_arsip_spby" class="hidden main-content">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 16px;">
+        <div>
+            <h2 style="margin:0; font-size:22px; color:var(--text-main);">Arsip Digital SPBY</h2>
+            <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted);">Manajemen Surat Perintah Bayar</p>
+        </div>
+        <button class="btn-add" style="background-color: #0284c7;" onclick="document.getElementById('modalSPBY').classList.remove('hidden')">
+            <span class="material-symbols-outlined icon" style="font-size: 18px;">upload_file</span> Upload SPBY Baru
+        </button>
+    </div>
+    
+    <div class="content-card" style="padding: 0;">
+        <div class="table-responsive">
+            <table id="tabelSPBY">
+                <thead>
+                    <tr><th>No Surat</th><th>Tanggal</th><th>Jenis</th><th>Untuk Pembayaran</th><th>Nominal</th><th>Aksi</th></tr>
+                </thead>
+                <tbody id="tbodySPBY">
+                    <tr><td colspan="6" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL FORM SPBY -->
+<div class="modal-overlay hidden" id="modalSPBY" style="z-index: 1005;">
+    <div class="modal-card" style="max-width: 650px;">
+        <div class="modal-header">
+            <h3 style="color:#0284c7;">Upload Dokumen SPBY Baru</h3>
+            <button class="close-btn" onclick="document.getElementById('modalSPBY').classList.add('hidden')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-grid">
+                <div class="form-group"><label>No Surat *</label><input type="text" id="inNoSPBY" required></div>
+                <div class="form-group"><label>Tanggal *</label><input type="date" id="inTglSPBY" required></div>
+                <div class="form-group">
+                    <label>Jenis SPBY (Penentu Folder) *</label>
+                    <select id="inJenisSPBY" required style="font-weight:bold; color:#0284c7;">
+                        <option value="">-- Pilih Jenis --</option>
+                        <option value="TUP">TUP</option>
+                        <option value="UP">UP</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Kode *</label><input type="text" id="inKodeSPBY" required></div>
+                <div class="form-group full-width"><label>Untuk Pembayaran *</label><textarea id="inBayarSPBY" rows="2" required></textarea></div>
+                <div class="form-group full-width"><label>Kegiatan, Output, MAK *</label><textarea id="inMakSPBY" rows="2" required></textarea></div>
+                <div class="form-group full-width">
+                    <label>Nominal (Rp) *</label>
+                    <input type="number" id="inNominalSPBY" placeholder="Contoh: 1500000" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Upload File (PDF) *</label>
+                    <input type="file" id="inFileSPBY" accept=".pdf" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-outline" onclick="document.getElementById('modalSPBY').classList.add('hidden')">Batal</button>
+            <button type="button" class="btn-primary" style="background-color: #0284c7;" onclick="simpanArsipSPBY()" id="btnSimpanSPBY">Upload SPBY</button>
+        </div>
+    </div>
+</div>
         </div> <!-- PENUTUP main-content (default content area) -->
     </div> <!-- PENUTUP dashboard-wrapper -->
 </div> <!-- PENUTUP container UTAMA -->
@@ -1566,7 +1718,7 @@
         }
         
         // --- NAMA MODUL BARU DITAMBAHKAN DI SINI ---
-        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar'];
+        const semuaModul = ['defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 'modul_siswa_keluar', 'modul_arsip_bast', 'modul_arsip_spby'];
         semuaModul.forEach(id => {
             const elemen = document.getElementById(id);
             if(elemen) elemen.classList.add('hidden'); 
@@ -1712,7 +1864,14 @@
             document.getElementById('modul_siswa_keluar').classList.remove('hidden');
             muatSiswaKeluar();
         }
-
+       else if(modulName === 'arsip_bast') {
+    document.getElementById('modul_arsip_bast').classList.remove('hidden');
+    muatDataBAST();
+}
+else if(modulName === 'arsip_spby') {
+    document.getElementById('modul_arsip_spby').classList.remove('hidden');
+    muatDataSPBY();
+}
         closeSidebarMobile();
     }
 
@@ -3316,6 +3475,214 @@ function renderGrafikPemeliharaan() {
         };
         reader.readAsDataURL(file); // Trigger pembacaan file
     }
+    // ==========================================
+// LOGIKA UPLOAD ARSIP BAST
+// ==========================================
+function simpanArsipBAST() {
+    const btn = document.getElementById('btnSimpanBAST');
+    const no = document.getElementById('inNoBAST').value;
+    const tgl = document.getElementById('inTglBAST').value;
+    const pihak1 = document.getElementById('inPihak1BAST').value;
+    const pihak2 = document.getElementById('inPihak2BAST').value;
+    const kegiatan = document.getElementById('inKegiatanBAST').value;
+    const sumber = document.getElementById('inSumberBAST').value; // Penentu Sub-folder
+    const fileInput = document.getElementById('inFileBAST');
+
+    if(!no || !tgl || !pihak1 || !pihak2 || !kegiatan || !sumber || !fileInput.files.length) {
+        alert("Mohon lengkapi semua data formulir dan file PDF BAST!"); return;
+    }
+
+    const file = fileInput.files[0];
+    btn.disabled = true; btn.innerText = "Mengupload...";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const payload = {
+            action: "upload_bast",
+            no: no, tanggal: tgl, pihak1: pihak1, pihak2: pihak2, kegiatan: kegiatan,
+            folder_target: sumber, // "Biro Umum", "PPK Wilayah 8", dll
+            fileName: file.name,
+            fileMimeType: file.type,
+            fileData: e.target.result // Base64
+        };
+
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+        }).then(res => res.json()).then(data => {
+            btn.disabled = false; btn.innerText = "Upload BAST";
+            if(data.status === "berhasil") {
+                alert("Sukses: Dokumen BAST berhasil diarsipkan ke folder " + sumber);
+                document.getElementById('modalBAST').classList.add('hidden');
+                muatDataBAST(); // Nanti kita buat fungsi penarik datanya
+            } else { alert("Gagal: " + data.pesan); }
+        }).catch(err => {
+            btn.disabled = false; btn.innerText = "Upload BAST"; alert("Terjadi kesalahan jaringan.");
+        });
+    };
+    reader.readAsDataURL(file);
+}
+
+// ==========================================
+// LOGIKA UPLOAD ARSIP SPBY
+// ==========================================
+function simpanArsipSPBY() {
+    const btn = document.getElementById('btnSimpanSPBY');
+    const no = document.getElementById('inNoSPBY').value;
+    const tgl = document.getElementById('inTglSPBY').value;
+    const jenis = document.getElementById('inJenisSPBY').value; // Penentu Sub-folder
+    const bayar = document.getElementById('inBayarSPBY').value;
+    const mak = document.getElementById('inMakSPBY').value;
+    const kode = document.getElementById('inKodeSPBY').value;
+    const nominal = document.getElementById('inNominalSPBY').value;
+    const fileInput = document.getElementById('inFileSPBY');
+
+    if(!no || !tgl || !jenis || !bayar || !mak || !kode || !nominal || !fileInput.files.length) {
+        alert("Mohon lengkapi semua data formulir dan file PDF SPBY!"); return;
+    }
+
+    const file = fileInput.files[0];
+    btn.disabled = true; btn.innerText = "Mengupload...";
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const payload = {
+            action: "upload_spby",
+            no: no, tanggal: tgl, jenis: jenis, bayar: bayar, mak: mak, kode: kode, nominal: nominal,
+            folder_target: jenis, // "TUP" atau "UP"
+            fileName: file.name,
+            fileMimeType: file.type,
+            fileData: e.target.result // Base64
+        };
+
+        fetch(scriptURL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+        }).then(res => res.json()).then(data => {
+            btn.disabled = false; btn.innerText = "Upload SPBY";
+            if(data.status === "berhasil") {
+                alert("Sukses: Dokumen SPBY berhasil diarsipkan ke folder " + jenis);
+                document.getElementById('modalSPBY').classList.add('hidden');
+                muatDataSPBY(); // Nanti kita buat fungsi penarik datanya
+            } else { alert("Gagal: " + data.pesan); }
+        }).catch(err => {
+            btn.disabled = false; btn.innerText = "Upload SPBY"; alert("Terjadi kesalahan jaringan.");
+        });
+    };
+    reader.readAsDataURL(file);
+}
+// ==========================================
+// LOGIKA MENAMPILKAN DATA ARSIP BAST
+// ==========================================
+let dataBASTGlobal = [];
+
+function muatDataBAST() {
+    document.getElementById('tbodyBAST').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Mengambil data arsip BAST...</td></tr>';
+    
+    fetch(scriptURL, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "get_arsip_bast" })
+    }).then(res => res.json()).then(data => {
+        if(data.status === "berhasil") {
+            dataBASTGlobal = data.data; 
+            renderTabelBAST(); 
+        } else {
+            document.getElementById('tbodyBAST').innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada data arsip BAST.</td></tr>';
+        }
+    }).catch(err => {
+        document.getElementById('tbodyBAST').innerHTML = '<tr><td colspan="7" style="text-align:center;color:red;">Gagal terhubung ke server.</td></tr>';
+    });
+}
+
+function renderTabelBAST() {
+    const tbody = document.getElementById('tbodyBAST');
+    tbody.innerHTML = '';
+    if(dataBASTGlobal.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px;">Belum ada arsip BAST.</td></tr>'; 
+        return; 
+    }
+    
+    // Kita balik datanya agar arsip terbaru muncul paling atas
+    let dataUrut = dataBASTGlobal.slice().reverse();
+
+    dataUrut.forEach((row, index) => {
+        // Tombol Link PDF Otomatis
+        let linkHtml = row.link_file ? `<a href="${row.link_file}" target="_blank" style="color: #0284c7; background: #e0f2fe; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 600; display:inline-flex; align-items:center; gap:4px; font-size:12px; transition:0.2s;"><span class="material-symbols-outlined" style="font-size:16px;">description</span> Lihat File</a>` : `<span style="color:#9ca3af; font-size:12px;">Tidak ada file</span>`;
+        
+        // Format Tanggal Rapih
+        let tglFormat = row.tanggal;
+        if (new Date(row.tanggal) !== "Invalid Date" && !isNaN(new Date(row.tanggal))) {
+            tglFormat = new Date(row.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+        }
+
+        tbody.innerHTML += `<tr>
+            <td>${index + 1}</td>
+            <td><span style="background:#f3f4f6; color:#4b5563; padding:4px 8px; border-radius:4px; font-weight:600; font-size:11px;">${tglFormat}</span></td>
+            <td><b>${row.sumber}</b></td>
+            <td>${row.pihak1}</td>
+            <td>${row.pihak2}</td>
+            <td>${row.kegiatan}</td>
+            <td>${linkHtml}</td>
+        </tr>`;
+    });
+}
+
+// ==========================================
+// LOGIKA MENAMPILKAN DATA ARSIP SPBY
+// ==========================================
+let dataSPBYGlobal = [];
+
+function muatDataSPBY() {
+    document.getElementById('tbodySPBY').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Mengambil data arsip SPBY...</td></tr>';
+    
+    fetch(scriptURL, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "get_arsip_spby" })
+    }).then(res => res.json()).then(data => {
+        if(data.status === "berhasil") {
+            dataSPBYGlobal = data.data; 
+            renderTabelSPBY(); 
+        } else {
+            document.getElementById('tbodySPBY').innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada data arsip SPBY.</td></tr>';
+        }
+    }).catch(err => {
+        document.getElementById('tbodySPBY').innerHTML = '<tr><td colspan="6" style="text-align:center;color:red;">Gagal terhubung ke server.</td></tr>';
+    });
+}
+
+function renderTabelSPBY() {
+    const tbody = document.getElementById('tbodySPBY');
+    tbody.innerHTML = '';
+    if(dataSPBYGlobal.length === 0) { 
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Belum ada arsip SPBY.</td></tr>'; 
+        return; 
+    }
+    
+    // Kita balik datanya agar arsip terbaru muncul paling atas
+    let dataUrut = dataSPBYGlobal.slice().reverse();
+
+    dataUrut.forEach((row) => {
+        let linkHtml = row.link_file ? `<a href="${row.link_file}" target="_blank" style="color: #15803d; background: #dcfce7; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-weight: 600; display:inline-flex; align-items:center; gap:4px; font-size:12px; transition:0.2s;"><span class="material-symbols-outlined" style="font-size:16px;">request_quote</span> Lihat File</a>` : `<span style="color:#9ca3af; font-size:12px;">Tidak ada file</span>`;
+        
+        let tglFormat = row.tanggal;
+        if (new Date(row.tanggal) !== "Invalid Date" && !isNaN(new Date(row.tanggal))) {
+            tglFormat = new Date(row.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'});
+        }
+        
+        // Format Rupiah untuk Nominal
+        let nominalFormat = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(row.nominal || 0);
+        
+        // Warna Label TUP (Kuning) dan UP (Biru)
+        let warnaJenis = row.jenis === 'TUP' ? 'background:#fef08a; color:#854d0e;' : 'background:#e0f2fe; color:#0369a1;';
+
+        tbody.innerHTML += `<tr>
+            <td><b>${row.no}</b></td>
+            <td>${tglFormat}</td>
+            <td><span style="${warnaJenis} padding:4px 8px; border-radius:4px; font-weight:bold; font-size:11px;">${row.jenis}</span></td>
+            <td>${row.bayar}<br><small style="color:var(--text-muted); font-weight:500;">MAK: ${row.mak} (Kode: <b>${row.kode}</b>)</small></td>
+            <td style="font-weight:bold; color:var(--primary); font-size:14px;">${nominalFormat}</td>
+            <td>${linkHtml}</td>
+        </tr>`;
+    });
+}
 </script>
 </body>
 </html>
