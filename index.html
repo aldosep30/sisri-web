@@ -467,7 +467,8 @@
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">dashboard</span><span class="menu-text">Dashboard Utama</span></div>
                 </div>
             </li> 
-            <li class="menu-item" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh" onclick="toggleMenu(this, event)">
+            <!-- PERUBAHAN AKSES: Wali Asuh dikeluarkan dari menu Sarana & Prasarana. Atribut data-role-kecuali="..." = tampil untuk semua, kecuali level yang disebut -->
+            <li class="menu-item" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama" onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">domain</span><span class="menu-text">Sarana & Prasarana</span></div>
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
@@ -495,7 +496,7 @@
                 </ul>
             </li>
 
-            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+            <li class="menu-item" data-role="Seluruh" data-role-kecuali="Wali Asuh" onclick="toggleMenu(this, event)">
     <div class="menu-label">
         <div class="menu-label-left">
             <span class="material-symbols-outlined icon">folder_open</span>
@@ -554,7 +555,7 @@
                 </ul>
             </li>
 
-            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+            <li class="menu-item" data-role="Seluruh" data-role-kecuali="Wali Asuh" onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">school</span><span class="menu-text">Kesiswaan</span></div>
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
@@ -609,7 +610,7 @@
                 </div>
             </li>
 
-            <li class="menu-item" data-role="Seluruh" onclick="toggleMenu(this, event)">
+            <li class="menu-item" data-role="Seluruh" data-role-kecuali="Wali Asuh" onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">account_balance_wallet</span><span class="menu-text">Keuangan</span></div>
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
@@ -728,7 +729,7 @@
                     <div class="main-services-grid">
                         
                         <!-- 1. KARTU SARANA PRASARANA -->
-                        <div class="service-card border-red" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama,Wali Asuh">
+                        <div class="service-card dash-card border-red" data-role="Kepala Sekolah,Wakasek Sarpras,Operator Sekolah,Wali Asrama">
                             <div class="sc-header">
                                 <div class="sc-icon text-red bg-light-red"><span class="material-symbols-outlined">home_work</span></div>
                                 <h4 class="sc-title text-red">Sarana & Prasarana</h4>
@@ -742,7 +743,7 @@
                         </div>
 
                         <!-- 2. KARTU OTOMASI SURAT -->
-                        <div class="service-card border-blue" data-role="Seluruh">
+                        <div class="service-card dash-card border-blue" data-role="Seluruh">
                             <div class="sc-header">
                                 <div class="sc-icon text-blue bg-light-blue"><span class="material-symbols-outlined">mail</span></div>
                                 <h4 class="sc-title text-blue">Sistem Otomasi Surat</h4>
@@ -757,7 +758,7 @@
                         </div>
 
                         <!-- 3. KARTU ASESMEN SISWA -->
-                        <div class="service-card border-yellow" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru">
+                        <div class="service-card dash-card border-yellow" data-role="Kepala Sekolah,Wakasek Kurikulum,Wakasek Kesiswaan,Wakasek Sarpras,Operator Sekolah,Wali Asuh,Wali Asrama,Guru">
                             <div class="sc-header">
                                 <div class="sc-icon text-yellow bg-light-yellow"><span class="material-symbols-outlined">assignment</span></div>
                                 <h4 class="sc-title text-yellow">Asesmen Siswa</h4>
@@ -770,22 +771,22 @@
                         </div>
 
                         <!-- 4. KARTU KESISWAAN -->
-                        <div class="service-card border-green" data-role="Seluruh">
+                        <div class="service-card dash-card border-green" data-role="Seluruh">
                             <div class="sc-header">
                                 <div class="sc-icon text-green bg-light-green"><span class="material-symbols-outlined">school</span></div>
                                 <h4 class="sc-title text-green">Kesiswaan & Ruangan</h4>
                             </div>
                             <p class="sc-desc">Data siswa, ekstrakurikuler, dan pengelolaan reservasi ruangan sekolah.</p>
                             <div class="sc-links">
-                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SMP', event)"><span class="material-symbols-outlined">groups</span> Data SMP <span class="material-symbols-outlined arrow">chevron_right</span></button>
-                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Siswa SMA', event)"><span class="material-symbols-outlined">groups</span> Data SMA <span class="material-symbols-outlined arrow">chevron_right</span></button>
-                                <button class="sc-btn text-green hover-green" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined">sports_soccer</span> Ekskul <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" data-role-kecuali="Wali Asuh" onclick="openContent('Data Siswa SMP', event)"><span class="material-symbols-outlined">groups</span> Data SMP <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" data-role-kecuali="Wali Asuh" onclick="openContent('Data Siswa SMA', event)"><span class="material-symbols-outlined">groups</span> Data SMA <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-green hover-green" data-role-kecuali="Wali Asuh" onclick="openContent('Data Ekstrakurikuler', event)"><span class="material-symbols-outlined">sports_soccer</span> Ekskul <span class="material-symbols-outlined arrow">chevron_right</span></button>
                                 <button class="sc-btn text-green hover-green" onclick="openContent('Pengajuan Penggunaan Ruangan', event)"><span class="material-symbols-outlined">meeting_room</span> Ruangan <span class="material-symbols-outlined arrow">chevron_right</span></button>
                             </div>
                         </div>
 
                         <!-- 5. KARTU KEUANGAN -->
-                        <div class="service-card border-purple" data-role="Seluruh">
+                        <div class="service-card dash-card border-purple" data-role="Seluruh" data-role-kecuali="Wali Asuh">
                             <div class="sc-header">
                                 <div class="sc-icon text-purple bg-light-purple"><span class="material-symbols-outlined">account_balance</span></div>
                                 <h4 class="sc-title text-purple">Keuangan</h4>
@@ -3789,8 +3790,8 @@ const LEVEL_AKSES=['Kepala Sekolah','Operator Sekolah','Wali Asuh'];
 function peranLokal(lv){const n=String(lv||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim().toLowerCase();if(n==='kepala sekolah')return 'Kepala Sekolah';if(n==='operator sekolah')return 'Operator Sekolah';if(n.indexOf('wali asuh')!==-1)return 'Wali Asuh';return ''}
 const hakKosong=()=>({lihat:false,ajukan:false,setujui:false,kelola:false,sumber:''});
 const pendingBaru=()=>({catatan:[],log:new Set(),gantiSemua:false,dirty:false});
-const swapBaru=(jenis,date)=>({jenis:jenis||'tukar',a:null,date:date==null?null:date,b:null,date2:null,absen:'I',alasan:'',ack:false,sending:false});
-let S=null, HAK=hakKosong(), USER={username:'',level:''}, BASE_REV=0, VERSI=0, SESI=0;
+const swapBaru=(jenis,date)=>({jenis:jenis||'tukar',a:null,date:date==null?null:date,b:null,date2:null,absen:'I',alasan:'',ack:false,sending:false,pilihManual:false});
+let S=null, HAK=hakKosong(), USER={username:'',level:''}, AKUN=[], BASE_REV=0, VERSI=0, SESI=0;
 let loadState='idle', loadMsg='', saveState='saved', saving=false, perluMuatUlang=false, pollTimer=null;
 let pending=pendingBaru();
 let jwaTab=ssGet('jwa-tab')||'jadwal';
@@ -3798,6 +3799,8 @@ let curMonth=ssGet('jwa-month')||ds(todayDn()).slice(0,7);
 let filterGroup='all', filterStatus='all';
 let swapUI=swapBaru();
 const bisaUbah=()=>!!(HAK.setujui||HAK.kelola);
+const normU=s=>String(s==null?'':s).trim().toLowerCase();
+const stafSaya=()=>(S&&USER.username)?(S.staff.find(st=>normU(st.username)&&normU(st.username)===normU(USER.username))||null):null;
 const root=()=>document.getElementById('jwaRoot');
 const wadah=()=>document.getElementById('modul_jadwal_wali_asuh');
 
@@ -3908,7 +3911,7 @@ function api(action,extra){
 function terimaPaket(r){
   if(r.status==='ditolak'){S=null;loadState='denied';loadMsg=r.pesan||'Akses ditolak.';render();return}
   if(r.status!=='berhasil'&&r.status!=='konflik'){loadState='error';loadMsg=r.pesan||'Gagal memuat data jadwal.';render();return}
-  HAK=Object.assign(hakKosong(),r.hak||{});USER=r.pengguna||USER;
+  HAK=Object.assign(hakKosong(),r.hak||{});USER=r.pengguna||USER;AKUN=Array.isArray(r.akun)?r.akun:[];
   if(!r.data){S=null;loadState='empty';render();return}
   S=r.data;normalisasi(S);BASE_REV=r.rev||0;VERSI=r.versi||0;loadState='ready';render();
 }
@@ -4047,7 +4050,7 @@ function render(){
      <button class="btn-outline jwa-btn" data-act="xlsx">${ikon('download')}Excel bulan ini</button>
      <button class="btn-outline jwa-btn" data-act="cetak">${ikon('print')}Versi cetak</button>
      ${HAK.kelola?`<button class="btn-outline jwa-btn" data-act="backup">${ikon('backup')}Cadangan</button>`:''}</div></div>
-   ${!bisaUbah()?`<div class="jwa-banner info">${ikon('visibility')}<div>Anda masuk sebagai <b>${esc(USER.username)}</b> (${esc(USER.level)}): dapat melihat jadwal dan <b>mengajukan</b> tukar shift. Perubahan berlaku setelah disetujui Koordinator, Operator Sekolah, atau Kepala Sekolah.</div></div>`:''}
+   ${!bisaUbah()?(stafSaya()?`<div class="jwa-banner info">${ikon('visibility')}<div>Anda masuk sebagai <b>${esc(USER.username)}</b> (${esc(USER.level)}), terhubung dengan data pegawai <b>${esc(stafSaya().nama)}</b>. Anda dapat melihat jadwal dan <b>mengajukan</b> tukar shift atas nama sendiri. Perubahan berlaku setelah disetujui Koordinator, Operator Sekolah, atau Kepala Sekolah.</div></div>`:`<div class="jwa-banner warn">${ikon('link_off')}<div>Akun <b>${esc(USER.username)}</b> belum dihubungkan ke data pegawai, sehingga belum bisa mengajukan tukar shift. Minta Operator Sekolah atau Koordinator menghubungkannya di tab <b>Pegawai & Kelompok</b> (kolom Akun web). Jadwal tetap bisa dilihat.</div></div>`):''}
    <div class="tab-container jwa-tabs">${TABS.map(([k,l,ic])=>`<div class="tab-btn ${k===jwaTab?'active':''}" data-tab="${k}">${ikon(ic)}${l}${k==='riwayat'&&pend?`<span class="jwa-badge">${pend}</span>`:''}</div>`).join('')}</div>
    <div id="jwaView"></div>`;
   $$('[data-act]',el).forEach(b=>b.onclick=()=>aksiHeader(b.dataset.act));
@@ -4079,7 +4082,7 @@ function vJadwal(v){
   for(const i of issues){if(i.sid==='*'){covBad[i.n+'|'+i.c]=1;covBad[i.n]=1}else{(i.sev==='error'?cellBad:cellWarn)[K(i.sid,i.n)]=i.msg}}
   const errN=issues.filter(i=>i.sev==='error').length,warnN=issues.length-errN;
   const days=[];for(let n=a;n<=b;n++)days.push(n);
-  const list=S.staff.filter(st=>activeIn(st,a,b));
+  const list=S.staff.filter(st=>activeIn(st,a,b)),saya=stafSaya();
   const groups=S.groups.map(g=>({g,members:list.filter(st=>groupOf(st,b)===g.id||(!groupOf(st,b)&&days.some(n=>groupOf(st,n)===g.id)))}));
   const inGroup=new Set(groups.flatMap(x=>x.members.map(m=>m.id)));
   const others=list.filter(st=>!inGroup.has(st.id));
@@ -4087,7 +4090,8 @@ function vJadwal(v){
       const cls=['c'];if(!c)cls.push('empty');if(n===td)cls.push('todaycol');if(o)cls.push('ov');if(cellBad[k])cls.push('bad');else if(cellWarn[k])cls.push('wrn');if(isLegacy(st,n))cls.push('lg');
       const tip=[`${nick(st)} · ${fmtL(n)}`,c?`${c} — ${d.nama||''}${d.mulai?` (${d.mulai}–${d.selesai})`:''}`:'Tidak terjadwal',isLegacy(st,n)?'Jadwal lama (sebelum formasi baru)':'',o?`Diubah: ${o.note||''}`:'',cellBad[k]||cellWarn[k]||''].filter(Boolean).join('\n');
       return `<td class="${cls.join(' ')}" style="${c?`background:${d.warna};color:${d.teks}`:''}" data-cell="${esc(st.id)}|${n}" title="${esc(tip)}">${c?esc(c):'·'}</td>`}).join('');
-    return `<tr><td class="nm" title="${esc(st.nama)}"><b>${esc(nick(st))}</b> <span class="jwa-muted jwa-small">${/koordinator/i.test(st.jabatan||'')?'Koord.':''}</span></td><td class="jk">${esc(st.jk)}</td>${cells}<td class="tot">${fmtH(h)}</td><td class="tot">${nm}</td></tr>`};
+    const milik=saya&&saya.id===st.id;
+    return `<tr><td class="nm" title="${esc(st.nama)}"><b>${esc(nick(st))}</b> ${milik?'<span class="jwa-chip info" style="padding:1px 7px">Anda</span>':`<span class="jwa-muted jwa-small">${/koordinator/i.test(st.jabatan||'')?'Koord.':''}</span>`}</td><td class="jk">${esc(st.jk)}</td>${cells}<td class="tot">${fmtH(h)}</td><td class="tot">${nm}</td></tr>`};
   let body='';
   for(const {g,members} of groups){if(filterGroup!=='all'&&String(g.id)!==filterGroup)continue;if(!members.length)continue;
     const p=members.filter(m=>m.jk==='P').length;
@@ -4138,12 +4142,12 @@ function cellModal(sid,n){
   const cur=code(st,n),base=baseCode(st,n),o=S.overrides[K(sid,n)];
   const sub=`${esc(st.nama)} · ${esc(groupName(groupOf(st,n)))} · Jadwal dasar: ${base?esc(base):'—'}${o?` · <b>sudah diubah</b> (${esc(o.note||'')})`:''}`;
   if(!bisaUbah()){
-    const d=C(cur)||{},iss=personIssues(st,n,n),h=statusAt(st,n);
+    const d=C(cur)||{},iss=personIssues(st,n,n),h=statusAt(st,n),saya=stafSaya(),milik=!!saya&&saya.id===sid;
     modal({judul:`${esc(nick(st))} · ${esc(fmtL(n))}`,sub,lebar:580,
       isi:`<div class="jwa-flex" style="margin-bottom:12px">${codeTag(cur)} <b>${esc(d.nama||'Tidak terjadwal')}</b>${d.mulai?` <span class="jwa-muted">${d.mulai}–${d.selesai}</span>`:''}</div>
        ${iss.length?issuesList(iss):''}
        <div class="jwa-banner info" style="margin:12px 0 0">${ikon('info')}<div>Perubahan jadwal diajukan lewat menu <b>Tukar Shift</b> dan berlaku setelah disetujui Koordinator, Operator Sekolah, atau Kepala Sekolah.</div></div>`,
-      kaki:`<button class="btn-outline jwa-btn" data-a>Tutup</button>${h&&h.mode==='shift'?`<button class="btn-add jwa-btn" id="jwaAjukan">${ikon('swap_horiz')}Ajukan tukar / pengganti</button>`:''}`},
+      kaki:`${!milik?'<span class="jwa-small jwa-muted">Anda hanya dapat mengajukan perubahan untuk jadwal Anda sendiri.</span><span class="jwa-sp"></span>':''}<button class="btn-outline jwa-btn" data-a>Tutup</button>${milik&&h&&h.mode==='shift'?`<button class="btn-add jwa-btn" id="jwaAjukan">${ikon('swap_horiz')}Ajukan tukar / pengganti</button>`:''}`},
       m=>{$('[data-a]',m).onclick=closeModal;if($('#jwaAjukan',m))$('#jwaAjukan',m).onclick=()=>{swapUI=swapBaru('tukar',n);swapUI.a=sid;closeModal();setTab('tukar')}});
     return;
   }
@@ -4254,14 +4258,20 @@ function miniGrid(changes){
 }
 function vTukar(v){
   const u=swapUI,anc=dn(S.anchor);if(u.date==null)u.date=Math.max(todayDn(),anc);
+  const penuh=bisaUbah(),saya=stafSaya(),kunci=!penuh;
+  // Wali Asuh: pemohon selalu pegawai milik akun login. Akses penuh: default akun sendiri, boleh diganti.
+  if(kunci){if(u.a!==(saya?saya.id:null)){u.a=saya?saya.id:null;u.b=null;u.date2=null}}
+  else if(!u.a&&!u.pilihManual&&saya){const hs=statusAt(saya,u.date);if(hs&&hs.mode==='shift')u.a=saya.id}
   const A=u.a?staffById(u.a):null,n=u.date,cA=A?code(A,n):'';
-  const penuh=bisaUbah();
+  const hA=A?statusAt(A,n):null;
   const types=[['tukar','Tukar shift (hari yang sama)','swap_horiz','Dua wali asuh saling bertukar kode shift pada tanggal yang sama. Jumlah petugas per shift tetap.'],
                ['tukarhari','Tukar hari (balas jasa)','event_repeat','A menyerahkan shiftnya ke B pada tanggal X, lalu A menggantikan B pada tanggal Y. Keduanya tidak kehilangan hari libur.'],
                ['pengganti','Pengganti piket (izin/sakit/cuti/DL)','person_add','A berhalangan (dicatat Izin/Sakit/Cuti/DL), B menggantikan shift A pada tanggal itu.']];
   const changes=buildChanges();const ev=changes&&changes.length?evaluate(changes):null;
   let candHtml='';
-  if(n<anc)candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('history')}<div>Tanggal sebelum ${fmt(anc)} masih jadwal lama. Tukar shift berlaku untuk formasi baru mulai ${fmt(anc)}.</div></div>`;
+  if(kunci&&!saya)candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('link_off')}<div>Akun <b>${esc(USER.username)}</b> belum dihubungkan ke data pegawai. Minta Operator Sekolah atau Koordinator menghubungkannya di tab <b>Pegawai & Kelompok</b> (kolom Akun web), lalu buka menu ini lagi.</div></div>`;
+  else if(n<anc)candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('history')}<div>Tanggal sebelum ${fmt(anc)} masih jadwal lama. Tukar shift berlaku untuk formasi baru mulai ${fmt(anc)}.</div></div>`;
+  else if(A&&(!hA||hA.mode!=='shift'))candHtml=`<div class="jwa-banner info" style="margin-top:12px">${ikon('info')}<div>${kunci?'Anda':esc(nick(A))} tidak berstatus wali asuh shift pada ${fmt(n)} (${hA?(hA.mode==='reguler'?'non-shift/reguler':'nonaktif'):'belum terjadwal'}), sehingga tidak ada shift yang bisa ditukar pada tanggal ini.</div></div>`;
   else if(A&&cA){
     if(isAbsen(cA))candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('event_busy')}<div>Pemohon tercatat berhalangan pada tanggal ini.</div></div>`;
     else if(u.jenis==='pengganti'&&!isWork(cA))candHtml=`<div class="jwa-banner info" style="margin-top:12px">${ikon('info')}<div>Pemohon tidak sedang bertugas pada tanggal ini (kode ${esc(cA)}), sehingga tidak perlu pengganti.</div></div>`;
@@ -4287,7 +4297,7 @@ function vTukar(v){
   v.innerHTML=`<div class="jwa-types">${types.map(t=>`<div class="jwa-type ${u.jenis===t[0]?'on':''}" data-j="${t[0]}"><b>${ikon(t[2])}${t[1]}</b><span class="jwa-small jwa-muted">${t[3]}</span></div>`).join('')}</div>
   <div class="jwa-cols"><div class="jwa-card">
    <h3>${ikon('edit_note')}Pengajuan</h3>
-   <div class="jwa-grid2"><label class="jwa-f"><span>Pemohon</span><select id="jwaPa"><option value="">— pilih —</option>${staffOptions(u.a,st=>{const h=statusAt(st,n);return h&&h.mode==='shift'},n)}</select></label>
+   <div class="jwa-grid2"><label class="jwa-f"><span>Pemohon${kunci?' · terkunci sesuai akun login':''}</span>${kunci?`<select id="jwaPa" disabled title="Pemohon mengikuti akun yang sedang login">${saya?`<option value="${esc(saya.id)}" selected>&#128274; ${esc(nick(saya))} — ${esc(String(saya.nama).split(',')[0])} [${esc(code(saya,n)||'—')}]</option>`:'<option value="">&#128274; Akun belum dihubungkan</option>'}</select>`:`<select id="jwaPa"><option value="">— pilih —</option>${staffOptions(u.a,st=>{const h=statusAt(st,n);return h&&h.mode==='shift'},n)}</select>`}</label>
    <label class="jwa-f"><span>Tanggal shift pemohon</span><input type="date" id="jwaDt" value="${ds(n)}"></label>
    ${u.jenis==='pengganti'?`<label class="jwa-f"><span>Keterangan berhalangan</span><select id="jwaAb">${S.codeOrder.filter(isAbsen).map(c=>`<option value="${esc(c)}" ${u.absen===c?'selected':''}>${esc(c)} — ${esc(C(c).nama)}</option>`).join('')}</select></label>`:''}</div>
    ${A?`<p class="jwa-small" style="margin:12px 0 0">Jadwal ${esc(nick(A))} pada ${fmtL(n)}: ${codeTag(cA)} ${esc((C(cA)||{}).nama||'')}</p>`:''}
@@ -4302,7 +4312,7 @@ function vTukar(v){
    <li>Pegawai yang ditandai “tidak boleh shift malam” tidak bisa menerima shift M.</li>
    <li>Pengajuan yang sudah disetujui bisa dibatalkan dari Riwayat; jadwal kembali persis seperti semula.</li></ul></details></div>`;
   $$('[data-j]',v).forEach(e=>e.onclick=()=>{u.jenis=e.dataset.j;u.b=null;u.date2=null;u.ack=false;render()});
-  $('#jwaPa',v).onchange=e=>{u.a=e.target.value||null;u.b=null;u.date2=null;u.ack=false;render()};
+  $('#jwaPa',v).onchange=e=>{if(kunci)return;u.a=e.target.value||null;u.pilihManual=true;u.b=null;u.date2=null;u.ack=false;render()};
   $('#jwaDt',v).onchange=e=>{if(e.target.value){u.date=dn(e.target.value);u.b=null;u.date2=null;u.ack=false;render()}};
   if($('#jwaAb',v))$('#jwaAb',v).onchange=e=>{u.absen=e.target.value;render()};
   $$('tr[data-b]',v).forEach(tr=>tr.onclick=()=>{u.b=tr.dataset.b;u.date2=null;u.ack=false;render()});
@@ -4367,6 +4377,8 @@ function vRekap(v){
 }
 
 /* ====================== view: pegawai ====================== */
+function pilihAkun(nilai,id){const ada=AKUN.some(a=>normU(a.username)===normU(nilai));
+  return `<select ${id?`id="${id}"`:'data-f="username"'} style="min-width:150px"><option value="">— belum dihubungkan —</option>${AKUN.map(a=>`<option value="${esc(a.username)}" ${normU(a.username)===normU(nilai)?'selected':''}>${esc(a.username)} (${esc(a.level)})</option>`).join('')}${nilai&&!ada?`<option value="${esc(nilai)}" selected>${esc(nilai)} (tidak ditemukan di sheet Users)</option>`:''}</select>`}
 function vPegawai(v){
   const ref=Math.max(todayDn(),dn(S.anchor));const ro=!HAK.kelola,dis=ro?'disabled':'';
   const comp=S.groups.map(g=>{const m=S.staff.filter(st=>groupOf(st,ref)===g.id);const p=m.filter(x=>x.jk==='P').length;return {g,m,p,l:m.length-p}});
@@ -4379,8 +4391,9 @@ function vPegawai(v){
    ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><button class="btn-outline jwa-btn" id="jwaEven">${ikon('balance')}Ratakan jarak antarkelompok otomatis</button><span class="jwa-small jwa-muted">Siklus ${S.cycle.length} hari dibagi ${S.groups.length} kelompok → selisih ${fmtH(S.cycle.length/S.groups.length)} hari, sehingga tiap hari selalu ada satu kelompok di setiap shift.</span></div>`}
   </div>
   <div class="jwa-card"><div class="jwa-flex" style="margin-bottom:12px"><h3 class="jwa-h" style="margin:0">${ikon('badge')}Data pegawai</h3><span class="jwa-sp"></span>${ro?'<span class="jwa-chip info">Hanya lihat</span>':`<button class="btn-add jwa-btn" id="jwaAdd">${ikon('person_add')}Tambah pegawai</button>`}</div>
-   <div class="table-responsive"><table class="jwa-t" style="min-width:980px"><tr><th>Nama lengkap & gelar</th><th>Panggilan</th><th>NIP</th><th>JK</th><th>Jabatan</th><th>Status saat ini</th><th title="Contoh: kehamilan berisiko / rekomendasi dokter">Tidak boleh malam</th>${ro?'':'<th></th>'}</tr>
-   ${S.staff.map(st=>{const h=statusAt(st,ref);return `<tr data-sid="${esc(st.id)}"><td><input type="text" data-f="nama" value="${esc(st.nama)}" ${dis}></td><td><input type="text" data-f="panggilan" value="${esc(st.panggilan)}" style="width:100px" ${dis}></td><td><input type="text" data-f="nip" value="${esc(st.nip)}" style="width:180px" ${dis}></td>
+   <p class="jwa-small jwa-muted" style="margin:0 0 10px">Kolom <b>Akun web</b> menghubungkan pegawai dengan username login SISRI (sheet Users). Wali Asuh yang sudah terhubung hanya bisa mengajukan tukar shift atas nama dirinya sendiri.</p>
+   <div class="table-responsive"><table class="jwa-t" style="min-width:1140px"><tr><th>Nama lengkap & gelar</th><th>Panggilan</th><th>Akun web</th><th>NIP</th><th>JK</th><th>Jabatan</th><th>Status saat ini</th><th title="Contoh: kehamilan berisiko / rekomendasi dokter">Tidak boleh malam</th>${ro?'':'<th></th>'}</tr>
+   ${S.staff.map(st=>{const h=statusAt(st,ref);return `<tr data-sid="${esc(st.id)}"><td><input type="text" data-f="nama" value="${esc(st.nama)}" ${dis}></td><td><input type="text" data-f="panggilan" value="${esc(st.panggilan)}" style="width:100px" ${dis}></td><td>${ro?(st.username?`<span class="jwa-chip info">${esc(st.username)}</span>`:'<span class="jwa-muted jwa-small">—</span>'):pilihAkun(st.username)}</td><td><input type="text" data-f="nip" value="${esc(st.nip)}" style="width:180px" ${dis}></td>
     <td><select data-f="jk" ${dis}><option ${st.jk==='L'?'selected':''}>L</option><option ${st.jk==='P'?'selected':''}>P</option></select></td><td><input type="text" data-f="jabatan" value="${esc(st.jabatan)}" ${dis}></td>
     <td class="jwa-small">${h?(h.mode==='shift'?esc(groupName(h.kelompok)):h.mode==='reguler'?'Non-shift (reguler)':'Nonaktif'):'—'}<div class="jwa-muted">sejak ${h?fmt(dn(h.mulai)):'-'}</div></td>
     <td style="text-align:center"><input type="checkbox" data-f="batasMalam" ${st.batasMalam?'checked':''} ${dis}></td>
@@ -4395,8 +4408,11 @@ function vPegawai(v){
   $('#jwaEven',v).onclick=async()=>{if(!(await ask('Ratakan siklus?','Offset tiap kelompok diatur ulang berjarak sama dalam siklus. Ini mengubah jadwal dasar semua kelompok sejak tanggal acuan.','Ratakan')))return;
     const L=S.cycle.length,G=S.groups.length,lama=S.groups.map(g=>`${g.nama}:${g.offset+1}`).join(', ');S.groups.forEach((g,i)=>g.offset=Math.round(i*L/G)%L);
     commit('Siklus kelompok diratakan.',{aksi:'RATAKAN SIKLUS KELOMPOK',detail:`Sebelum: ${lama} · Sesudah: ${S.groups.map(g=>`${g.nama}:${g.offset+1}`).join(', ')}`})};
-  $('#jwaSaveStaff',v).onclick=()=>{const ub=[];
-    $$('tr[data-sid]',v).forEach(tr=>{const st=staffById(tr.dataset.sid);const f=[];$$('[data-f]',tr).forEach(i=>{const k=i.dataset.f;const nv=i.type==='checkbox'?i.checked:i.value.trim();const ov=k==='batasMalam'?!!st[k]:String(st[k]==null?'':st[k]);if(nv!==ov){f.push(`${k}: ${k==='batasMalam'?(ov?'ya':'tidak'):ov||'-'} → ${k==='batasMalam'?(nv?'ya':'tidak'):nv||'-'}`);st[k]=nv}});if(f.length)ub.push(`${nick(st)} (${f.join(', ')})`)});
+  $('#jwaSaveStaff',v).onclick=()=>{
+    const baru=$$('tr[data-sid]',v).map(tr=>{const o={st:staffById(tr.dataset.sid),val:{}};$$('[data-f]',tr).forEach(i=>{o.val[i.dataset.f]=i.type==='checkbox'?i.checked:i.value.trim()});return o});
+    const dipakai={};for(const o of baru){const un=normU(o.val.username);if(!un)continue;if(dipakai[un]){toast(`Akun web "${o.val.username}" dipilih untuk lebih dari satu pegawai (${dipakai[un]} dan ${nick(o.st)}). Satu akun hanya untuk satu pegawai.`,'error');return}dipakai[un]=nick(o.st)}
+    const ub=[];
+    for(const {st,val} of baru){const f=[];for(const k of Object.keys(val)){const nv=val[k];const ov=k==='batasMalam'?!!st[k]:String(st[k]==null?'':st[k]);if(nv!==ov){f.push(`${k==='username'?'akun web':k}: ${k==='batasMalam'?(ov?'ya':'tidak'):ov||'-'} → ${k==='batasMalam'?(nv?'ya':'tidak'):nv||'-'}`);st[k]=nv}}if(f.length)ub.push(`${nick(st)} (${f.join(', ')})`)}
     if(!ub.length){toast('Tidak ada perubahan data pegawai.','info');return}
     commit('Data pegawai disimpan.',{aksi:'UBAH DATA PEGAWAI',detail:ub.join('; ')})};
   $('#jwaAdd',v).onclick=()=>addStaffModal();
@@ -4424,12 +4440,13 @@ function moveModal(sid){
 function addStaffModal(){
   modal({judul:'Tambah pegawai',lebar:720,isi:`<div class="jwa-grid2"><label class="jwa-f"><span>Nama lengkap & gelar</span><input type="text" id="jwaN1"></label><label class="jwa-f"><span>Panggilan</span><input type="text" id="jwaN2"></label><label class="jwa-f"><span>NIP</span><input type="text" id="jwaN3"></label>
   <label class="jwa-f"><span>JK</span><select id="jwaN4"><option>L</option><option>P</option></select></label><label class="jwa-f"><span>Jabatan</span><input type="text" id="jwaN5" value="Wali Asuh"></label><label class="jwa-f"><span>Mulai bertugas</span><input type="date" id="jwaN6" value="${ds(Math.max(todayDn(),dn(S.anchor)))}"></label>
-  <label class="jwa-f"><span>Status</span><select id="jwaN7"><option value="shift">Shift</option><option value="reguler">Non-shift</option></select></label><label class="jwa-f"><span>Kelompok</span><select id="jwaN8">${S.groups.map(g=>`<option value="${g.id}">${esc(g.nama)}</option>`).join('')}</select></label></div>`,
+  <label class="jwa-f"><span>Status</span><select id="jwaN7"><option value="shift">Shift</option><option value="reguler">Non-shift</option></select></label><label class="jwa-f"><span>Kelompok</span><select id="jwaN8">${S.groups.map(g=>`<option value="${g.id}">${esc(g.nama)}</option>`).join('')}</select></label><label class="jwa-f"><span>Akun web (opsional)</span>${pilihAkun('','jwaN9')}</label></div>`,
   kaki:`<button class="btn-outline jwa-btn" data-a>Batal</button><button class="btn-add jwa-btn" id="jwaOk">${ikon('person_add')}Tambah</button>`},
   m=>{$('[data-a]',m).onclick=closeModal;$('#jwaOk',m).onclick=()=>{const nama=$('#jwaN1',m).value.trim();if(!nama){toast('Nama wajib diisi.','warn');return}
     const mulai=$('#jwaN6',m).value;if(!mulai){toast('Tanggal mulai bertugas wajib diisi.','warn');return}
     const md=$('#jwaN7',m).value,kel=md==='shift'?+$('#jwaN8',m).value:null;
-    const st={id:'s'+uid(),nama,panggilan:$('#jwaN2',m).value.trim()||nama.split(' ')[0],nip:$('#jwaN3',m).value.trim(),jk:$('#jwaN4',m).value,jabatan:$('#jwaN5',m).value.trim(),batasMalam:false,riwayat:[{mulai,mode:md,kelompok:kel}]};
+    const akun=$('#jwaN9',m).value.trim();if(akun&&S.staff.some(x=>normU(x.username)===normU(akun))){toast(`Akun web "${akun}" sudah dihubungkan ke pegawai lain.`,'error');return}
+    const st={id:'s'+uid(),nama,panggilan:$('#jwaN2',m).value.trim()||nama.split(' ')[0],nip:$('#jwaN3',m).value.trim(),jk:$('#jwaN4',m).value,jabatan:$('#jwaN5',m).value.trim(),batasMalam:false,riwayat:[{mulai,mode:md,kelompok:kel}],username:akun};
     S.staff.push(st);closeModal();
     commit('Pegawai ditambahkan.',{aksi:'TAMBAH PEGAWAI',detail:`${st.nama} (${st.jk}) · ${md==='shift'?groupName(kel):'Non-shift'} mulai ${mulai}`})}});
 }
@@ -4603,7 +4620,7 @@ function backupModal(){
 
 /* ====================== integrasi dengan web SISRI ====================== */
 function resetSemua(){
-  SESI++;closeModal();S=null;HAK=hakKosong();USER={username:'',level:''};BASE_REV=0;VERSI=0;
+  SESI++;closeModal();S=null;HAK=hakKosong();USER={username:'',level:''};AKUN=[];BASE_REV=0;VERSI=0;
   loadState='idle';loadMsg='';saveState='saved';saving=false;perluMuatUlang=false;pending=pendingBaru();
   swapUI=swapBaru();filterGroup='all';filterStatus='all';
   const el=root();if(el)el.innerHTML='';
@@ -4619,8 +4636,20 @@ function bukaModul(){
 }
 window.jwaBukaModul=bukaModul;
 function aturMenuJadwal(level){const ok=!!peranLokal(level);$$('[data-jwa-menu]').forEach(el=>{el.style.display=ok?'':'none'})}
+/* data-role-kecuali="Wali Asuh" = tampil untuk semua level yang diizinkan data-role, KECUALI level yang disebut */
+function cocokKecuali(daftar,level){const p=peranLokal(level),n=String(level||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  return String(daftar||'').split(',').some(x=>{const k=x.replace(/\s+/g,' ').trim().toLowerCase();return !!k&&(k===n||(k==='wali asuh'&&p==='Wali Asuh'))})}
+function terapkanKecuali(level){$$('[data-role-kecuali]').forEach(el=>{if(cocokKecuali(el.getAttribute('data-role-kecuali'),level))el.style.display='none';else if(!el.matches('.menu-item, .dash-card'))el.style.display=''})}
 if(typeof window.aturHakAksesMenu==='function'){const aturAsli=window.aturHakAksesMenu;
-  window.aturHakAksesMenu=function(level){const hasil=aturAsli.apply(this,arguments);try{aturMenuJadwal(level)}catch(e){}return hasil}}
+  window.aturHakAksesMenu=function(level){const hasil=aturAsli.apply(this,arguments);try{aturMenuJadwal(level);terapkanKecuali(level)}catch(e){}return hasil}}
+/* Penjaga halaman: modul/konten hanya dibuka bila pintu masuknya (menu sidebar / kartu dashboard) tidak disembunyikan untuk level ini.
+   Mencegah halaman terlarang terbuka lewat fitur "ingat halaman terakhir" setelah refresh. */
+function tersembunyiPeran(el){for(let x=el;x&&x!==document.body;x=x.parentElement){if(x.style&&x.style.display==='none')return true}return false}
+function bolehBuka(fn,nama){if(fn==='openModule'&&(nama==='dashboard'||nama==='jadwal_wali_asuh'))return true;
+  const kunci=fn+"('"+nama+"'";const pintu=$$('#sidebar [onclick], #defaultContent [onclick]').filter(el=>(el.getAttribute('onclick')||'').indexOf(kunci)!==-1);
+  return !pintu.length||pintu.some(el=>!tersembunyiPeran(el))}
+['openModule','openContent'].forEach(fn=>{const asli=window[fn];if(typeof asli!=='function')return;
+  window[fn]=function(nama){if(sessionStorage.getItem('isLoggedIn')==='true'&&!bolehBuka(fn,nama)){toast('Menu tersebut tidak tersedia untuk level akun Anda.','warn');return window.openModule('dashboard')}return asli.apply(this,arguments)}});
 window.bukaJadwalWaliAsuh=function(tab,event){if(tab)setTab(tab,true);openModule('jadwal_wali_asuh',event)};
 window.jwaReset=function(){const w=wadah();const tampil=!!w&&!w.classList.contains('hidden');resetSemua();
   if(tampil){w.classList.add('hidden');const dc=document.getElementById('defaultContent');if(dc)dc.classList.remove('hidden')}};
