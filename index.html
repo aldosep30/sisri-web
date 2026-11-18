@@ -229,6 +229,158 @@
         html.user-logged-in #authArea { display: none !important; }
         html.user-logged-in #dashboardArea { display: flex !important; }
     </style>
+    <!-- ================================================================= -->
+    <!-- STYLE MODUL JADWAL SHIFT WALI ASUH (TAMBAHAN, khusus kelas jwa-)   -->
+    <!-- ================================================================= -->
+    <style id="jwa-style">
+        .border-teal { border-top: 4px solid #5eead4; } .bg-light-teal { background: #ccfbf1 !important; } .text-teal { color: #0f766e !important; }
+        .hover-teal:hover { background: #f0fdfa; border-color: #99f6e4; }
+
+        .jwa-root { font-size: 13px; color: var(--text-main); }
+        .jwa-root table, .jwa-ov table { min-width: 0; }
+        .jwa-root .page-header.jwa-head { flex-wrap: wrap; gap: 16px; }
+        .jwa-sub { margin: 4px 0 0 0; font-size: 13px; color: var(--text-muted); }
+        .jwa-flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .jwa-sp { flex: 1; }
+        .jwa-muted { color: var(--text-muted); } .jwa-small { font-size: 12px; }
+        .jwa-root .jwa-btn, .jwa-ov .jwa-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-family: 'Inter', sans-serif; padding: 8px 14px; border-radius: 6px; line-height: 1.2; white-space: nowrap; }
+        .jwa-root .jwa-btn .material-symbols-outlined, .jwa-ov .jwa-btn .material-symbols-outlined { font-size: 18px; }
+        .jwa-root .btn-outline.jwa-btn:hover, .jwa-ov .btn-outline.jwa-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .jwa-root button:disabled, .jwa-ov button:disabled { opacity: .45; cursor: not-allowed; }
+        .jwa-root .jwa-btn-ok, .jwa-ov .jwa-btn-ok { background: #15803d; border: none; color: #fff; }
+        .jwa-root .jwa-btn-ok:hover, .jwa-ov .jwa-btn-ok:hover { background: #166534; }
+        .jwa-root .btn-outline.jwa-btn-danger, .jwa-ov .btn-outline.jwa-btn-danger { color: #dc2626; border-color: #fecaca; }
+        .jwa-ov .jwa-btn-danger-solid { background: #dc2626; } .jwa-ov .jwa-btn-danger-solid:hover { background: #b91c1c; }
+        .jwa-root .jwa-icon-btn { padding: 7px 9px; }
+        .jwa-month { min-width: 150px; text-align: center; font-size: 15px; }
+        .jwa-root select.jwa-inline, .jwa-root input.jwa-inline { width: auto; min-width: 150px; padding: 8px 10px; font-size: 13px; }
+        .jwa-root input[type=checkbox], .jwa-ov input[type=checkbox] { width: 16px; height: 16px; padding: 0; margin: 1px 0 0 0; flex: 0 0 auto; accent-color: var(--primary); cursor: pointer; }
+        .jwa-check { display: flex !important; align-items: flex-start; gap: 8px; text-transform: none !important; font-weight: 500 !important; font-size: 13px !important; color: var(--text-main); margin: 8px 0 0 0 !important; cursor: pointer; }
+        .jwa-f { display: flex; flex-direction: column; gap: 6px; }
+        .jwa-f > span { font-size: 12px; font-weight: 600; color: var(--text-main); text-transform: uppercase; }
+        .jwa-root .jwa-f input, .jwa-root .jwa-f select, .jwa-ov .jwa-f input, .jwa-ov .jwa-f select { padding: 9px 10px; font-size: 13px; }
+        .jwa-root textarea, .jwa-ov textarea { font-size: 13px; min-height: 70px; resize: vertical; }
+        .jwa-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+        .jwa-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .jwa-card > h3, .jwa-card h3.jwa-h { margin: 0 0 12px 0; font-size: 15px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .jwa-card h4 { margin: 18px 0 10px 0; font-size: 13px; font-weight: 700; color: var(--primary); }
+        .jwa-root .stats-grid.jwa-kpis { margin-bottom: 20px; }
+        .jwa-root .jwa-kpis .stat-value { font-size: 22px; }
+        .jwa-root .jwa-tabs { overflow-x: auto; scrollbar-width: thin; }
+        .jwa-root .jwa-tabs .tab-btn { white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; padding: 12px 12px; font-size: 13.5px; }
+        .jwa-root .jwa-tabs .tab-btn .material-symbols-outlined { font-size: 19px; }
+        .jwa-badge { display: inline-block; min-width: 18px; padding: 1px 6px; border-radius: 9px; background: var(--primary); color: #fff; font-size: 11px; text-align: center; }
+        .jwa-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 99px; font-size: 12px; font-weight: 600; background: #f3f4f6; color: var(--text-muted); border: 1px solid var(--border); }
+        .jwa-pill i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; box-shadow: 0 0 6px #22c55e; }
+        .jwa-pill.pending i { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; } .jwa-pill.err { cursor: pointer; color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+        .jwa-pill.err i { background: #dc2626; box-shadow: none; }
+        .jwa-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 99px; font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+        .jwa-chip.ok { background: #f0fdf4; color: #15803d; } .jwa-chip.warn { background: #fffbeb; color: #b45309; }
+        .jwa-chip.err { background: #fef2f2; color: #b91c1c; } .jwa-chip.info { background: #e0f2fe; color: #0369a1; }
+        .jwa-banner { display: flex; gap: 12px; align-items: flex-start; padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; border: 1px solid; line-height: 1.5; }
+        .jwa-banner .material-symbols-outlined { font-size: 22px; }
+        .jwa-banner.info { background: #e0f2fe; color: #075985; border-color: #bae6fd; } .jwa-banner.warn { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+        .jwa-banner.err { background: #fef2f2; color: #991b1b; border-color: #fecaca; } .jwa-banner.ok { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+        .jwa-panel { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 56px 32px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45vh; }
+        .jwa-panel .jwa-panel-ic { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .jwa-panel .jwa-panel-ic .material-symbols-outlined { font-size: 40px; color: var(--primary); }
+        .jwa-panel h3 { margin: 0 0 10px 0; font-size: 20px; color: var(--text-main); }
+        .jwa-panel p { margin: 0 0 24px 0; color: var(--text-muted); font-size: 14px; max-width: 520px; line-height: 1.6; }
+        .jwa-spin { width: 34px; height: 34px; border: 3px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: jwaSpin .8s linear infinite; margin-bottom: 16px; }
+        @keyframes jwaSpin { to { transform: rotate(360deg); } }
+
+        /* Grid jadwal */
+        .jwa-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 8px; }
+        .jwa-legend span { padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 600; }
+        .jwa-gridwrap { overflow: auto; border: 1px solid var(--border); border-radius: 12px; max-height: 70vh; background: #fff; }
+        .jwa-root table.jwa-sch { border-collapse: separate; border-spacing: 0; width: auto; min-width: 100%; font-size: 12px; }
+        .jwa-root .jwa-sch th, .jwa-root .jwa-sch td { padding: 0; text-align: center; white-space: nowrap; border-right: 1px solid #f1f2f4; border-bottom: 1px solid #f1f2f4; font-size: 12px; color: var(--text-main); }
+        .jwa-root .jwa-sch thead th { position: sticky; top: 0; background: #f9fafb; z-index: 3; font-weight: 700; padding: 6px 2px; cursor: pointer; line-height: 1.25; }
+        .jwa-root .jwa-sch thead th:hover { color: var(--primary); }
+        .jwa-root .jwa-sch thead th.we { background: #fef2f2; color: #b91c1c; }
+        .jwa-root .jwa-sch thead th.today { background: var(--primary); color: #fff; }
+        .jwa-root .jwa-sch .nm { position: sticky; left: 0; background: #fff; z-index: 2; text-align: left; padding: 4px 12px; width: 180px; min-width: 180px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+        .jwa-root .jwa-sch thead th.nm, .jwa-root .jwa-sch thead th.jk { z-index: 4; background: #f9fafb; cursor: default; color: var(--text-main); }
+        .jwa-root .jwa-sch .jk { position: sticky; left: 180px; background: #fff; z-index: 2; width: 30px; min-width: 30px; color: var(--text-muted); }
+        .jwa-root .jwa-sch tr.grp td { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; text-align: left; padding: 7px 12px; position: sticky; left: 0; }
+        .jwa-root .jwa-sch td.c { min-width: 34px; height: 30px; font-weight: 700; cursor: pointer; position: relative; font-size: 11.5px; }
+        .jwa-root .jwa-sch td.c:hover { outline: 2px solid var(--primary); outline-offset: -2px; z-index: 1; }
+        .jwa-root .jwa-sch td.c.todaycol { box-shadow: inset 2px 0 0 var(--primary), inset -2px 0 0 var(--primary); }
+        .jwa-root .jwa-sch td.c.ov::after { content: ""; position: absolute; top: 0; right: 0; border-width: 0 8px 8px 0; border-style: solid; border-color: transparent var(--primary) transparent transparent; }
+        .jwa-root .jwa-sch td.c.bad { box-shadow: inset 0 0 0 2px #dc2626; }
+        .jwa-root .jwa-sch td.c.wrn { box-shadow: inset 0 0 0 2px #f59e0b; }
+        .jwa-root .jwa-sch td.c.lg { opacity: .55; font-style: italic; }
+        .jwa-root .jwa-sch td.c.empty { color: #d1d5db; cursor: default; }
+        .jwa-root .jwa-sch td.tot { padding: 0 8px; font-weight: 700; color: var(--text-muted); background: #f9fafb; }
+        .jwa-root .jwa-sch tfoot td { background: #f9fafb; font-weight: 700; font-size: 11px; height: 24px; padding: 0 2px; position: sticky; z-index: 2; }
+        .jwa-root .jwa-sch tfoot tr:nth-child(1) td { bottom: 48px; } .jwa-root .jwa-sch tfoot tr:nth-child(2) td { bottom: 24px; } .jwa-root .jwa-sch tfoot tr:nth-child(3) td { bottom: 0; }
+        .jwa-root .jwa-sch tfoot td.nm { z-index: 3; background: #f9fafb; } .jwa-root .jwa-sch tfoot td.jk { z-index: 3; background: #f9fafb; }
+        .jwa-root .jwa-sch tfoot td.cv-bad { background: #fef2f2; color: #b91c1c; }
+
+        /* Tabel data */
+        .jwa-root table.jwa-t, .jwa-ov table.jwa-t { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .jwa-root .jwa-t th, .jwa-ov .jwa-t th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .3px; color: var(--text-muted); padding: 10px 12px; background: #f9fafb; }
+        .jwa-root .jwa-t td, .jwa-ov .jwa-t td { padding: 10px 12px; vertical-align: top; color: var(--text-main); }
+        .jwa-root .jwa-t tr:hover td { background: #fafafa; }
+        .jwa-root .jwa-t input[type=text] { padding: 7px 9px; font-size: 13px; min-width: 90px; }
+        .jwa-root .jwa-t select { padding: 7px 9px; font-size: 13px; width: auto; }
+        .jwa-root .jwa-t input[data-f=nama] { min-width: 260px; } .jwa-root .jwa-t input[data-f=jabatan] { min-width: 230px; }
+        .jwa-code { display: inline-block; min-width: 34px; text-align: center; padding: 2px 6px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+        .jwa-issues { list-style: none; margin: 0; padding: 0; }
+        .jwa-issues li { padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 13px; display: flex; gap: 8px; align-items: flex-start; border: 1px solid; line-height: 1.45; }
+        .jwa-issues li b { white-space: nowrap; }
+        .jwa-issues li.error { background: #fef2f2; color: #991b1b; border-color: #fecaca; } .jwa-issues li.warn { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+        .jwa-issues li.fixed { background: #f0fdf4; color: #166534; border-color: #bbf7d0; } .jwa-issues li.info { background: #e0f2fe; color: #075985; border-color: #bae6fd; }
+
+        /* Tukar shift */
+        .jwa-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-bottom: 16px; }
+        .jwa-type { border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; background: #fff; transition: all .2s; }
+        .jwa-type:hover { border-color: #fca5a5; }
+        .jwa-type.on { border-color: var(--primary); background: var(--primary-light); }
+        .jwa-type b { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--text-main); font-size: 14px; }
+        .jwa-type b .material-symbols-outlined { color: var(--primary); font-size: 20px; }
+        .jwa-cands { max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: 10px; }
+        .jwa-cands tr[data-b], .jwa-cands tr[data-d2] { cursor: pointer; }
+        .jwa-cands tr.sel td { background: var(--primary-light) !important; }
+        .jwa-root table.jwa-mini { border-collapse: collapse; font-size: 12px; width: auto; }
+        .jwa-root .jwa-mini th, .jwa-root .jwa-mini td { border: 1px solid var(--border); padding: 4px 7px; text-align: center; font-size: 12px; background: #fff; color: var(--text-main); }
+        .jwa-root .jwa-mini td.chg { outline: 2px solid var(--primary); outline-offset: -2px; }
+        .jwa-cols { display: grid; grid-template-columns: minmax(300px, 1fr) minmax(300px, 1.1fr); gap: 16px; align-items: start; }
+        @media (max-width: 1200px) { .jwa-cols { grid-template-columns: 1fr; } }
+
+        /* Modal & toast */
+        .jwa-ov { z-index: 1010; padding: 16px; box-sizing: border-box; }
+        .jwa-ov .modal-card { max-height: 92vh; }
+        .jwa-modal-sub { margin: 4px 0 0 0; font-size: 12px; color: var(--text-muted); }
+        .jwa-ov .modal-header { align-items: flex-start; }
+        .jwa-ov .modal-footer { flex-wrap: wrap; align-items: center; }
+        .jwa-codes { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+        .jwa-codes button { border: 2px solid transparent; border-radius: 8px; padding: 7px 11px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 13px; }
+        .jwa-codes button.on { border-color: var(--text-main); }
+        .jwa-ask { display: flex; gap: 14px; align-items: flex-start; font-size: 14px; color: var(--text-main); line-height: 1.55; }
+        .jwa-ask > .material-symbols-outlined { font-size: 34px; } .jwa-ask .warn { color: #d97706; } .jwa-ask .err { color: #dc2626; }
+        .jwa-toast-box { position: fixed; right: 20px; bottom: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 8px; }
+        .jwa-toast { background: #fff; color: var(--text-main); border: 1px solid var(--border); border-left: 4px solid var(--primary); padding: 12px 14px; border-radius: 10px; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); font-size: 13px; display: flex; gap: 10px; align-items: flex-start; font-family: 'Inter', sans-serif; line-height: 1.45; }
+        .jwa-toast .material-symbols-outlined { font-size: 20px; color: var(--primary); }
+        .jwa-toast.ok { border-left-color: #15803d; } .jwa-toast.ok .material-symbols-outlined { color: #15803d; }
+        .jwa-toast.error { border-left-color: #dc2626; } .jwa-toast.error .material-symbols-outlined { color: #dc2626; }
+        .jwa-toast.warn { border-left-color: #d97706; } .jwa-toast.warn .material-symbols-outlined { color: #d97706; }
+        .jwa-toast.info { border-left-color: #0284c7; } .jwa-toast.info .material-symbols-outlined { color: #0284c7; }
+        .jwa-law ol { padding-left: 20px; margin: 0; } .jwa-law li { margin-bottom: 10px; line-height: 1.6; color: var(--text-main); }
+        details.jwa-det summary { cursor: pointer; font-weight: 700; color: var(--text-main); }
+        details.jwa-det ul { margin: 10px 0 0; padding-left: 20px; line-height: 1.6; }
+        @media (max-width: 768px) {
+            .jwa-root .jwa-head .jwa-flex { width: 100%; }
+            .jwa-root .jwa-sch .nm { width: 120px; min-width: 120px; max-width: 120px; }
+            .jwa-root .jwa-sch .jk { left: 120px; }
+            .jwa-toast-box { left: 12px; right: 12px; } .jwa-toast { max-width: none; }
+            .jwa-root .stats-grid.jwa-kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .jwa-root .jwa-kpis .stat-card { padding: 12px; gap: 10px; flex-direction: column; align-items: flex-start; }
+            .jwa-root .jwa-kpis .stat-icon { width: 40px; height: 40px; border-radius: 10px; } .jwa-root .jwa-kpis .stat-icon span { font-size: 22px; }
+            .jwa-root .jwa-kpis .stat-title { font-size: 11px; } .jwa-root .jwa-kpis .stat-value { font-size: 18px; }
+            .jwa-types { grid-template-columns: 1fr; } .jwa-type { padding: 10px 12px; }
+        }
+    </style>
     <!-- SCRIPT CEGATAN SEBELUM RENDER (ANTI-GLITCH) -->
     <script>
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
@@ -429,6 +581,28 @@
                 </ul>
             </li>
 
+            <!-- PENAMBAHAN MENU JADWAL WALI ASUH (khusus Kepala Sekolah, Operator Sekolah, Wali Asuh) -->
+            <li class="menu-item" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh" onclick="toggleMenu(this, event)">
+                <div class="menu-label">
+                    <div class="menu-label-left"><span class="material-symbols-outlined icon">calendar_month</span><span class="menu-text">Jadwal Wali Asuh</span></div>
+                    <span class="material-symbols-outlined chevron-icon">expand_more</span>
+                </div>
+                <ul class="submenu">
+                    <li class="submenu-label" data-jwa-tab="jadwal" onclick="bukaJadwalWaliAsuh('jadwal', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">calendar_view_month</span><span class="submenu-text">Jadwal Shift</span></div>
+                    </li>
+                    <li class="submenu-label" data-jwa-tab="tukar" onclick="bukaJadwalWaliAsuh('tukar', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">swap_horiz</span><span class="submenu-text">Tukar Shift</span></div>
+                    </li>
+                    <li class="submenu-label" data-jwa-tab="riwayat" onclick="bukaJadwalWaliAsuh('riwayat', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">history</span><span class="submenu-text">Riwayat & Persetujuan</span></div>
+                    </li>
+                    <li class="submenu-label" data-jwa-tab="rekap" onclick="bukaJadwalWaliAsuh('rekap', event)">
+                        <div class="menu-label-left"><span class="material-symbols-outlined submenu-icon">fact_check</span><span class="submenu-text">Rekap & Validasi</span></div>
+                    </li>
+                </ul>
+            </li>
+
             <li class="menu-item" data-role="Seluruh" onclick="openContent('Pengajuan Penggunaan Ruangan', event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">meeting_room</span><span class="menu-text">Pengajuan Ruangan</span></div>
@@ -621,6 +795,20 @@
                                 <button class="sc-btn text-purple hover-purple" onclick="openContent('Pengajuan Anggaran', event)"><span class="material-symbols-outlined">request_quote</span> Pengajuan Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
                                 <button class="sc-btn text-purple hover-purple" onclick="openContent('Realisasi Anggaran', event)"><span class="material-symbols-outlined">analytics</span> Realisasi Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
                                 <button class="sc-btn text-purple hover-purple" onclick="openContent('Pencairan Anggaran', event)"><span class="material-symbols-outlined">payments</span> Pencairan Anggaran <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- 6. KARTU JADWAL WALI ASUH (PENAMBAHAN) -->
+                        <div class="service-card dash-card border-teal" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh">
+                            <div class="sc-header">
+                                <div class="sc-icon text-teal bg-light-teal"><span class="material-symbols-outlined">calendar_month</span></div>
+                                <h4 class="sc-title text-teal">Jadwal Wali Asuh</h4>
+                            </div>
+                            <p class="sc-desc">Jadwal shift pendampingan asrama 24 jam, tukar shift dengan validasi aturan otomatis, dan riwayat persetujuan.</p>
+                            <div class="sc-links">
+                                <button class="sc-btn text-teal hover-teal" onclick="bukaJadwalWaliAsuh('jadwal', event)"><span class="material-symbols-outlined">calendar_view_month</span> Jadwal Shift <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-teal hover-teal" onclick="bukaJadwalWaliAsuh('tukar', event)"><span class="material-symbols-outlined">swap_horiz</span> Tukar Shift <span class="material-symbols-outlined arrow">chevron_right</span></button>
+                                <button class="sc-btn text-teal hover-teal" onclick="bukaJadwalWaliAsuh('riwayat', event)"><span class="material-symbols-outlined">history</span> Riwayat & Persetujuan <span class="material-symbols-outlined arrow">chevron_right</span></button>
                             </div>
                         </div>
 
@@ -1276,6 +1464,12 @@
         </div>
     </div>
 </div>
+<!-- ================================================= -->
+<!-- MODUL JADWAL SHIFT WALI ASUH (PENAMBAHAN)         -->
+<!-- ================================================= -->
+<div id="modul_jadwal_wali_asuh" class="hidden">
+    <div id="jwaRoot" class="jwa-root"></div>
+</div>
         </div> <!-- PENUTUP main-content (default content area) -->
     </div> <!-- PENUTUP dashboard-wrapper -->
 </div> <!-- PENUTUP container UTAMA -->
@@ -1642,6 +1836,7 @@
     }
 
     function logout() {
+        if (typeof jwaReset === 'function') jwaReset(); // PENAMBAHAN: bersihkan data modul Jadwal Wali Asuh
         sessionStorage.clear(); // Hapus sesi login dari browser
         document.body.style.backgroundColor = "var(--primary)";
         document.getElementById('authArea').classList.remove('hidden');
@@ -1725,7 +1920,8 @@
             'defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 
             'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 
             'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 
-            'modul_siswa_keluar', 'modul_arsip_bast', 'modul_arsip_spby'
+            'modul_siswa_keluar', 'modul_arsip_bast', 'modul_arsip_spby',
+            'modul_jadwal_wali_asuh' // PENAMBAHAN MODUL JADWAL WALI ASUH
         ];
         
         semuaModul.forEach(id => {
@@ -1808,6 +2004,14 @@
                 if(typeof muatDataSPBY === 'function') muatDataSPBY();
             }
         }
+        // ---> PENAMBAHAN MODUL JADWAL WALI ASUH <---
+        else if(modulName === 'jadwal_wali_asuh') {
+            const wadahJadwal = document.getElementById('modul_jadwal_wali_asuh');
+            if(wadahJadwal) {
+                wadahJadwal.classList.remove('hidden');
+                if(typeof jwaBukaModul === 'function') jwaBukaModul();
+            }
+        }
 
         closeSidebarMobile();
     }
@@ -1830,7 +2034,8 @@
             'defaultContent', 'modul_development', 'modul_nonops', 'modul_ops', 
             'modul_pemeliharaan', 'modul_pengajuan_perbaikan', 'modul_barang_rusak', 
             'modul_daftar_pemeliharaan', 'modul_data_siswa', 'modul_siswa_jenjang', 
-            'modul_siswa_keluar', 'modul_arsip_bast', 'modul_arsip_spby'
+            'modul_siswa_keluar', 'modul_arsip_bast', 'modul_arsip_spby',
+            'modul_jadwal_wali_asuh' // PENAMBAHAN MODUL JADWAL WALI ASUH
         ];
         
         semuaModul.forEach(id => {
@@ -3545,6 +3750,870 @@ function renderTabelSPBY() {
         </tr>`;
     });
 }
+</script>
+<!-- ======================================================================= -->
+<!-- SCRIPT MODUL JADWAL SHIFT WALI ASUH (TAMBAHAN)                           -->
+<!-- Backend : Code.gs (aksi *_jadwal_wali_asuh) · Database: sheet Jadwal_WA_* -->
+<!-- Akses   : Kepala Sekolah, Operator Sekolah, Wali Asuh                     -->
+<!-- Jejak   : setiap perubahan dicatat ke sheet Log_Aktivitas (catatLog)      -->
+<!-- ======================================================================= -->
+<script id="jwa-script">
+(function(){
+'use strict';
+/* ====================== util ====================== */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DAY=['Min','Sen','Sel','Rab','Kam','Jum','Sab'], DAYL=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const MON=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const dn=s=>{const p=String(s).split('-').map(Number);return Math.round(Date.UTC(p[0],p[1]-1,p[2])/864e5)};
+const ds=n=>new Date(n*864e5).toISOString().slice(0,10);
+const wd=n=>new Date(n*864e5).getUTCDay();
+const dOf=n=>new Date(n*864e5);
+const fmt=n=>{const d=dOf(n);return d.getUTCDate()+' '+MON[d.getUTCMonth()].slice(0,3)+' '+d.getUTCFullYear()};
+const fmtL=n=>DAYL[wd(n)]+', '+fmt(n);
+const mod=(a,b)=>((a%b)+b)%b;
+const hm=t=>{const p=String(t||'0:0').split(':').map(Number);return p[0]+(p[1]||0)/60};
+const todayDn=()=>{const t=new Date();return Math.round(Date.UTC(t.getFullYear(),t.getMonth(),t.getDate())/864e5)};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const fmtH=h=>(Math.round(h*10)/10).toString().replace('.',',');
+const fmtWaktu=iso=>{if(!iso)return '';const d=new Date(iso);return isNaN(d.getTime())?String(iso):d.toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'})};
+const tglPendek=s=>{const p=String(s||'').split('-');return p.length===3?p[2]+'/'+p[1]+'/'+p[0]:String(s||'')};
+function ssGet(k){try{return sessionStorage.getItem(k)}catch(e){return null}}
+function ssSet(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}
+const ikon=(n,st)=>`<span class="material-symbols-outlined"${st?` style="${st}"`:''}>${n}</span>`;
+
+/* ====================== state ====================== */
+const LEVEL_AKSES=['Kepala Sekolah','Operator Sekolah','Wali Asuh'];
+const hakKosong=()=>({lihat:false,ajukan:false,setujui:false,kelola:false,sumber:''});
+const pendingBaru=()=>({catatan:[],log:new Set(),gantiSemua:false,dirty:false});
+const swapBaru=(jenis,date)=>({jenis:jenis||'tukar',a:null,date:date==null?null:date,b:null,date2:null,absen:'I',alasan:'',ack:false,sending:false});
+let S=null, HAK=hakKosong(), USER={username:'',level:''}, BASE_REV=0, VERSI=0, SESI=0;
+let loadState='idle', loadMsg='', saveState='saved', saving=false, perluMuatUlang=false, pollTimer=null;
+let pending=pendingBaru();
+let jwaTab=ssGet('jwa-tab')||'jadwal';
+let curMonth=ssGet('jwa-month')||ds(todayDn()).slice(0,7);
+let filterGroup='all', filterStatus='all';
+let swapUI=swapBaru();
+const bisaUbah=()=>!!(HAK.setujui||HAK.kelola);
+const root=()=>document.getElementById('jwaRoot');
+const wadah=()=>document.getElementById('modul_jadwal_wali_asuh');
+
+/* ====================== core schedule ====================== */
+const C=c=>S.codes[c];
+const isWork=c=>!!(C(c)&&C(c).kerja);
+const isNight=c=>!!(C(c)&&C(c).malam);
+const isAbsen=c=>!!(C(c)&&C(c).absen);
+const jagaCodes=()=>S.codeOrder.filter(c=>C(c)&&C(c).jaga);
+function span(c){const d=C(c);if(!d||!d.kerja||!d.mulai)return null;const a=hm(d.mulai);let b=hm(d.selesai);if(b<=a)b+=24;return [a,b]}
+const jam=c=>{const s=span(c);return s?s[1]-s[0]:0};
+function sortRiwayat(st){st.riwayat.sort((a,b)=>a.mulai<b.mulai?-1:a.mulai>b.mulai?1:0)}
+function statusAt(st,n){let cur=null;for(const h of st.riwayat){if(dn(h.mulai)<=n)cur=h;}return cur}
+function groupOf(st,n){const h=statusAt(st,n);return h&&h.mode==='shift'?h.kelompok:null}
+function isHoliday(n){return (S.libur||[]).some(x=>x.tanggal===ds(n))}
+function baseCode(st,n){
+  const h=statusAt(st,n);
+  if(!h){const lg=S.legacy&&S.legacy[st.id];return (lg&&lg[ds(n)])||''}
+  if(h.mode==='nonaktif')return '';
+  if(h.mode==='reguler'){const w=wd(n);return (w===0||w===6||isHoliday(n))?'OFF':'R'}
+  const g=S.groups.find(x=>x.id===h.kelompok);if(!g||!S.cycle.length)return '';
+  return S.cycle[mod(g.offset+n-dn(S.anchor),S.cycle.length)];
+}
+const K=(sid,n)=>sid+'|'+ds(n);
+function code(st,n,ov){const k=K(st.id,n);if(ov&&Object.prototype.hasOwnProperty.call(ov,k))return ov[k];const o=S.overrides[k];return o?o.code:baseCode(st,n)}
+const isLegacy=(st,n)=>!statusAt(st,n)&&!!(S.legacy&&S.legacy[st.id]&&S.legacy[st.id][ds(n)]);
+const staffById=id=>S.staff.find(s=>s.id===id);
+const nick=st=>st?(st.panggilan||String(st.nama||'').split(',')[0]):'?';
+function activeIn(st,a,b){for(let n=a;n<=b;n++){const c=code(st,n);if(c)return true}return false}
+function normalisasi(x){
+  x.log=Array.isArray(x.log)?x.log:[];x.overrides=x.overrides&&typeof x.overrides==='object'?x.overrides:{};
+  x.libur=Array.isArray(x.libur)?x.libur:[];x.legacy=x.legacy||{};x.akses=x.akses||{koordinator:[]};
+  if(!Array.isArray(x.akses.koordinator))x.akses.koordinator=[];
+  x.staff.forEach(st=>{if(!Array.isArray(st.riwayat))st.riwayat=[];sortRiwayat(st)});
+}
+
+/* ====================== validation engine ====================== */
+function I(sev,type,st,n,msg,x){return {sev,type,sid:st?st.id:'*',n,msg,key:type+'|'+(st?st.id:'*')+'|'+n+'|'+(x||'')}}
+function personIssues(st,d0,d1,ov){
+  const R=S.rules,out=[],nm=nick(st),lo=d0-9,hi=d1+1,iv=[];
+  const anc=dn(S.anchor),inR=n=>n>=d0&&n<=d1&&n>=anc;
+  for(let n=lo;n<=hi;n++){const c=code(st,n,ov),sp=span(c);if(sp)iv.push({n,c,s:n*24+sp[0],e:n*24+sp[1]})}
+  for(let i=1;i<iv.length;i++){const a=iv[i-1],b=iv[i],gap=b.s-a.e;if(!inR(b.n))continue;
+    if(gap<0)out.push(I('error','bentrok',st,b.n,`${nm}: shift ${a.c} (${fmt(a.n)}) bertumpang tindih dengan shift ${b.c} (${fmt(b.n)}).`));
+    else if(gap<R.istirahatMinKeras)out.push(I('error','istirahat',st,b.n,`${nm}: jeda istirahat hanya ${fmtH(gap)} jam antara ${a.c} (${fmt(a.n)}) dan ${b.c} (${fmt(b.n)}); minimal ${R.istirahatMinKeras} jam.`));
+    else if(gap<R.istirahatMinIdeal)out.push(I('warn','istirahat',st,b.n,`${nm}: jeda istirahat ${fmtH(gap)} jam antara ${a.c} dan ${b.c} (${fmt(b.n)}); idealnya ≥ ${R.istirahatMinIdeal} jam.`));
+  }
+  let run=0,nr=0;
+  for(let n=lo;n<=d1;n++){const c=code(st,n,ov);run=isWork(c)?run+1:0;nr=isNight(c)?nr+1:0;
+    if(!inR(n))continue;
+    if(run===R.maksHariBeruntun+1)out.push(I('error','beruntun',st,n,`${nm}: ${run} hari kerja berturut-turut s.d. ${fmt(n)} (maks ${R.maksHariBeruntun} hari).`));
+    if(nr===R.maksMalamBeruntun+1)out.push(I('warn','malam',st,n,`${nm}: ${nr} shift malam berturut-turut s.d. ${fmt(n)} (ideal maks ${R.maksMalamBeruntun}).`));
+    if(nr===R.maksMalamKeras+1)out.push(I('error','malam2',st,n,`${nm}: ${nr} shift malam berturut-turut (batas ${R.maksMalamKeras}).`));
+    if(st.batasMalam&&isNight(c))out.push(I('error','batasmalam',st,n,`${nm}: ditandai tidak boleh shift malam (perlindungan kesehatan), tetapi dijadwalkan M pada ${fmt(n)}.`));
+  }
+  let pH=false,pR=false;
+  for(let w=d0-6;w<=d1;w++){const ws=w*24,we=ws+168;let h=0,last=ws,mg=0,any=false;
+    for(const x of iv){if(x.e<=ws||x.s>=we)continue;any=true;const s=Math.max(x.s,ws),e=Math.min(x.e,we);h+=e-s;mg=Math.max(mg,s-last);last=Math.max(last,e)}
+    mg=Math.max(mg,we-last);const end=w+6;
+    const badH=h>R.maksJam7, badR=any&&mg<R.istirahatMingguan;
+    if(inR(end)){
+      if(badH&&!pH){const hard=h>R.maksJam7Keras;out.push(I(hard?'error':'warn','jam7',st,end,`${nm}: ${fmtH(h)} jam kerja dalam 7 hari (${fmt(w)}–${fmt(end)}); ${hard?'batas maksimal':'batas wajar'} ${hard?R.maksJam7Keras:R.maksJam7} jam.`))}
+      if(badR&&!pR)out.push(I('error','mingguan',st,end,`${nm}: tidak ada istirahat penuh ≥ ${R.istirahatMingguan} jam dalam 7 hari (${fmt(w)}–${fmt(end)}).`));
+    }
+    pH=badH;pR=badR;
+  }
+  return out;
+}
+function coverageIssues(n,ov){
+  const R=S.rules,out=[];if(n<dn(S.anchor))return out;
+  for(const c of jagaCodes()){let t=0,p=0,l=0;
+    for(const st of S.staff){if(code(st,n,ov)===c){t++;if(st.jk==='P')p++;else l++}}
+    const lbl=`Shift ${c} (${C(c).nama}) ${fmt(n)}`;
+    const add=(msg,x)=>{const i=I('error','cov',null,n,msg,c+x);i.c=c;out.push(i)};
+    if(t<R.minPerShift)add(`${lbl}: hanya ${t} petugas (minimal ${R.minPerShift}).`,'t');
+    if(p<R.minPutri)add(`${lbl}: wali asuh putri ${p} orang (minimal ${R.minPutri}) — asrama putri tanpa pendamping.`,'p');
+    if(l<R.minPutra)add(`${lbl}: wali asuh putra ${l} orang (minimal ${R.minPutra}).`,'l');
+  }
+  return out;
+}
+function validateRange(d0,d1,ov,sids){
+  const out=[];const list=sids?sids.map(staffById).filter(Boolean):S.staff.filter(st=>activeIn(st,d0,d1));
+  for(const st of list)out.push(...personIssues(st,d0,d1,ov));
+  for(let n=d0;n<=d1;n++)out.push(...coverageIssues(n,ov));
+  return out;
+}
+function evaluate(changes){
+  const ov={};for(const ch of changes)ov[K(ch.sid,ch.n)]=ch.to;
+  const sids=[...new Set(changes.map(c=>c.sid))],ns=changes.map(c=>c.n);
+  const d0=Math.min(...ns)-1,d1=Math.max(...ns)+8;
+  const covB=[],covA=[];for(const n of new Set(ns)){covB.push(...coverageIssues(n));covA.push(...coverageIssues(n,ov))}
+  const before=[...covB],after=[...covA];
+  for(const id of sids){const st=staffById(id);if(!st)continue;before.push(...personIssues(st,d0,d1));after.push(...personIssues(st,d0,d1,ov))}
+  const bk=new Set(before.map(i=>i.key)),ak=new Set(after.map(i=>i.key));
+  const added=after.filter(i=>!bk.has(i.key)),fixed=before.filter(i=>!ak.has(i.key));
+  return {errors:added.filter(i=>i.sev==='error'),warns:added.filter(i=>i.sev==='warn'),fixed,ov};
+}
+const verdict=ev=>ev.errors.length?'err':ev.warns.length?'warn':'ok';
+
+/* ====================== API Apps Script & penyimpanan ====================== */
+function api(action,extra){
+  const body=Object.assign({action,user_penginput:sessionStorage.getItem('username')||'',user_level:sessionStorage.getItem('level')||''},extra||{});
+  return fetch(scriptURL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
+    .catch(()=>{throw new Error('Tidak dapat terhubung ke server Apps Script (periksa koneksi internet).')})
+    .then(res=>{if(!res.ok)throw new Error('HTTP '+res.status);return res.text()})
+    .then(t=>{try{return JSON.parse(t)}catch(e){throw new Error('Respons server tidak dikenali — kemungkinan Apps Script belum memuat aksi jadwal yang baru.')}});
+}
+function terimaPaket(r){
+  if(r.status==='ditolak'){S=null;loadState='denied';loadMsg=r.pesan||'Akses ditolak.';render();return}
+  if(r.status!=='berhasil'&&r.status!=='konflik'){loadState='error';loadMsg=r.pesan||'Gagal memuat data jadwal.';render();return}
+  HAK=Object.assign(hakKosong(),r.hak||{});USER=r.pengguna||USER;
+  if(!r.data){S=null;loadState='empty';render();return}
+  S=r.data;normalisasi(S);BASE_REV=r.rev||0;VERSI=r.versi||0;loadState='ready';render();
+}
+async function muat(opt){
+  opt=opt||{};const my=SESI;
+  if(opt.diam&&(saving||pending.dirty)){perluMuatUlang=true;return}
+  if(!opt.diam){loadState='loading';render()}
+  try{const r=await api('get_jadwal_wali_asuh');if(my!==SESI)return;
+    if(opt.diam&&r.status!=='berhasil')return;
+    terimaPaket(r);
+  }catch(e){if(my!==SESI||opt.diam)return;loadState='error';loadMsg=e.message||String(e);render()}
+}
+function markLog(id){pending.log.add(id)}
+function commit(msg,catatan,opt){
+  if(!bisaUbah()){toast('Akses Anda hanya untuk melihat jadwal dan mengajukan tukar shift.','error');render();return false}
+  [].concat(catatan||[]).filter(Boolean).forEach(c=>pending.catatan.push(c));
+  if(opt&&opt.gantiSemua)pending.gantiSemua=true;
+  pending.dirty=true;saveState='pending';
+  if(msg)toast(msg,'ok');
+  render();simpan();return true;
+}
+async function simpan(){
+  if(saving||!pending.dirty||!S)return;
+  const my=SESI;saving=true;saveState='saving';renderStatus();
+  const kirim=pending;pending=pendingBaru();
+  const state=JSON.parse(JSON.stringify(S));
+  const logUpsert=Array.from(kirim.log).map(id=>state.log.find(x=>x.id===id)).filter(Boolean);
+  if(!kirim.gantiSemua)delete state.log;
+  try{
+    const r=await api('simpan_jadwal_wali_asuh',{base_rev:BASE_REV,state,log_upsert:logUpsert,ganti_semua:kirim.gantiSemua,catatan:kirim.catatan});
+    if(my!==SESI)return;
+    saving=false;
+    if(r.status==='berhasil'){
+      const adaLain=r.versiSebelum!==VERSI;
+      BASE_REV=r.rev;VERSI=r.versi;S.rev=r.rev;S.updatedAt=r.updatedAt;S.updatedBy=r.updatedBy;
+      if(pending.dirty){saveState='pending';renderStatus();simpan();return}
+      saveState='saved';renderStatus();
+      if(adaLain||perluMuatUlang){perluMuatUlang=false;muat({diam:true})}
+      return;
+    }
+    if(r.status==='konflik'){
+      const hilang=kirim.catatan.concat(pending.catatan).map(c=>c.aksi+(c.detail?' — '+c.detail:''));
+      pending=pendingBaru();saveState='saved';terimaPaket(r);
+      infoModal('Perubahan belum tersimpan',`<div class="jwa-banner warn">${ikon('sync_problem')}<div>${esc(r.pesan)}</div></div><p style="margin:0 0 8px">Data terbaru sudah dimuat. Ulangi perubahan berikut bila masih diperlukan:</p><ul class="jwa-small" style="margin:0;padding-left:18px;line-height:1.6">${hilang.map(h=>`<li>${esc(h)}</li>`).join('')}</ul>`);
+      return;
+    }
+    if(r.status==='ditolak'){pending=pendingBaru();saveState='saved';toast(r.pesan||'Perubahan ditolak server.','error');muat();return}
+    throw new Error(r.pesan||'Gagal menyimpan');
+  }catch(e){
+    if(my!==SESI)return;
+    saving=false;
+    pending.catatan=kirim.catatan.concat(pending.catatan);kirim.log.forEach(id=>pending.log.add(id));
+    pending.gantiSemua=pending.gantiSemua||kirim.gantiSemua;pending.dirty=true;
+    saveState='error';renderStatus();
+    toast('Gagal menyimpan: '+(e.message||e)+' Klik status "Gagal simpan" untuk mencoba lagi.','error');
+  }
+}
+async function kirimPengajuan(rec){
+  const my=SESI;
+  try{
+    const r=await api('ajukan_jadwal_wali_asuh',{pengajuan:rec});
+    if(my!==SESI)return false;
+    if(r.status==='berhasil'){
+      const adaLain=r.versiSebelum!==VERSI;VERSI=r.versi;
+      S.log.unshift(r.pengajuan);
+      toast('Pengajuan terkirim dan menunggu persetujuan.','ok');
+      if(adaLain)muat({diam:true});
+      return true;
+    }
+    toast('Pengajuan gagal: '+(r.pesan||r.status),'error');return false;
+  }catch(e){if(my===SESI)toast('Pengajuan gagal terkirim: '+(e.message||e),'error');return false}
+}
+async function cekVersi(){
+  if(loadState!=='ready'||saving||pending.dirty||modalEl||document.hidden)return;
+  const w=wadah();if(!w||w.classList.contains('hidden'))return;
+  const ae=document.activeElement;if(ae&&w.contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+  const my=SESI;
+  try{const r=await api('cek_versi_jadwal_wali_asuh');if(my!==SESI)return;
+    if(r.status==='berhasil'&&r.versi!==VERSI){await muat({diam:true});toast('Jadwal diperbarui dengan data terbaru dari server.','info')}
+    else if(r.status==='ditolak'){terimaPaket(r)}
+  }catch(e){}
+}
+
+/* ====================== UI helpers ====================== */
+function toast(msg,kind){let box=$('.jwa-toast-box');if(!box){box=document.createElement('div');box.className='jwa-toast-box';document.body.appendChild(box)}
+  const d=document.createElement('div');d.className='jwa-toast '+(kind||'info');
+  d.innerHTML=ikon({ok:'check_circle',error:'error',warn:'warning'}[kind]||'info')+'<span></span>';d.lastChild.textContent=msg;
+  box.appendChild(d);setTimeout(()=>d.remove(),kind==='error'||kind==='warn'?8000:4000)}
+let modalEl=null;
+function modal(o,onMount){closeModal();modalEl=document.createElement('div');modalEl.className='modal-overlay jwa-ov';
+  modalEl.innerHTML=`<div class="modal-card jwa-modal" style="max-width:${o.lebar||680}px"><div class="modal-header"><div><h3>${o.judul}</h3>${o.sub?`<p class="jwa-modal-sub">${o.sub}</p>`:''}</div><button class="close-btn" data-x>&times;</button></div><div class="modal-body">${o.isi||''}</div>${o.kaki?`<div class="modal-footer">${o.kaki}</div>`:''}</div>`;
+  const el=modalEl;el.addEventListener('mousedown',e=>{if(e.target===el)closeModal()});el.querySelector('[data-x]').onclick=closeModal;
+  document.body.appendChild(el);if(onMount)onMount(el)}
+function closeModal(){if(modalEl){const m=modalEl;modalEl=null;m.remove();if(m._tutup)m._tutup()}}
+function ask(judul,isi,okLabel,danger){return new Promise(res=>{modal({judul:esc(judul),lebar:540,isi:`<div class="jwa-ask">${ikon(danger?'warning':'help',danger?'color:#dc2626':'color:#d97706')}<div style="flex:1">${isi}</div></div>`,
+  kaki:`<button class="btn-outline jwa-btn" data-a="0">Batal</button><button class="btn-add jwa-btn ${danger?'jwa-btn-danger-solid':''}" data-a="1">${esc(okLabel||'Ya')}</button>`},
+  m=>{m._tutup=()=>res(false);$$('[data-a]',m).forEach(b=>b.onclick=()=>{m._tutup=null;closeModal();res(b.dataset.a==='1')})})})}
+function infoModal(judul,isi){modal({judul:esc(judul),lebar:560,isi,kaki:'<button class="btn-add jwa-btn" data-a>Tutup</button>'},m=>{$('[data-a]',m).onclick=closeModal})}
+const codeTag=c=>{if(!c)return '<span class="jwa-code" style="background:#f3f4f6;color:#9ca3af">—</span>';const d=(S&&C(c))||{};return `<span class="jwa-code" style="background:${d.warna||'#eee'};color:${d.teks||'#333'}" title="${esc(d.nama||c)}">${esc(c)}</span>`};
+function issuesList(arr,cls){if(!arr.length)return '';return '<ul class="jwa-issues">'+arr.map(i=>`<li class="${cls||i.sev}"><b>${cls==='fixed'?'✓ Teratasi':i.sev==='error'?'✕ Melanggar':'! Peringatan'}</b><span>${esc(i.msg)}</span></li>`).join('')+'</ul>'}
+function staffOptions(sel,filterFn,n){return S.staff.filter(st=>!filterFn||filterFn(st)).map(st=>`<option value="${esc(st.id)}" ${st.id===sel?'selected':''}>${esc(nick(st))} — ${esc(String(st.nama).split(',')[0])}${n!=null?' ['+(code(st,n)||'—')+']':''}</option>`).join('')}
+const groupName=id=>{const g=S.groups.find(x=>x.id===id);return g?g.nama:'—'};
+const labelJenis=j=>({tukar:'Tukar shift',tukarhari:'Tukar hari',pengganti:'Pengganti piket',ubah:'Ubah jadwal'})[j]||j;
+const AKSI_JENIS={tukar:'TUKAR SHIFT',tukarhari:'TUKAR HARI',pengganti:'PENGGANTI PIKET',ubah:'UBAH JADWAL'};
+const ringkasRec=r=>`${labelJenis(r.jenis)} · ${nick(staffById(r.pemohon))}${r.rekan?' ⇄ '+nick(staffById(r.rekan)):''} · ${(r.changes||[]).map(c=>`${nick(staffById(c.sid))} ${tglPendek(c.tanggal)}: ${c.dari||'-'}→${c.ke||'-'}`).join('; ')} · Alasan: ${r.alasan||'-'}`;
+function copyText(t){try{navigator.clipboard.writeText(t).then(()=>toast('Teks disalin.','ok'),()=>toast('Tidak bisa menyalin otomatis; blok teks lalu salin manual.','warn'))}catch(e){toast('Tidak bisa menyalin otomatis; blok teks lalu salin manual.','warn')}}
+function panel(ic,judul,teks,tombol,spin){return `<div class="jwa-panel">${spin?'<div class="jwa-spin"></div>':`<div class="jwa-panel-ic">${ikon(ic)}</div>`}<h3>${judul}</h3>${teks?`<p>${teks}</p>`:''}${tombol||''}</div>`}
+
+/* ====================== routing & shell ====================== */
+const TABS=[['jadwal','Jadwal','calendar_month'],['tukar','Tukar Shift','swap_horiz'],['riwayat','Riwayat & Persetujuan','history'],['rekap','Rekap & Validasi','fact_check'],['pegawai','Pegawai & Kelompok','groups'],['aturan','Aturan & Dasar Hukum','gavel']];
+function setTab(t,tanpaRender){if(!TABS.some(x=>x[0]===t))t='jadwal';jwaTab=t;ssSet('jwa-tab',t);if(!tanpaRender)render()}
+function monthRange(m){const [y,mm]=m.split('-').map(Number);const a=dn(`${y}-${String(mm).padStart(2,'0')}-01`);const b=Math.round(Date.UTC(y,mm,0)/864e5);return [a,b]}
+function monthLabel(m){const [y,mm]=m.split('-').map(Number);return MON[mm-1]+' '+y}
+function shiftMonth(d){let [y,m]=curMonth.split('-').map(Number);m+=d;if(m<1){m=12;y--}if(m>12){m=1;y++}curMonth=y+'-'+String(m).padStart(2,'0');ssSet('jwa-month',curMonth);render()}
+function syncMenu(){const w=wadah();const vis=!!w&&!w.classList.contains('hidden');$$('[data-jwa-tab]').forEach(el=>el.classList.toggle('selected',vis&&el.dataset.jwaTab===jwaTab))}
+function render(){
+  const el=root();if(!el)return;
+  if(!TABS.some(x=>x[0]===jwaTab))jwaTab='jadwal';
+  if(loadState==='idle'||loadState==='loading'){el.innerHTML=panel('','Mengambil data jadwal dari server…','','',true);return}
+  if(loadState==='denied'){el.innerHTML=panel('lock','Akses Terbatas',esc(loadMsg),`<button class="btn-outline jwa-btn" id="jwaKembali">${ikon('arrow_back')}Kembali ke Dashboard</button>`);
+    $('#jwaKembali',el).onclick=e=>openModule('dashboard',e);return}
+  if(loadState==='error'){el.innerHTML=panel('cloud_off','Gagal memuat jadwal',esc(loadMsg)+'<br><span style="font-size:12.5px">Bila Code.gs baru saja diperbarui, pastikan sudah di-deploy ulang: Deploy → Kelola deployment → Edit → Versi baru.</span>',`<button class="btn-add jwa-btn" id="jwaUlang">${ikon('refresh')}Coba lagi</button>`);
+    $('#jwaUlang',el).onclick=()=>muat();return}
+  if(loadState==='empty'){
+    const boleh=HAK.sumber==='level';
+    el.innerHTML=panel('calendar_add_on','Data jadwal belum disiapkan',boleh?'Klik tombol di bawah untuk membuat sheet <b>Jadwal_WA_*</b> di spreadsheet dan memuat formasi awal wali asuh yang tersimpan di Code.gs. Setelah itu seluruh perubahan tersimpan di spreadsheet dan tercatat di Log_Aktivitas.':'Data jadwal belum diinisialisasi. Minta Operator Sekolah atau Kepala Sekolah membuka menu ini untuk menyiapkan data awal.',
+      boleh?`<button class="btn-add jwa-btn" id="jwaInit">${ikon('database')}Siapkan data awal</button>`:'');
+    if(boleh)$('#jwaInit',el).onclick=e=>inisialisasi(e.currentTarget);return}
+  const pend=S.log.filter(x=>x.status==='diajukan').length;
+  el.innerHTML=`<div class="page-header jwa-head"><div><h2>Jadwal Shift Wali Asuh</h2><p class="jwa-sub">${esc(S.meta.sekolah)} · ${esc(S.meta.periode)}</p></div>
+    <div class="jwa-flex"><span id="jwaPill"></span>
+     <button class="btn-outline jwa-btn" data-act="muat" title="Ambil data terbaru dari server">${ikon('refresh')}Muat ulang</button>
+     <button class="btn-outline jwa-btn" data-act="xlsx">${ikon('download')}Excel bulan ini</button>
+     <button class="btn-outline jwa-btn" data-act="cetak">${ikon('print')}Versi cetak</button>
+     ${HAK.kelola?`<button class="btn-outline jwa-btn" data-act="backup">${ikon('backup')}Cadangan</button>`:''}</div></div>
+   ${!bisaUbah()?`<div class="jwa-banner info">${ikon('visibility')}<div>Anda masuk sebagai <b>${esc(USER.username)}</b> (${esc(USER.level)}): dapat melihat jadwal dan <b>mengajukan</b> tukar shift. Perubahan berlaku setelah disetujui Koordinator, Operator Sekolah, atau Kepala Sekolah.</div></div>`:''}
+   <div class="tab-container jwa-tabs">${TABS.map(([k,l,ic])=>`<div class="tab-btn ${k===jwaTab?'active':''}" data-tab="${k}">${ikon(ic)}${l}${k==='riwayat'&&pend?`<span class="jwa-badge">${pend}</span>`:''}</div>`).join('')}</div>
+   <div id="jwaView"></div>`;
+  $$('[data-act]',el).forEach(b=>b.onclick=()=>aksiHeader(b.dataset.act));
+  const v=$('#jwaView',el);
+  ({jadwal:vJadwal,tukar:vTukar,riwayat:vRiwayat,rekap:vRekap,pegawai:vPegawai,aturan:vAturan})[jwaTab](v);
+  $$('[data-tab]',el).forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+  renderStatus();syncMenu();
+}
+function renderStatus(){const p=document.getElementById('jwaPill');if(!p)return;
+  const m={saved:['',bisaUbah()?'Tersimpan di server':'Mode lihat & ajukan'],pending:['pending','Belum tersimpan…'],saving:['pending','Menyimpan…'],error:['err','Gagal simpan — klik untuk coba lagi']}[saveState]||['',''];
+  p.innerHTML=`<span class="jwa-pill ${m[0]}" title="${S&&S.updatedAt?'Terakhir diubah '+esc(fmtWaktu(S.updatedAt))+' oleh '+esc(S.updatedBy||'-'):''}"><i></i>${m[1]}</span>`;
+  if(saveState==='error')p.firstChild.onclick=()=>simpan()}
+async function aksiHeader(a){
+  if(a==='muat'){if(saving){toast('Sedang menyimpan perubahan, tunggu sebentar.','info');return}if(pending.dirty&&!(await ask('Muat ulang data?','Ada perubahan yang belum tersimpan dan akan dibuang.','Muat ulang',true)))return;pending=pendingBaru();saveState='saved';muat();}
+  else if(a==='xlsx')exportXlsx();else if(a==='cetak')exportPrint();else if(a==='backup')backupModal();
+}
+async function inisialisasi(btn){
+  btn.disabled=true;btn.lastChild.textContent='Menyiapkan…';
+  try{const r=await api('inisialisasi_jadwal_wali_asuh');
+    if(r.status==='berhasil'){terimaPaket(r);toast(r.pesan||'Data awal jadwal siap.','ok')}
+    else{toast(r.pesan||'Gagal menyiapkan data.','error');btn.disabled=false;btn.lastChild.textContent='Siapkan data awal'}
+  }catch(e){toast('Gagal: '+(e.message||e),'error');btn.disabled=false;btn.lastChild.textContent='Siapkan data awal'}
+}
+
+/* ====================== view: jadwal ====================== */
+function vJadwal(v){
+  const [a,b]=monthRange(curMonth),td=todayDn();
+  const issues=validateRange(a,b);const cellBad={},cellWarn={},covBad={};
+  for(const i of issues){if(i.sid==='*'){covBad[i.n+'|'+i.c]=1;covBad[i.n]=1}else{(i.sev==='error'?cellBad:cellWarn)[K(i.sid,i.n)]=i.msg}}
+  const errN=issues.filter(i=>i.sev==='error').length,warnN=issues.length-errN;
+  const days=[];for(let n=a;n<=b;n++)days.push(n);
+  const list=S.staff.filter(st=>activeIn(st,a,b));
+  const groups=S.groups.map(g=>({g,members:list.filter(st=>groupOf(st,b)===g.id||(!groupOf(st,b)&&days.some(n=>groupOf(st,n)===g.id)))}));
+  const inGroup=new Set(groups.flatMap(x=>x.members.map(m=>m.id)));
+  const others=list.filter(st=>!inGroup.has(st.id));
+  const row=st=>{let h=0,nm=0;const cells=days.map(n=>{const c=code(st,n),d=C(c)||{},k=K(st.id,n),o=S.overrides[k];h+=jam(c);if(isNight(c))nm++;
+      const cls=['c'];if(!c)cls.push('empty');if(n===td)cls.push('todaycol');if(o)cls.push('ov');if(cellBad[k])cls.push('bad');else if(cellWarn[k])cls.push('wrn');if(isLegacy(st,n))cls.push('lg');
+      const tip=[`${nick(st)} · ${fmtL(n)}`,c?`${c} — ${d.nama||''}${d.mulai?` (${d.mulai}–${d.selesai})`:''}`:'Tidak terjadwal',isLegacy(st,n)?'Jadwal lama (sebelum formasi baru)':'',o?`Diubah: ${o.note||''}`:'',cellBad[k]||cellWarn[k]||''].filter(Boolean).join('\n');
+      return `<td class="${cls.join(' ')}" style="${c?`background:${d.warna};color:${d.teks}`:''}" data-cell="${esc(st.id)}|${n}" title="${esc(tip)}">${c?esc(c):'·'}</td>`}).join('');
+    return `<tr><td class="nm" title="${esc(st.nama)}"><b>${esc(nick(st))}</b> <span class="jwa-muted jwa-small">${/koordinator/i.test(st.jabatan||'')?'Koord.':''}</span></td><td class="jk">${esc(st.jk)}</td>${cells}<td class="tot">${fmtH(h)}</td><td class="tot">${nm}</td></tr>`};
+  let body='';
+  for(const {g,members} of groups){if(filterGroup!=='all'&&String(g.id)!==filterGroup)continue;if(!members.length)continue;
+    const p=members.filter(m=>m.jk==='P').length;
+    body+=`<tr class="grp"><td colspan="${days.length+4}">${esc(g.nama)} · ${members.length} orang (${p} putri, ${members.length-p} putra) · ${members.map(m=>esc(nick(m))).join(', ')}</td></tr>`;
+    body+=members.map(row).join('')}
+  if(others.length&&(filterGroup==='all'||filterGroup==='lain')){body+=`<tr class="grp"><td colspan="${days.length+4}">Non-shift / alih fungsi</td></tr>`+others.map(row).join('')}
+  const foot=jagaCodes().map(c=>`<tr><td class="nm">Jumlah ${esc(c)} <span class="jwa-muted">(putri)</span></td><td class="jk"></td>${days.map(n=>{let t=0,p=0;for(const st of S.staff){if(code(st,n)===c){t++;if(st.jk==='P')p++}}return `<td class="${covBad[n+'|'+c]?'cv-bad':''}">${t}<span class="jwa-muted">(${p})</span></td>`}).join('')}<td class="tot"></td><td class="tot"></td></tr>`).join('');
+  const nOv=Object.keys(S.overrides).filter(k=>{const n=dn(k.split('|')[1]);return n>=a&&n<=b}).length;
+  const kpi=(bg,tx,ic,ttl,val,desc)=>`<div class="stat-card"><div class="stat-icon ${bg}">${ikon(ic).replace('class="','class="'+tx+' ')}</div><div class="stat-info"><p class="stat-title ${tx}">${ttl}</p><h3 class="stat-value">${val}</h3><p class="stat-desc">${desc}</p></div></div>`;
+  v.innerHTML=`<div class="stats-grid jwa-kpis">
+    ${kpi('bg-light-blue','text-blue','calendar_month','Periode',monthLabel(curMonth),`${days.length} hari · ${list.length} petugas`)}
+    ${errN?kpi('bg-light-red','text-red','gpp_bad','Pelanggaran aturan',errN,'Wajib diperbaiki'):kpi('bg-light-green','text-green','verified','Pelanggaran aturan',0,'Semua aturan keras terpenuhi')}
+    ${warnN?kpi('bg-light-yellow','text-yellow','warning','Peringatan',warnN,'Boleh dengan catatan'):kpi('bg-light-green','text-green','task_alt','Peringatan',0,'Tidak ada catatan')}
+    ${kpi('bg-light-purple','text-purple','swap_horiz','Perubahan / tukar',nOv,'Sel diubah bulan ini')}
+   </div>
+   <div class="jwa-card">
+    <div class="jwa-flex"><button class="btn-outline jwa-btn jwa-icon-btn" data-m="-1" title="Bulan sebelumnya">${ikon('chevron_left')}</button><b class="jwa-month">${monthLabel(curMonth)}</b><button class="btn-outline jwa-btn jwa-icon-btn" data-m="1" title="Bulan berikutnya">${ikon('chevron_right')}</button><button class="btn-outline jwa-btn" data-m="0">Bulan ini</button>
+     <select class="jwa-inline" id="jwaFg"><option value="all">Semua kelompok</option>${S.groups.map(g=>`<option value="${g.id}" ${filterGroup===String(g.id)?'selected':''}>${esc(g.nama)}</option>`).join('')}<option value="lain" ${filterGroup==='lain'?'selected':''}>Non-shift</option></select>
+     <span class="jwa-sp"></span>${errN||warnN?`<button class="btn-outline jwa-btn" data-tab="rekap">${ikon('rule')}Lihat ${errN+warnN} temuan</button>`:'<span class="jwa-chip ok">✓ Jadwal bulan ini memenuhi semua aturan</span>'}</div>
+    <div class="jwa-legend">${S.codeOrder.map(c=>{const d=C(c);return `<span style="background:${d.warna};color:${d.teks}">${esc(c)} · ${esc(d.nama)}${d.mulai?` ${d.mulai}–${d.selesai}`:''}</span>`}).join('')}<span style="background:#fff;border:1px dashed var(--primary);color:var(--primary)">◥ diubah/tukar</span></div>
+    <p class="jwa-small jwa-muted" style="margin:4px 0 12px">${bisaUbah()?'Klik sel untuk mengubah satu jadwal':'Klik sel untuk melihat detail & mengajukan perubahan'}, klik tanggal untuk melihat petugas per shift & menyalin teks grup WhatsApp. Kolom kanan: total jam & jumlah shift malam bulan ini. Sel miring = jadwal lama sebelum formasi baru berlaku (${fmt(dn(S.anchor))}).</p>
+    <div class="jwa-gridwrap"><table class="jwa-sch"><thead><tr><th class="nm">Nama</th><th class="jk">JK</th>${days.map(n=>`<th data-day="${n}" class="${wd(n)===0||wd(n)===6||isHoliday(n)?'we':''} ${n===td?'today':''}" title="${esc(fmtL(n))}${isHoliday(n)?' (libur)':''}">${dOf(n).getUTCDate()}<br><span style="font-weight:500">${DAY[wd(n)]}</span></th>`).join('')}<th>Jam</th><th>Mlm</th></tr></thead>
+    <tbody>${body||`<tr><td class="nm jwa-muted" colspan="${days.length+4}" style="padding:20px">Tidak ada petugas terjadwal pada bulan ini.</td></tr>`}</tbody><tfoot>${foot}</tfoot></table></div>
+   </div>`;
+  $$('[data-m]',v).forEach(bt=>bt.onclick=()=>{const m=+bt.dataset.m;if(m===0){curMonth=ds(todayDn()).slice(0,7);ssSet('jwa-month',curMonth);render()}else shiftMonth(m)});
+  $('#jwaFg',v).onchange=e=>{filterGroup=e.target.value;render()};
+  $$('td[data-cell]',v).forEach(c=>c.onclick=()=>{const i=c.dataset.cell.lastIndexOf('|');cellModal(c.dataset.cell.slice(0,i),+c.dataset.cell.slice(i+1))});
+  $$('th[data-day]',v).forEach(th=>th.onclick=()=>dayModal(+th.dataset.day));
+}
+function dayText(n){
+  const lines=[`*Jadwal Wali Asuh — ${fmtL(n)}*`,`${S.meta.sekolah}`,''];
+  const by={};for(const st of S.staff){const c=code(st,n);if(!c)continue;(by[c]=by[c]||[]).push(st)}
+  for(const c of S.codeOrder){if(!by[c])continue;const d=C(c);lines.push(`${d.nama}${d.mulai?` (${d.mulai.replace(':','.')}–${d.selesai.replace(':','.')})`:''}: ${by[c].map(s=>nick(s)+(d.jaga?` (${s.jk})`:'')).join(', ')}`)}
+  return lines.join('\n');
+}
+function dayModal(n){
+  const by={};for(const st of S.staff){const c=code(st,n);if(!c)continue;(by[c]=by[c]||[]).push(st)}
+  const cov=coverageIssues(n);
+  modal({judul:esc(fmtL(n)),sub:'Petugas per shift',lebar:640,
+    isi:`<div class="table-responsive"><table class="jwa-t">${S.codeOrder.filter(c=>by[c]).map(c=>{const d=C(c);return `<tr><td style="width:150px">${codeTag(c)} <span class="jwa-small">${esc(d.nama)}</span></td><td>${by[c].map(s=>`${esc(nick(s))} <span class="jwa-muted jwa-small">(${s.jk})</span>`).join(', ')}</td></tr>`}).join('')||'<tr><td class="jwa-muted">Tidak ada petugas terjadwal.</td></tr>'}</table></div>
+     <div style="margin-top:12px">${cov.length?issuesList(cov):'<span class="jwa-chip ok">✓ Komposisi semua shift terpenuhi</span>'}</div>
+     <div class="jwa-f" style="margin-top:16px"><span>Teks untuk grup WhatsApp</span><textarea id="jwaWa" rows="8" readonly>${esc(dayText(n))}</textarea></div>`,
+    kaki:`<button class="btn-outline jwa-btn" id="jwaCp">${ikon('content_copy')}Salin teks</button><button class="btn-add jwa-btn" data-a>Tutup</button>`},
+    m=>{$('[data-a]',m).onclick=closeModal;$('#jwaCp',m).onclick=()=>copyText($('#jwaWa',m).value)});
+}
+function cellModal(sid,n){
+  const st=staffById(sid);if(!st)return;
+  const cur=code(st,n),base=baseCode(st,n),o=S.overrides[K(sid,n)];
+  const sub=`${esc(st.nama)} · ${esc(groupName(groupOf(st,n)))} · Jadwal dasar: ${base?esc(base):'—'}${o?` · <b>sudah diubah</b> (${esc(o.note||'')})`:''}`;
+  if(!bisaUbah()){
+    const d=C(cur)||{},iss=personIssues(st,n,n),h=statusAt(st,n);
+    modal({judul:`${esc(nick(st))} · ${esc(fmtL(n))}`,sub,lebar:580,
+      isi:`<div class="jwa-flex" style="margin-bottom:12px">${codeTag(cur)} <b>${esc(d.nama||'Tidak terjadwal')}</b>${d.mulai?` <span class="jwa-muted">${d.mulai}–${d.selesai}</span>`:''}</div>
+       ${iss.length?issuesList(iss):''}
+       <div class="jwa-banner info" style="margin:12px 0 0">${ikon('info')}<div>Perubahan jadwal diajukan lewat menu <b>Tukar Shift</b> dan berlaku setelah disetujui Koordinator, Operator Sekolah, atau Kepala Sekolah.</div></div>`,
+      kaki:`<button class="btn-outline jwa-btn" data-a>Tutup</button>${h&&h.mode==='shift'?`<button class="btn-add jwa-btn" id="jwaAjukan">${ikon('swap_horiz')}Ajukan tukar / pengganti</button>`:''}`},
+      m=>{$('[data-a]',m).onclick=closeModal;if($('#jwaAjukan',m))$('#jwaAjukan',m).onclick=()=>{swapUI=swapBaru('tukar',n);swapUI.a=sid;closeModal();setTab('tukar')}});
+    return;
+  }
+  let pick=cur;
+  const draw=m=>{
+    const ev=pick!==cur?evaluate([{sid,n,to:pick}]):null;
+    $('#jwaPv',m).innerHTML=ev?`<div class="jwa-flex" style="margin-bottom:8px">${codeTag(cur)} ${ikon('arrow_forward','font-size:18px;color:var(--text-muted)')} ${codeTag(pick)} ${ev.errors.length?'<span class="jwa-chip err">Ditolak sistem</span>':ev.warns.length?'<span class="jwa-chip warn">Boleh dengan catatan</span>':'<span class="jwa-chip ok">Aman</span>'}</div>${issuesList(ev.errors)}${issuesList(ev.warns)}${issuesList(ev.fixed,'fixed')}${!ev.errors.length&&!ev.warns.length?'<p class="jwa-small jwa-muted" style="margin:0">Tidak ada aturan yang dilanggar.</p>':''}`:'<p class="jwa-small jwa-muted" style="margin:0">Pilih kode baru untuk melihat dampaknya.</p>';
+    $$('.jwa-codes button',m).forEach(b=>b.classList.toggle('on',b.dataset.c===pick));
+    const ok=$('#jwaAp',m);ok.disabled=!ev||ev.errors.length>0||(ev.warns.length&&!$('#jwaAck',m).checked)||!$('#jwaAl',m).value.trim();
+    $('#jwaAckW',m).style.display=ev&&ev.warns.length?'':'none';
+  };
+  modal({judul:`${esc(nick(st))} · ${esc(fmtL(n))}`,sub,
+    isi:`${isLegacy(st,n)?`<div class="jwa-banner warn">${ikon('history')}<div>Tanggal ini masih jadwal lama (sebelum formasi baru). Perubahan tetap bisa dicatat.</div></div>`:''}
+     <div class="jwa-codes">${S.codeOrder.map(c=>{const d=C(c);return `<button type="button" data-c="${esc(c)}" style="background:${d.warna};color:${d.teks}" title="${esc(d.nama)}">${esc(c)}</button>`}).join('')}</div>
+     <div id="jwaPv"></div>
+     <div class="jwa-f" style="margin-top:14px"><span>Alasan / dasar perubahan (wajib)</span><textarea id="jwaAl" placeholder="mis. Sakit dengan surat dokter; Izin keluarga; Penugasan DL dari Kepala Sekolah"></textarea></div>
+     <label class="jwa-check" id="jwaAckW" style="display:none"><input type="checkbox" id="jwaAck"> Saya memahami peringatan di atas dan menyetujui perubahan ini.</label>
+     <p class="jwa-small jwa-muted" style="margin:12px 0 0">Untuk menukar jadwal dengan rekan, gunakan menu <a href="javascript:void(0)" id="jwaGoTukar" style="color:var(--primary);font-weight:600">Tukar Shift</a> agar kedua jadwal berubah bersamaan.</p>`,
+    kaki:`${o?`<button class="btn-outline jwa-btn jwa-btn-danger" id="jwaRs">${ikon('restart_alt')}Kembalikan ke jadwal dasar</button>`:''}<span class="jwa-sp"></span><button class="btn-outline jwa-btn" data-a>Batal</button><button class="btn-add jwa-btn" id="jwaAp">${ikon('check')}Terapkan</button>`},
+  m=>{$$('.jwa-codes button',m).forEach(b=>b.onclick=()=>{pick=b.dataset.c;draw(m)});$('#jwaAl',m).oninput=()=>draw(m);$('#jwaAck',m).onchange=()=>draw(m);$('[data-a]',m).onclick=closeModal;
+    $('#jwaGoTukar',m).onclick=()=>{swapUI=swapBaru('tukar',n);swapUI.a=sid;closeModal();setTab('tukar')};
+    if($('#jwaRs',m))$('#jwaRs',m).onclick=()=>{closeModal();terapkanLangsung('ubah',[{sid,n,to:base}],{alasan:'Dikembalikan ke jadwal dasar',pemohon:sid})};
+    $('#jwaAp',m).onclick=()=>{const ev=evaluate([{sid,n,to:pick}]);if(ev.errors.length)return;const al=$('#jwaAl',m).value.trim();closeModal();terapkanLangsung('ubah',[{sid,n,to:pick}],{alasan:al,pemohon:sid,peringatan:ev.warns.map(w=>w.msg)})};
+    draw(m)});
+}
+
+/* ====================== apply / setujui / tolak / batalkan ====================== */
+function buatRecord(jenis,changes,info,approved){
+  const now=new Date().toISOString();
+  return {id:uid(),jenis,dibuat:now,status:approved?'disetujui':'diajukan',alasan:info.alasan||'',pemohon:info.pemohon||null,rekan:info.rekan||null,
+    penyetuju:approved?USER.username:'',disetujuiPada:approved?now:'',peringatan:info.peringatan||[],diajukanOleh:USER.username,
+    changes:changes.map(ch=>{const st=staffById(ch.sid);return {sid:ch.sid,tanggal:ds(ch.n),dari:code(st,ch.n),ke:ch.to,prev:S.overrides[K(ch.sid,ch.n)]||null}})};
+}
+function writeChanges(rec){for(const ch of rec.changes){const st=staffById(ch.sid);if(!st)continue;const n=dn(ch.tanggal),k=K(ch.sid,n);
+  if(ch.ke===baseCode(st,n))delete S.overrides[k];else S.overrides[k]={code:ch.ke,note:`${labelJenis(rec.jenis)}: ${rec.alasan}`.slice(0,140),ref:rec.id}}}
+function terapkanLangsung(jenis,changes,info){
+  if(!bisaUbah()){toast('Akses Anda hanya untuk mengajukan perubahan.','error');return null}
+  const rec=buatRecord(jenis,changes,info,true);
+  writeChanges(rec);S.log.unshift(rec);markLog(rec.id);
+  commit('Perubahan diterapkan & tercatat di riwayat.',{aksi:AKSI_JENIS[jenis]||'UBAH JADWAL',detail:ringkasRec(rec)});
+  return rec;
+}
+async function approveRec(id){
+  if(!bisaUbah())return;const r=S.log.find(x=>x.id===id);if(!r)return;
+  for(const ch of r.changes){const st=staffById(ch.sid);if(!st){toast('Pegawai pada pengajuan ini tidak ditemukan.','error');return}
+    if(code(st,dn(ch.tanggal))!==ch.dari){toast(`Jadwal ${nick(st)} tanggal ${tglPendek(ch.tanggal)} sudah berubah sejak pengajuan (${ch.dari||'—'} → sekarang ${code(st,dn(ch.tanggal))||'—'}). Minta pemohon mengajukan ulang.`,'error');return}}
+  const ev=evaluate(r.changes.map(c=>({sid:c.sid,n:dn(c.tanggal),to:c.ke})));
+  if(ev.errors.length){infoModal('Tidak dapat disetujui','<p style="margin-top:0">Kondisi jadwal saat ini membuat pengajuan ini melanggar aturan:</p>'+issuesList(ev.errors));return}
+  if(ev.warns.length&&!(await ask('Setujui dengan peringatan?',issuesList(ev.warns),'Setujui')))return;
+  const now=new Date().toISOString();
+  r.changes.forEach(ch=>ch.prev=S.overrides[K(ch.sid,dn(ch.tanggal))]||null);
+  r.status='disetujui';r.penyetuju=USER.username;r.disetujuiPada=now;r.peringatan=ev.warns.map(w=>w.msg);
+  writeChanges(r);markLog(r.id);
+  commit('Pengajuan disetujui dan jadwal diperbarui.',{aksi:'SETUJUI PENGAJUAN',detail:ringkasRec(r)});
+}
+function rejectRec(id){
+  if(!bisaUbah())return;const r=S.log.find(x=>x.id===id);if(!r)return;
+  modal({judul:'Tolak pengajuan?',lebar:560,isi:`<p style="margin-top:0">${esc(ringkasRec(r))}</p><p class="jwa-small jwa-muted">Pengajuan akan ditandai <b>ditolak</b> dan jadwal tidak berubah.</p><div class="jwa-f"><span>Alasan penolakan (opsional, terlihat oleh pemohon)</span><textarea id="jwaTl"></textarea></div>`,
+    kaki:`<button class="btn-outline jwa-btn" data-a>Batal</button><button class="btn-add jwa-btn jwa-btn-danger-solid" id="jwaTolak">${ikon('block')}Tolak</button>`},
+    m=>{$('[data-a]',m).onclick=closeModal;$('#jwaTolak',m).onclick=()=>{const al=$('#jwaTl',m).value.trim();closeModal();
+      r.status='ditolak';r.ditolakOleh=USER.username;r.ditolakPada=new Date().toISOString();if(al)r.alasanTolak=al;markLog(r.id);
+      commit('Pengajuan ditolak.',{aksi:'TOLAK PENGAJUAN',detail:ringkasRec(r)+(al?' · Alasan penolakan: '+al:'')})}});
+}
+async function undoRec(id){
+  if(!bisaUbah())return;const r=S.log.find(x=>x.id===id);if(!r)return;
+  for(const ch of r.changes){const st=staffById(ch.sid);if(!st)continue;if(code(st,dn(ch.tanggal))!==ch.ke){toast(`Tidak bisa dibatalkan: jadwal ${nick(st)} ${tglPendek(ch.tanggal)} sudah diubah lagi oleh perubahan lain. Batalkan perubahan yang lebih baru terlebih dahulu.`,'error');return}}
+  const ev=evaluate(r.changes.filter(c=>staffById(c.sid)).map(c=>({sid:c.sid,n:dn(c.tanggal),to:c.dari})));
+  let body='Jadwal yang terlibat akan dikembalikan seperti sebelum perubahan ini.';if(ev.errors.length)body+=issuesList(ev.errors);
+  if(!(await ask('Batalkan perubahan ini?',body,'Batalkan perubahan',true)))return;
+  for(const ch of r.changes){const k=K(ch.sid,dn(ch.tanggal));if(ch.prev)S.overrides[k]=ch.prev;else delete S.overrides[k]}
+  r.status='dibatalkan';r.dibatalkanPada=new Date().toISOString();r.dibatalkanOleh=USER.username;markLog(r.id);
+  commit('Perubahan dibatalkan; jadwal dikembalikan.',{aksi:'BATALKAN PERUBAHAN',detail:ringkasRec(r)});
+}
+
+/* ====================== view: tukar ====================== */
+function buildChanges(){
+  const u=swapUI;if(!u.a||u.date==null)return null;const A=staffById(u.a),n=u.date;if(!A)return null;
+  if(u.jenis==='tukar'){if(!u.b)return null;const B=staffById(u.b);return [{sid:u.a,n,to:code(B,n)},{sid:u.b,n,to:code(A,n)}]}
+  if(u.jenis==='tukarhari'){if(!u.b||u.date2==null)return null;const B=staffById(u.b),m=u.date2;return [{sid:u.a,n,to:code(B,n)},{sid:u.b,n,to:code(A,n)},{sid:u.a,n:m,to:code(B,m)},{sid:u.b,n:m,to:code(A,m)}].filter(c=>code(staffById(c.sid),c.n)!==c.to)}
+  if(u.jenis==='pengganti'){if(!u.b)return null;return [{sid:u.a,n,to:u.absen},{sid:u.b,n,to:code(A,n)}]}
+  return null;
+}
+function candidates(){
+  const u=swapUI,A=staffById(u.a),n=u.date,cA=code(A,n),res=[];
+  for(const B of S.staff){if(B.id===u.a)continue;const h=statusAt(B,n);if(!h||h.mode!=='shift')continue;const cB=code(B,n);if(!cB||isAbsen(cB))continue;
+    if(u.jenis==='tukar'){if(cB===cA)continue;res.push({B,cB,ev:evaluate([{sid:A.id,n,to:cB},{sid:B.id,n,to:cA}])})}
+    else if(u.jenis==='pengganti'){if(cB===cA)continue;res.push({B,cB,ev:evaluate([{sid:A.id,n,to:u.absen},{sid:B.id,n,to:cA}])})}
+    else if(u.jenis==='tukarhari'){if(cB===cA)continue;res.push({B,cB,ev:evaluate([{sid:A.id,n,to:cB},{sid:B.id,n,to:cA}])})}
+  }
+  const rank={ok:0,warn:1,err:2};
+  const [ma,mb]=monthRange(ds(n).slice(0,7));const monthH=st=>{let h=0;for(let x=ma;x<=mb;x++)h+=jam(code(st,x));return h};
+  res.forEach(r=>{r.v=verdict(r.ev);r.h=monthH(r.B);r.free=!isWork(r.cB)});
+  res.sort((x,y)=>rank[x.v]-rank[y.v]||(u.jenis==='pengganti'?(y.free-x.free):0)||x.h-y.h);
+  return res;
+}
+function dateCandidates(){
+  const u=swapUI,A=staffById(u.a),B=staffById(u.b),n=u.date,res=[];
+  for(let m=n-14;m<=n+14;m++){if(m===n)continue;const cA=code(A,m),cB=code(B,m);if(!cA||!cB||cA===cB||isAbsen(cA)||isAbsen(cB))continue;
+    const ch=[{sid:A.id,n,to:code(B,n)},{sid:B.id,n,to:code(A,n)},{sid:A.id,n:m,to:cB},{sid:B.id,n:m,to:cA}];
+    const ev=evaluate(ch);res.push({m,cA,cB,ev,v:verdict(ev)})}
+  const rank={ok:0,warn:1,err:2};res.sort((x,y)=>rank[x.v]-rank[y.v]||Math.abs(x.m-n)-Math.abs(y.m-n));return res;
+}
+function miniGrid(changes){
+  const sids=[...new Set(changes.map(c=>c.sid))],ns=changes.map(c=>c.n);const a=Math.min(...ns)-2,b=Math.max(...ns)+3;const ov={};changes.forEach(c=>ov[K(c.sid,c.n)]=c.to);
+  const days=[];for(let n=a;n<=b;n++)days.push(n);
+  const rowsFor=(lbl,o)=>sids.map(id=>{const st=staffById(id);return `<tr><th style="text-align:left">${esc(nick(st))} <span class="jwa-muted">${lbl}</span></th>${days.map(n=>{const c=code(st,n,o),d=C(c)||{};const chg=o&&ov[K(id,n)]!==undefined;return `<td class="${chg?'chg':''}" style="background:${d.warna||'#fff'};color:${d.teks||'#999'};font-weight:700">${esc(c||'—')}</td>`}).join('')}</tr>`}).join('');
+  return `<div style="overflow:auto"><table class="jwa-mini"><tr><th></th>${days.map(n=>`<th>${dOf(n).getUTCDate()}<br><span class="jwa-muted">${DAY[wd(n)]}</span></th>`).join('')}</tr>${rowsFor('sebelum')}${rowsFor('sesudah',ov)}</table></div>`;
+}
+function vTukar(v){
+  const u=swapUI,anc=dn(S.anchor);if(u.date==null)u.date=Math.max(todayDn(),anc);
+  const A=u.a?staffById(u.a):null,n=u.date,cA=A?code(A,n):'';
+  const penuh=bisaUbah();
+  const types=[['tukar','Tukar shift (hari yang sama)','swap_horiz','Dua wali asuh saling bertukar kode shift pada tanggal yang sama. Jumlah petugas per shift tetap.'],
+               ['tukarhari','Tukar hari (balas jasa)','event_repeat','A menyerahkan shiftnya ke B pada tanggal X, lalu A menggantikan B pada tanggal Y. Keduanya tidak kehilangan hari libur.'],
+               ['pengganti','Pengganti piket (izin/sakit/cuti/DL)','person_add','A berhalangan (dicatat Izin/Sakit/Cuti/DL), B menggantikan shift A pada tanggal itu.']];
+  const changes=buildChanges();const ev=changes&&changes.length?evaluate(changes):null;
+  let candHtml='';
+  if(n<anc)candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('history')}<div>Tanggal sebelum ${fmt(anc)} masih jadwal lama. Tukar shift berlaku untuk formasi baru mulai ${fmt(anc)}.</div></div>`;
+  else if(A&&cA){
+    if(isAbsen(cA))candHtml=`<div class="jwa-banner warn" style="margin-top:12px">${ikon('event_busy')}<div>Pemohon tercatat berhalangan pada tanggal ini.</div></div>`;
+    else if(u.jenis==='pengganti'&&!isWork(cA))candHtml=`<div class="jwa-banner info" style="margin-top:12px">${ikon('info')}<div>Pemohon tidak sedang bertugas pada tanggal ini (kode ${esc(cA)}), sehingga tidak perlu pengganti.</div></div>`;
+    else{const cs=candidates();const okN=cs.filter(c=>c.v==='ok').length;
+      candHtml=`<h4>${u.jenis==='tukarhari'?'Langkah 1 — pilih rekan':'Rekan yang bisa dipilih'} <span class="jwa-chip ok">${okN} aman</span></h4>
+      <div class="jwa-cands"><table class="jwa-t"><tr><th>Rekan</th><th>Kode</th><th>Jam bln</th><th>Status</th></tr>${cs.map(c=>`<tr data-b="${esc(c.B.id)}" class="${u.b===c.B.id?'sel':''}"><td><b>${esc(nick(c.B))}</b> <span class="jwa-muted jwa-small">${c.B.jk} · ${esc(groupName(groupOf(c.B,n)))}</span></td><td>${codeTag(c.cB)}</td><td>${fmtH(c.h)}</td><td>${c.v==='ok'?'<span class="jwa-chip ok">Aman</span>':c.v==='warn'?`<span class="jwa-chip warn" title="${esc(c.ev.warns.map(w=>w.msg).join('\n'))}">Catatan</span>`:`<span class="jwa-chip err" title="${esc(c.ev.errors.map(w=>w.msg).join('\n'))}">Bentrok</span>`}</td></tr>`).join('')||'<tr><td colspan="4" class="jwa-muted">Tidak ada rekan yang tersedia.</td></tr>'}</table></div>`;
+      if(u.jenis==='tukarhari'&&u.b){const dc=dateCandidates();const B=staffById(u.b);
+        candHtml+=`<h4>Langkah 2 — tanggal ${esc(nick(A))} menggantikan ${esc(nick(B))}</h4><div class="jwa-cands"><table class="jwa-t"><tr><th>Tanggal</th><th>${esc(nick(A))}</th><th>${esc(nick(B))}</th><th>Status</th></tr>${dc.map(d=>`<tr data-d2="${d.m}" class="${u.date2===d.m?'sel':''}"><td>${fmtL(d.m)}</td><td>${codeTag(d.cA)}</td><td>${codeTag(d.cB)}</td><td>${d.v==='ok'?'<span class="jwa-chip ok">Aman</span>':d.v==='warn'?'<span class="jwa-chip warn">Catatan</span>':'<span class="jwa-chip err">Bentrok</span>'}</td></tr>`).join('')||'<tr><td colspan="4" class="jwa-muted">Tidak ada tanggal yang cocok dalam ±14 hari.</td></tr>'}</table></div>`}
+    }
+  }
+  let prev='<p class="jwa-muted" style="margin:0">Pilih pemohon, tanggal, dan rekan untuk melihat simulasi.</p>';
+  if(ev){const blocked=ev.errors.length>0;
+    prev=`<div class="jwa-flex" style="margin-bottom:10px">${blocked?'<span class="jwa-chip err">✕ Ditolak sistem — melanggar aturan</span>':ev.warns.length?`<span class="jwa-chip warn">! ${penuh?'Boleh dengan persetujuan':'Akan dinilai penyetuju'}</span>`:'<span class="jwa-chip ok">✓ Aman — tidak ada aturan yang dilanggar</span>'}</div>
+    ${miniGrid(changes)}
+    <div style="margin-top:12px">${issuesList(ev.errors)}${issuesList(ev.warns)}${issuesList(ev.fixed,'fixed')}</div>
+    <div class="jwa-f" style="margin-top:12px"><span>Alasan pengajuan (wajib)</span><textarea id="jwaAl">${esc(u.alasan)}</textarea></div>
+    ${penuh&&ev.warns.length?`<label class="jwa-check"><input type="checkbox" id="jwaAck" ${u.ack?'checked':''}> Saya memahami peringatan di atas dan menyetujui.</label>`:''}
+    <div class="jwa-flex" style="margin-top:14px"><span class="jwa-sp"></span>
+     <button class="${penuh?'btn-outline':'btn-add'} jwa-btn" id="jwaAjukan" ${blocked||!u.alasan.trim()||u.sending?'disabled':''}>${ikon('send')}${u.sending?'Mengirim…':penuh?'Simpan sebagai pengajuan':'Kirim pengajuan'}</button>
+     ${penuh?`<button class="btn-add jwa-btn jwa-btn-ok" id="jwaSetuju" ${blocked||!u.alasan.trim()||(ev.warns.length&&!u.ack)?'disabled':''}>${ikon('check_circle')}Setujui & terapkan</button>`:''}</div>
+    <p class="jwa-small jwa-muted" style="margin:10px 0 0">${penuh?'“Simpan sebagai pengajuan” mencatat permohonan tanpa mengubah jadwal; persetujuan dilakukan di menu Riwayat & Persetujuan (sistem memeriksa ulang saat disetujui).':'Pengajuan tersimpan di spreadsheet dan menunggu persetujuan Koordinator, Operator Sekolah, atau Kepala Sekolah. Status dapat dipantau di tab Riwayat & Persetujuan.'}</p>`}
+  else if(changes&&!changes.length)prev='<p class="jwa-muted" style="margin:0">Tidak ada perubahan: kode shift kedua pihak sama.</p>';
+  v.innerHTML=`<div class="jwa-types">${types.map(t=>`<div class="jwa-type ${u.jenis===t[0]?'on':''}" data-j="${t[0]}"><b>${ikon(t[2])}${t[1]}</b><span class="jwa-small jwa-muted">${t[3]}</span></div>`).join('')}</div>
+  <div class="jwa-cols"><div class="jwa-card">
+   <h3>${ikon('edit_note')}Pengajuan</h3>
+   <div class="jwa-grid2"><label class="jwa-f"><span>Pemohon</span><select id="jwaPa"><option value="">— pilih —</option>${staffOptions(u.a,st=>{const h=statusAt(st,n);return h&&h.mode==='shift'},n)}</select></label>
+   <label class="jwa-f"><span>Tanggal shift pemohon</span><input type="date" id="jwaDt" value="${ds(n)}"></label>
+   ${u.jenis==='pengganti'?`<label class="jwa-f"><span>Keterangan berhalangan</span><select id="jwaAb">${S.codeOrder.filter(isAbsen).map(c=>`<option value="${esc(c)}" ${u.absen===c?'selected':''}>${esc(c)} — ${esc(C(c).nama)}</option>`).join('')}</select></label>`:''}</div>
+   ${A?`<p class="jwa-small" style="margin:12px 0 0">Jadwal ${esc(nick(A))} pada ${fmtL(n)}: ${codeTag(cA)} ${esc((C(cA)||{}).nama||'')}</p>`:''}
+   ${candHtml}
+  </div>
+  <div class="jwa-card"><h3>${ikon('rule')}Simulasi & validasi otomatis</h3>${prev}</div></div>
+  <div class="jwa-card jwa-small"><details class="jwa-det"><summary>Aturan yang diperiksa setiap tukar shift</summary><ul>
+   <li>Setiap shift jaga (P/S/M) minimal <b>${S.rules.minPerShift}</b> petugas, minimal <b>${S.rules.minPutri}</b> wali asuh putri dan <b>${S.rules.minPutra}</b> wali asuh putra (pendampingan asrama putri & putra 24 jam).</li>
+   <li>Jeda istirahat antar-shift minimal <b>${S.rules.istirahatMinKeras} jam</b> (di bawahnya ditolak); di bawah <b>${S.rules.istirahatMinIdeal} jam</b> diberi peringatan. Contoh yang otomatis ditolak: malam (berakhir 07.00) lalu langsung pagi 07.00.</li>
+   <li>Maksimal <b>${S.rules.maksHariBeruntun}</b> hari kerja berturut-turut; malam berturut-turut ideal ≤ ${S.rules.maksMalamBeruntun}, batas ${S.rules.maksMalamKeras}.</li>
+   <li>Dalam setiap 7 hari: ada istirahat penuh ≥ ${S.rules.istirahatMingguan} jam, jam kerja wajar ≤ ${S.rules.maksJam7} jam (batas ${S.rules.maksJam7Keras} jam).</li>
+   <li>Pegawai yang ditandai “tidak boleh shift malam” tidak bisa menerima shift M.</li>
+   <li>Pengajuan yang sudah disetujui bisa dibatalkan dari Riwayat; jadwal kembali persis seperti semula.</li></ul></details></div>`;
+  $$('[data-j]',v).forEach(e=>e.onclick=()=>{u.jenis=e.dataset.j;u.b=null;u.date2=null;u.ack=false;render()});
+  $('#jwaPa',v).onchange=e=>{u.a=e.target.value||null;u.b=null;u.date2=null;u.ack=false;render()};
+  $('#jwaDt',v).onchange=e=>{if(e.target.value){u.date=dn(e.target.value);u.b=null;u.date2=null;u.ack=false;render()}};
+  if($('#jwaAb',v))$('#jwaAb',v).onchange=e=>{u.absen=e.target.value;render()};
+  $$('tr[data-b]',v).forEach(tr=>tr.onclick=()=>{u.b=tr.dataset.b;u.date2=null;u.ack=false;render()});
+  $$('tr[data-d2]',v).forEach(tr=>tr.onclick=()=>{u.date2=+tr.dataset.d2;u.ack=false;render()});
+  const tA=$('#jwaAjukan',v),tS=$('#jwaSetuju',v);
+  const segar=()=>{if(!ev)return;const bl=ev.errors.length>0,has=!!u.alasan.trim();if(tA)tA.disabled=bl||!has||u.sending;if(tS)tS.disabled=bl||!has||(ev.warns.length&&!u.ack)};
+  if($('#jwaAl',v))$('#jwaAl',v).oninput=e=>{u.alasan=e.target.value;segar()};
+  if($('#jwaAck',v))$('#jwaAck',v).onchange=e=>{u.ack=e.target.checked;segar()};
+  const info=()=>({alasan:u.alasan.trim(),pemohon:u.a,rekan:u.b,peringatan:ev.warns.map(w=>w.msg)});
+  if(tA)tA.onclick=async()=>{u.sending=true;render();const ok=await kirimPengajuan(buatRecord(u.jenis,changes,info(),false));
+    if(ok){swapUI=swapBaru(u.jenis,u.date);setTab('riwayat')}else{u.sending=false;render()}};
+  if(tS)tS.onclick=()=>{terapkanLangsung(u.jenis,changes,info());swapUI=swapBaru(u.jenis,u.date);setTab('riwayat')};
+}
+
+/* ====================== view: riwayat ====================== */
+function vRiwayat(v){
+  const log=S.log||[];const penuh=bisaUbah();
+  const stc={diajukan:'<span class="jwa-chip warn">Menunggu</span>',disetujui:'<span class="jwa-chip ok">Disetujui</span>',ditolak:'<span class="jwa-chip err">Ditolak</span>',dibatalkan:'<span class="jwa-chip info">Dibatalkan</span>'};
+  const cnt=s=>log.filter(r=>r.status===s).length;
+  const shown=log.filter(r=>filterStatus==='all'||r.status===filterStatus);
+  const oleh=r=>{const w=r.status==='disetujui'?[r.penyetuju,r.disetujuiPada]:r.status==='ditolak'?[r.ditolakOleh,r.ditolakPada]:r.status==='dibatalkan'?[r.dibatalkanOleh,r.dibatalkanPada]:null;
+    return w&&(w[0]||w[1])?`<div class="jwa-small jwa-muted" style="margin-top:4px">${esc(String(w[0]||'').split(',')[0])}${w[1]?'<br>'+esc(fmtWaktu(w[1])):''}</div>`:''};
+  const opsi=[['all','Semua',log.length],['diajukan','Menunggu',cnt('diajukan')],['disetujui','Disetujui',cnt('disetujui')],['ditolak','Ditolak',cnt('ditolak')],['dibatalkan','Dibatalkan',cnt('dibatalkan')]];
+  v.innerHTML=`<div class="jwa-card"><div class="jwa-flex" style="margin-bottom:10px"><h3 class="jwa-h" style="margin:0">${ikon('history')}Riwayat perubahan & persetujuan</h3><span class="jwa-sp"></span>
+    <select class="jwa-inline" id="jwaFs">${opsi.map(o=>`<option value="${o[0]}" ${filterStatus===o[0]?'selected':''}>${o[1]} (${o[2]})</option>`).join('')}</select></div>
+   <p class="jwa-small jwa-muted" style="margin:0 0 14px">Semua tukar shift, pengganti piket, dan ubah jadwal tercatat sebagai jejak administrasi (sheet <b>Jadwal_WA_Pengajuan</b>, serta <b>Log_Aktivitas</b> modul “Jadwal Wali Asuh”).</p>
+   ${penuh&&cnt('diajukan')?`<div class="jwa-banner warn">${ikon('pending_actions')}<div>Ada <b>${cnt('diajukan')}</b> pengajuan menunggu persetujuan. Sistem memeriksa ulang aturan saat Anda menekan <b>Setujui</b>.</div></div>`:''}
+   <div class="table-responsive"><table class="jwa-t"><tr><th>Dibuat</th><th>Jenis</th><th>Pihak</th><th>Perubahan</th><th>Alasan</th><th>Status</th>${penuh?'<th></th>':''}</tr>
+   ${shown.map(r=>`<tr><td class="jwa-small">${esc(fmtWaktu(r.dibuat))}${r.diajukanOleh?`<div class="jwa-muted">oleh ${esc(r.diajukanOleh)}</div>`:''}</td><td>${esc(labelJenis(r.jenis))}</td>
+    <td>${esc(nick(staffById(r.pemohon)))}${r.rekan?' ⇄ '+esc(nick(staffById(r.rekan))):''}</td>
+    <td class="jwa-small">${(r.changes||[]).map(c=>`${esc(nick(staffById(c.sid)))} ${esc(String(c.tanggal).slice(8))}/${esc(String(c.tanggal).slice(5,7))}: ${codeTag(c.dari)}→${codeTag(c.ke)}`).join('<br>')}</td>
+    <td class="jwa-small">${esc(r.alasan)}${r.peringatan&&r.peringatan.length?`<br><span class="jwa-chip warn" title="${esc(r.peringatan.join('\n'))}">${r.peringatan.length} catatan</span>`:''}${r.alasanTolak?`<div style="margin-top:4px;color:#b91c1c">Ditolak: ${esc(r.alasanTolak)}</div>`:''}</td>
+    <td>${stc[r.status]||esc(r.status)}${oleh(r)}</td>
+    ${penuh?`<td style="white-space:nowrap">${r.status==='diajukan'?`<button class="btn-add jwa-btn jwa-btn-ok" data-ap="${esc(r.id)}">${ikon('check')}Setujui</button> <button class="btn-outline jwa-btn jwa-btn-danger" data-rj="${esc(r.id)}">Tolak</button>`:r.status==='disetujui'?`<button class="btn-outline jwa-btn" data-un="${esc(r.id)}">${ikon('undo')}Batalkan</button>`:''}</td>`:''}</tr>`).join('')||`<tr><td colspan="7" class="jwa-muted" style="text-align:center;padding:28px">${log.length?'Tidak ada data untuk filter ini.':'Belum ada perubahan.'}</td></tr>`}
+   </table></div></div>`;
+  $('#jwaFs',v).onchange=e=>{filterStatus=e.target.value;render()};
+  $$('[data-ap]',v).forEach(b=>b.onclick=()=>approveRec(b.dataset.ap));
+  $$('[data-rj]',v).forEach(b=>b.onclick=()=>rejectRec(b.dataset.rj));
+  $$('[data-un]',v).forEach(b=>b.onclick=()=>undoRec(b.dataset.un));
+}
+
+/* ====================== view: rekap ====================== */
+function rekapData(a,b){
+  const list=S.staff.filter(st=>activeIn(st,a,b));
+  return list.map(st=>{const r={st,cnt:{},h:0,ovr:0};for(let n=a;n<=b;n++){const c=code(st,n);if(!c)continue;r.cnt[c]=(r.cnt[c]||0)+1;r.h+=jam(c);if(S.overrides[K(st.id,n)])r.ovr++}return r});
+}
+function vRekap(v){
+  const [a,b]=monthRange(curMonth);const rows=rekapData(a,b);const issues=validateRange(a,b);
+  const shiftRows=rows.filter(r=>(r.cnt.P||0)+(r.cnt.S||0)+(r.cnt.M||0)>0);
+  const avg=shiftRows.length?shiftRows.reduce((s,r)=>s+r.h,0)/shiftRows.length:0;
+  const weeks=(b-a+1)/7;
+  const sevF=ssGet('jwa-sev')||'all';
+  const shown=issues.filter(i=>sevF==='all'||i.sev===sevF).sort((x,y)=>x.n-y.n);
+  v.innerHTML=`<div class="jwa-card"><div class="jwa-flex"><button class="btn-outline jwa-btn jwa-icon-btn" data-m="-1">${ikon('chevron_left')}</button><b class="jwa-month">${monthLabel(curMonth)}</b><button class="btn-outline jwa-btn jwa-icon-btn" data-m="1">${ikon('chevron_right')}</button><span class="jwa-sp"></span><span class="jwa-small jwa-muted">Rata-rata jam petugas shift: <b>${fmtH(avg)}</b> jam/bulan (≈ ${fmtH(avg/weeks)} jam/minggu bruto)</span></div></div>
+  <div class="jwa-card"><h3>${ikon('table_chart')}Rekap beban kerja per pegawai</h3><div class="table-responsive"><table class="jwa-t"><tr><th>Nama</th><th>Kelompok</th>${S.codeOrder.map(c=>`<th>${esc(c)}</th>`).join('')}<th>Total jam</th><th>Selisih rata²</th><th>Diubah</th></tr>
+  ${rows.map(r=>{const d=r.h-avg,isShift=shiftRows.includes(r);return `<tr><td><b>${esc(nick(r.st))}</b><div class="jwa-small jwa-muted">${esc(r.st.nama)}</div></td><td class="jwa-small">${esc(groupName(groupOf(r.st,b)))}</td>${S.codeOrder.map(c=>`<td>${r.cnt[c]||''}</td>`).join('')}<td><b>${fmtH(r.h)}</b></td><td>${isShift?`<span class="jwa-chip ${Math.abs(d)>16?'warn':'ok'}">${d>=0?'+':''}${fmtH(d)}</span>`:'<span class="jwa-muted jwa-small">non-shift</span>'}</td><td>${r.ovr||''}</td></tr>`}).join('')}</table></div>
+  <p class="jwa-small jwa-muted" style="margin:10px 0 0">Selisih &gt; 16 jam (2 shift) dari rata-rata ditandai kuning sebagai sinyal ketidakseimbangan beban — biasanya akibat tukar/pengganti yang belum “dibayar”.</p></div>
+  <div class="jwa-card"><div class="jwa-flex" style="margin-bottom:12px"><h3 class="jwa-h" style="margin:0">${ikon('fact_check')}Temuan validasi bulan ini</h3><span class="jwa-sp"></span><select class="jwa-inline" id="jwaSv"><option value="all">Semua (${issues.length})</option><option value="error" ${sevF==='error'?'selected':''}>Pelanggaran (${issues.filter(i=>i.sev==='error').length})</option><option value="warn" ${sevF==='warn'?'selected':''}>Peringatan (${issues.filter(i=>i.sev==='warn').length})</option></select></div>
+  ${shown.length?issuesList(shown):'<span class="jwa-chip ok">✓ Tidak ada temuan. Jadwal memenuhi semua aturan.</span>'}</div>`;
+  $$('[data-m]',v).forEach(x=>x.onclick=()=>shiftMonth(+x.dataset.m));
+  $('#jwaSv',v).onchange=e=>{ssSet('jwa-sev',e.target.value);render()};
+}
+
+/* ====================== view: pegawai ====================== */
+function vPegawai(v){
+  const ref=Math.max(todayDn(),dn(S.anchor));const ro=!HAK.kelola,dis=ro?'disabled':'';
+  const comp=S.groups.map(g=>{const m=S.staff.filter(st=>groupOf(st,ref)===g.id);const p=m.filter(x=>x.jk==='P').length;return {g,m,p,l:m.length-p}});
+  const R=S.rules;
+  const compWarn=comp.filter(c=>c.p<R.minPutri||c.l<R.minPutra||c.m.length<R.minPerShift);
+  v.innerHTML=`<div class="jwa-card"><h3>${ikon('diversity_3')}Formasi kelompok shift (per ${fmt(ref)})</h3>
+   <div class="table-responsive"><table class="jwa-t"><tr><th>Kelompok</th><th>Hari siklus pada ${fmt(dn(S.anchor))}</th><th>Anggota</th><th>Putri</th><th>Putra</th><th>Status</th></tr>
+   ${comp.map(c=>`<tr><td><input type="text" data-gn="${c.g.id}" value="${esc(c.g.nama)}" style="max-width:160px" ${dis}></td><td><select data-go="${c.g.id}" ${dis}>${S.cycle.map((x,i)=>`<option value="${i}" ${c.g.offset===i?'selected':''}>Hari ${i+1} (${esc(x)})</option>`).join('')}</select></td><td class="jwa-small">${c.m.map(m=>esc(nick(m))).join(', ')||'—'}</td><td>${c.p}</td><td>${c.l}</td><td>${c.p<R.minPutri||c.l<R.minPutra||c.m.length<R.minPerShift?'<span class="jwa-chip err">Tidak memenuhi komposisi minimal</span>':'<span class="jwa-chip ok">Memenuhi</span>'}</td></tr>`).join('')}</table></div>
+   ${compWarn.length?`<div class="jwa-banner err" style="margin:12px 0 0">${ikon('error')}<div>Ada kelompok yang komposisinya di bawah ketentuan minimal shift. Pindahkan anggota atau ubah aturan.</div></div>`:''}
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><button class="btn-outline jwa-btn" id="jwaEven">${ikon('balance')}Ratakan jarak antarkelompok otomatis</button><span class="jwa-small jwa-muted">Siklus ${S.cycle.length} hari dibagi ${S.groups.length} kelompok → selisih ${fmtH(S.cycle.length/S.groups.length)} hari, sehingga tiap hari selalu ada satu kelompok di setiap shift.</span></div>`}
+  </div>
+  <div class="jwa-card"><div class="jwa-flex" style="margin-bottom:12px"><h3 class="jwa-h" style="margin:0">${ikon('badge')}Data pegawai</h3><span class="jwa-sp"></span>${ro?'<span class="jwa-chip info">Hanya lihat</span>':`<button class="btn-add jwa-btn" id="jwaAdd">${ikon('person_add')}Tambah pegawai</button>`}</div>
+   <div class="table-responsive"><table class="jwa-t" style="min-width:980px"><tr><th>Nama lengkap & gelar</th><th>Panggilan</th><th>NIP</th><th>JK</th><th>Jabatan</th><th>Status saat ini</th><th title="Contoh: kehamilan berisiko / rekomendasi dokter">Tidak boleh malam</th>${ro?'':'<th></th>'}</tr>
+   ${S.staff.map(st=>{const h=statusAt(st,ref);return `<tr data-sid="${esc(st.id)}"><td><input type="text" data-f="nama" value="${esc(st.nama)}" ${dis}></td><td><input type="text" data-f="panggilan" value="${esc(st.panggilan)}" style="width:100px" ${dis}></td><td><input type="text" data-f="nip" value="${esc(st.nip)}" style="width:180px" ${dis}></td>
+    <td><select data-f="jk" ${dis}><option ${st.jk==='L'?'selected':''}>L</option><option ${st.jk==='P'?'selected':''}>P</option></select></td><td><input type="text" data-f="jabatan" value="${esc(st.jabatan)}" ${dis}></td>
+    <td class="jwa-small">${h?(h.mode==='shift'?esc(groupName(h.kelompok)):h.mode==='reguler'?'Non-shift (reguler)':'Nonaktif'):'—'}<div class="jwa-muted">sejak ${h?fmt(dn(h.mulai)):'-'}</div></td>
+    <td style="text-align:center"><input type="checkbox" data-f="batasMalam" ${st.batasMalam?'checked':''} ${dis}></td>
+    ${ro?'':`<td style="white-space:nowrap"><button class="btn-outline jwa-btn" data-mv="${esc(st.id)}">${ikon('move_up')}Pindah / ubah status</button></td>`}</tr>`}).join('')}</table></div>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><span class="jwa-sp"></span><button class="btn-add jwa-btn" id="jwaSaveStaff">${ikon('save')}Simpan data pegawai</button></div>`}
+  </div>`;
+  if(ro)return;
+  $$('[data-gn]',v).forEach(i=>i.onchange=()=>{const g=S.groups.find(x=>x.id===+i.dataset.gn);const lama=g.nama;const baru=i.value.trim();if(!baru||baru===lama){i.value=lama;return}g.nama=baru;commit('Nama kelompok disimpan.',{aksi:'UBAH NAMA KELOMPOK',detail:`${lama} → ${baru}`})});
+  $$('[data-go]',v).forEach(i=>i.onchange=async()=>{const g=S.groups.find(x=>x.id===+i.dataset.go);const old=g.offset;g.offset=+i.value;const iss=validateRange(ref,ref+30).filter(x=>x.sev==='error');
+    if(iss.length&&!(await ask('Perubahan menimbulkan pelanggaran',`${iss.length} pelanggaran muncul dalam 31 hari ke depan (contoh: ${esc(iss[0].msg)}). Tetap simpan?`,'Tetap simpan',true))){g.offset=old;render();return}
+    commit('Posisi siklus kelompok diperbarui.',{aksi:'UBAH POSISI SIKLUS KELOMPOK',detail:`${g.nama}: Hari ${old+1} (${S.cycle[old]}) → Hari ${g.offset+1} (${S.cycle[g.offset]}) pada tanggal acuan ${S.anchor}`})});
+  $('#jwaEven',v).onclick=async()=>{if(!(await ask('Ratakan siklus?','Offset tiap kelompok diatur ulang berjarak sama dalam siklus. Ini mengubah jadwal dasar semua kelompok sejak tanggal acuan.','Ratakan')))return;
+    const L=S.cycle.length,G=S.groups.length,lama=S.groups.map(g=>`${g.nama}:${g.offset+1}`).join(', ');S.groups.forEach((g,i)=>g.offset=Math.round(i*L/G)%L);
+    commit('Siklus kelompok diratakan.',{aksi:'RATAKAN SIKLUS KELOMPOK',detail:`Sebelum: ${lama} · Sesudah: ${S.groups.map(g=>`${g.nama}:${g.offset+1}`).join(', ')}`})};
+  $('#jwaSaveStaff',v).onclick=()=>{const ub=[];
+    $$('tr[data-sid]',v).forEach(tr=>{const st=staffById(tr.dataset.sid);const f=[];$$('[data-f]',tr).forEach(i=>{const k=i.dataset.f;const nv=i.type==='checkbox'?i.checked:i.value.trim();const ov=k==='batasMalam'?!!st[k]:String(st[k]==null?'':st[k]);if(nv!==ov){f.push(`${k}: ${k==='batasMalam'?(ov?'ya':'tidak'):ov||'-'} → ${k==='batasMalam'?(nv?'ya':'tidak'):nv||'-'}`);st[k]=nv}});if(f.length)ub.push(`${nick(st)} (${f.join(', ')})`)});
+    if(!ub.length){toast('Tidak ada perubahan data pegawai.','info');return}
+    commit('Data pegawai disimpan.',{aksi:'UBAH DATA PEGAWAI',detail:ub.join('; ')})};
+  $('#jwaAdd',v).onclick=()=>addStaffModal();
+  $$('[data-mv]',v).forEach(b=>b.onclick=()=>moveModal(b.dataset.mv));
+}
+function moveModal(sid){
+  const st=staffById(sid);const d0=Math.max(todayDn(),dn(S.anchor));
+  modal({judul:`Pindah kelompok / ubah status — ${esc(nick(st))}`,sub:'Perubahan berlaku mulai tanggal yang dipilih; jadwal sebelum tanggal itu tidak berubah.',
+   isi:`<div class="jwa-grid2"><label class="jwa-f"><span>Berlaku mulai</span><input type="date" id="jwaMm" value="${ds(d0)}"></label>
+   <label class="jwa-f"><span>Status</span><select id="jwaMd"><option value="shift">Shift (wali asuh)</option><option value="reguler">Non-shift / reguler (Sen–Jum)</option><option value="nonaktif">Nonaktif (mutasi/keluar)</option></select></label>
+   <label class="jwa-f"><span>Kelompok</span><select id="jwaMk">${S.groups.map(g=>`<option value="${g.id}">${esc(g.nama)}</option>`).join('')}</select></label></div>
+   <div id="jwaMvp" style="margin-top:12px"></div>
+   <h4 style="margin:16px 0 8px;font-size:13px">Riwayat status</h4><table class="jwa-t">${st.riwayat.map((h,i)=>`<tr><td>${fmt(dn(h.mulai))}</td><td>${h.mode==='shift'?esc(groupName(h.kelompok)):esc(h.mode)}</td><td style="text-align:right">${i>0&&i===st.riwayat.length-1?`<button class="btn-outline jwa-btn jwa-btn-danger" id="jwaDelLast">${ikon('delete')}Hapus</button>`:''}</td></tr>`).join('')}</table>`,
+   kaki:`<button class="btn-outline jwa-btn" data-a>Batal</button><button class="btn-add jwa-btn" id="jwaOk">${ikon('save')}Simpan</button>`},
+  m=>{const prev=()=>{const md=$('#jwaMd',m).value;$('#jwaMk',m).disabled=md!=='shift';const mul=$('#jwaMm',m).value;if(!mul)return;const ent={mulai:mul,mode:md,kelompok:md==='shift'?+$('#jwaMk',m).value:null};
+      const bak=JSON.stringify(st.riwayat);st.riwayat=st.riwayat.filter(h=>h.mulai!==mul);st.riwayat.push(ent);sortRiwayat(st);const n=dn(mul);const iss=validateRange(n-1,n+20);st.riwayat=JSON.parse(bak);
+      const er=iss.filter(i=>i.sev==='error');
+      $('#jwaMvp',m).innerHTML=iss.length?`<p class="jwa-small" style="margin:0 0 8px"><b>Dampak 3 minggu sejak tanggal berlaku:</b></p>${issuesList(er.slice(0,6))}${er.length>6?'<p class="jwa-small jwa-muted">…dan lainnya</p>':''}${!er.length?'<span class="jwa-chip warn">Hanya peringatan</span>':''}`:'<span class="jwa-chip ok">✓ Tidak menimbulkan pelanggaran</span>'};
+    ['#jwaMm','#jwaMd','#jwaMk'].forEach(s=>$(s,m).onchange=prev);prev();$('[data-a]',m).onclick=closeModal;
+    if($('#jwaDelLast',m))$('#jwaDelLast',m).onclick=()=>{const h=st.riwayat.pop();closeModal();commit('Riwayat status terakhir dihapus.',{aksi:'HAPUS RIWAYAT STATUS',detail:`${nick(st)}: ${h.mulai} ${h.mode==='shift'?groupName(h.kelompok):h.mode}`})};
+    $('#jwaOk',m).onclick=()=>{const md=$('#jwaMd',m).value,mul=$('#jwaMm',m).value;if(!mul)return;const kel=md==='shift'?+$('#jwaMk',m).value:null;
+      st.riwayat=st.riwayat.filter(h=>h.mulai!==mul);st.riwayat.push({mulai:mul,mode:md,kelompok:kel});sortRiwayat(st);closeModal();
+      commit('Status pegawai diperbarui.',{aksi:'UBAH STATUS PEGAWAI',detail:`${nick(st)}: mulai ${mul} → ${md==='shift'?groupName(kel):md==='reguler'?'Non-shift (reguler)':'Nonaktif'}`})}});
+}
+function addStaffModal(){
+  modal({judul:'Tambah pegawai',lebar:720,isi:`<div class="jwa-grid2"><label class="jwa-f"><span>Nama lengkap & gelar</span><input type="text" id="jwaN1"></label><label class="jwa-f"><span>Panggilan</span><input type="text" id="jwaN2"></label><label class="jwa-f"><span>NIP</span><input type="text" id="jwaN3"></label>
+  <label class="jwa-f"><span>JK</span><select id="jwaN4"><option>L</option><option>P</option></select></label><label class="jwa-f"><span>Jabatan</span><input type="text" id="jwaN5" value="Wali Asuh"></label><label class="jwa-f"><span>Mulai bertugas</span><input type="date" id="jwaN6" value="${ds(Math.max(todayDn(),dn(S.anchor)))}"></label>
+  <label class="jwa-f"><span>Status</span><select id="jwaN7"><option value="shift">Shift</option><option value="reguler">Non-shift</option></select></label><label class="jwa-f"><span>Kelompok</span><select id="jwaN8">${S.groups.map(g=>`<option value="${g.id}">${esc(g.nama)}</option>`).join('')}</select></label></div>`,
+  kaki:`<button class="btn-outline jwa-btn" data-a>Batal</button><button class="btn-add jwa-btn" id="jwaOk">${ikon('person_add')}Tambah</button>`},
+  m=>{$('[data-a]',m).onclick=closeModal;$('#jwaOk',m).onclick=()=>{const nama=$('#jwaN1',m).value.trim();if(!nama){toast('Nama wajib diisi.','warn');return}
+    const mulai=$('#jwaN6',m).value;if(!mulai){toast('Tanggal mulai bertugas wajib diisi.','warn');return}
+    const md=$('#jwaN7',m).value,kel=md==='shift'?+$('#jwaN8',m).value:null;
+    const st={id:'s'+uid(),nama,panggilan:$('#jwaN2',m).value.trim()||nama.split(' ')[0],nip:$('#jwaN3',m).value.trim(),jk:$('#jwaN4',m).value,jabatan:$('#jwaN5',m).value.trim(),batasMalam:false,riwayat:[{mulai,mode:md,kelompok:kel}]};
+    S.staff.push(st);closeModal();
+    commit('Pegawai ditambahkan.',{aksi:'TAMBAH PEGAWAI',detail:`${st.nama} (${st.jk}) · ${md==='shift'?groupName(kel):'Non-shift'} mulai ${mulai}`})}});
+}
+
+/* ====================== view: aturan ====================== */
+function cycleStats(){
+  const L=S.cycle.length;let h=0,nights=0,minGap=1e9;const iv=[];
+  for(let k=0;k<L*2;k++){const c=S.cycle[k%L];const sp=span(c);if(k<L){h+=jam(c);if(isNight(c))nights++}if(sp)iv.push([k*24+sp[0],k*24+sp[1]])}
+  for(let i=1;i<iv.length;i++)minGap=Math.min(minGap,iv[i][0]-iv[i-1][1]);
+  const shifts=S.cycle.filter(isWork).length;const br=S.rules.istirahatShiftMenit/60;
+  return {L,h,wk:h/L*7,net:(h-shifts*br)/L*7,nights,minGap,shifts};
+}
+function vAturan(v){
+  const R=S.rules,cs=cycleStats();const ro=!HAK.kelola,dis=ro?'disabled':'';
+  const coverageDay=[...Array(cs.L).keys()].map(d=>{const cnt={};S.groups.forEach(g=>{const c=S.cycle[mod(g.offset+d,cs.L)];cnt[c]=(cnt[c]||0)+1});return cnt});
+  const allCovered=coverageDay.every(cnt=>jagaCodes().every(c=>cnt[c]>=1));
+  const num=(k,l,step)=>`<label class="jwa-f"><span>${l}</span><input type="number" step="${step||1}" data-r="${k}" value="${R[k]}" ${dis}></label>`;
+  const kpi=(bg,tx,ic,ttl,val,sz)=>`<div class="stat-card"><div class="stat-icon ${bg}">${ikon(ic).replace('class="','class="'+tx+' ')}</div><div class="stat-info"><p class="stat-title ${tx}">${ttl}</p><h3 class="stat-value"${sz?` style="font-size:${sz}px"`:''}>${val}</h3></div></div>`;
+  const bolehAkses=HAK.sumber==='level';
+  v.innerHTML=`<div class="stats-grid jwa-kpis">
+   ${kpi('bg-light-blue','text-blue','autorenew','Siklus',esc(S.cycle.join(' – ')),15)}
+   ${kpi('bg-light-purple','text-purple','schedule','Jam bruto / minggu',fmtH(cs.wk))}
+   ${kpi(cs.net>=R.targetJamMinggu?'bg-light-green':'bg-light-yellow',cs.net>=R.targetJamMinggu?'text-green':'text-yellow','timer',`Jam efektif / minggu`,fmtH(cs.net))}
+   ${kpi(cs.minGap>=R.istirahatMinIdeal?'bg-light-green':'bg-light-yellow',cs.minGap>=R.istirahatMinIdeal?'text-green':'text-yellow','bedtime','Jeda istirahat terpendek',fmtH(cs.minGap)+' jam')}
+   ${kpi(allCovered?'bg-light-green':'bg-light-red',allCovered?'text-green':'text-red','shield','Setiap hari P, S, M terisi',allCovered?'Ya':'Tidak')}
+  </div>
+  <div class="jwa-card"><h3>${ikon('admin_panel_settings')}Hak akses modul</h3>
+   <div class="table-responsive"><table class="jwa-t"><tr><th>Level / akun</th><th>Hak di menu Jadwal Wali Asuh</th></tr>
+    <tr><td><b>Kepala Sekolah</b>, <b>Operator Sekolah</b></td><td>Akses penuh: ubah jadwal, setujui/tolak/batalkan tukar shift, kelola pegawai, kelompok & aturan, cadangan data.</td></tr>
+    <tr><td><b>Koordinator</b> (akun Wali Asuh di bawah)</td><td>Akses penuh seperti di atas, kecuali mengubah daftar koordinator.</td></tr>
+    <tr><td><b>Wali Asuh</b></td><td>Melihat jadwal, rekap & aturan; <b>mengajukan</b> tukar shift / pengganti piket; unduh Excel & versi cetak.</td></tr>
+    <tr><td class="jwa-muted">Level lain</td><td class="jwa-muted">Menu tidak tampil dan server menolak akses.</td></tr></table></div>
+   <div class="jwa-f" style="margin-top:14px"><span>Username akun web Koordinator Wali Asuh (pisahkan dengan koma)</span><input type="text" id="jwaKoord" value="${esc(S.akses.koordinator.join(', '))}" placeholder="mis. fahri" ${bolehAkses?'':'disabled'}></div>
+   ${bolehAkses?`<div class="jwa-flex" style="margin-top:10px"><button class="btn-add jwa-btn" id="jwaSaveAkses">${ikon('save')}Simpan daftar koordinator</button><span class="jwa-small jwa-muted">Isi sesuai kolom Username di sheet Users. Level akun tetap dibaca dari sheet Users oleh server.</span></div>`:'<p class="jwa-small jwa-muted" style="margin:8px 0 0">Daftar koordinator hanya dapat diubah oleh Kepala Sekolah atau Operator Sekolah.</p>'}
+  </div>
+  <div class="jwa-card"><h3>${ikon('autorenew')}Siklus rotasi</h3>
+   <div class="jwa-grid2"><label class="jwa-f"><span>Pola siklus (pisahkan dengan koma)</span><input type="text" id="jwaCyc" value="${esc(S.cycle.join(', '))}" ${dis}></label><label class="jwa-f"><span>Tanggal acuan (Hari 1 kelompok dengan offset 0)</span><input type="date" id="jwaAnc" value="${esc(S.anchor)}" ${dis}></label></div>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><button class="btn-add jwa-btn" id="jwaSaveCyc">${ikon('save')}Simpan siklus</button><span class="jwa-small jwa-muted">Mengubah siklus/tanggal acuan memengaruhi jadwal dasar semua kelompok; perubahan manual & tukar shift tetap dipertahankan.</span></div>`}
+   <h4>Matriks siklus</h4><div style="overflow:auto"><table class="jwa-mini"><tr><th>Kelompok</th>${[...Array(cs.L).keys()].map(d=>`<th>Hari ${d+1}</th>`).join('')}</tr>${S.groups.map(g=>`<tr><th style="text-align:left">${esc(g.nama)}</th>${[...Array(cs.L).keys()].map(d=>{const c=S.cycle[mod(g.offset+d,cs.L)],x=C(c)||{};return `<td style="background:${x.warna};color:${x.teks};font-weight:700">${esc(c)}</td>`}).join('')}</tr>`).join('')}</table></div>
+  </div>
+  <div class="jwa-card"><h3>${ikon('tune')}Parameter aturan</h3>
+   <h4>Komposisi minimal setiap shift jaga</h4><div class="jwa-grid2">${num('minPerShift','Petugas per shift')}${num('minPutri','Wali asuh putri per shift')}${num('minPutra','Wali asuh putra per shift')}</div>
+   <h4>Waktu istirahat & beban kerja</h4><div class="jwa-grid2">${num('istirahatMinKeras','Jeda antar-shift minimal (jam) — ditolak bila kurang')}${num('istirahatMinIdeal','Jeda antar-shift ideal (jam) — peringatan')}${num('istirahatMingguan','Istirahat penuh per 7 hari (jam)')}${num('maksHariBeruntun','Maks. hari kerja berturut-turut')}${num('maksMalamBeruntun','Malam berturut-turut ideal')}${num('maksMalamKeras','Malam berturut-turut maksimal')}${num('maksJam7','Jam kerja wajar per 7 hari')}${num('maksJam7Keras','Jam kerja maksimal per 7 hari')}${num('istirahatShiftMenit','Istirahat dalam 1 shift (menit)')}${num('targetJamMinggu','Target jam efektif ASN / minggu',0.5)}</div>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:14px"><button class="btn-add jwa-btn" id="jwaSaveRules">${ikon('save')}Simpan parameter</button></div>`}
+  </div>
+  <div class="jwa-card"><h3>${ikon('schedule')}Kode & jam shift</h3><div class="table-responsive"><table class="jwa-t"><tr><th>Kode</th><th>Nama</th><th>Mulai</th><th>Selesai</th><th>Jam</th><th>Jenis</th></tr>
+   ${S.codeOrder.map(c=>{const d=C(c);return `<tr><td>${codeTag(c)}</td><td>${esc(d.nama)}</td><td>${d.kerja?`<input type="text" data-cm="${esc(c)}" value="${esc(d.mulai)}" style="width:80px" ${dis}>`:'—'}</td><td>${d.kerja?`<input type="text" data-cs="${esc(c)}" value="${esc(d.selesai)}" style="width:80px" ${dis}>`:'—'}</td><td>${d.kerja?fmtH(jam(c)):'—'}</td><td class="jwa-small">${d.jaga?'Shift jaga asrama':d.kerja?'Jam kerja reguler':d.absen?'Berhalangan':'Istirahat'}</td></tr>`}).join('')}</table></div>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><button class="btn-add jwa-btn" id="jwaSaveCodes">${ikon('save')}Simpan jam shift</button></div>`}</div>
+  <div class="jwa-card"><h3>${ikon('event')}Hari libur nasional (untuk pegawai non-shift)</h3><p class="jwa-small jwa-muted" style="margin:0 0 10px">Wali asuh shift tetap mengikuti siklus pada hari libur karena layanan asrama berjalan 24 jam.</p>
+   <table class="jwa-t">${S.libur.map((l,i)=>`<tr><td>${fmtL(dn(l.tanggal))}</td><td>${esc(l.nama)}</td><td style="text-align:right">${ro?'':`<button class="btn-outline jwa-btn jwa-btn-danger" data-dl="${i}">${ikon('delete')}Hapus</button>`}</td></tr>`).join('')||'<tr><td class="jwa-muted">Belum ada hari libur.</td></tr>'}</table>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><input type="date" id="jwaLd" class="jwa-inline"><input type="text" id="jwaLn" class="jwa-inline" placeholder="Nama hari libur" style="min-width:220px"><button class="btn-outline jwa-btn" id="jwaAddL">${ikon('add')}Tambah</button></div>`}</div>
+  <div class="jwa-card"><h3>${ikon('verified')}Identitas dokumen & pengesahan</h3><div class="jwa-grid2">
+   <label class="jwa-f"><span>Nama sekolah</span><input type="text" data-mt="sekolah" value="${esc(S.meta.sekolah)}" ${dis}></label><label class="jwa-f"><span>Periode</span><input type="text" data-mt="periode" value="${esc(S.meta.periode)}" ${dis}></label><label class="jwa-f"><span>Kota (tempat tanda tangan)</span><input type="text" data-mt="kota" value="${esc(S.meta.kota)}" ${dis}></label>
+   <label class="jwa-f"><span>Koordinator Wali Asuh</span><input type="text" data-mk="koordinator.nama" value="${esc(S.meta.koordinator.nama)}" ${dis}></label><label class="jwa-f"><span>NIP Koordinator</span><input type="text" data-mk="koordinator.nip" value="${esc(S.meta.koordinator.nip)}" ${dis}></label>
+   <label class="jwa-f"><span>Kepala Sekolah</span><input type="text" data-mk="kepala.nama" value="${esc(S.meta.kepala.nama)}" ${dis}></label><label class="jwa-f"><span>NIP Kepala Sekolah</span><input type="text" data-mk="kepala.nip" value="${esc(S.meta.kepala.nip)}" ${dis}></label></div>
+   ${ro?'':`<div class="jwa-flex" style="margin-top:12px"><button class="btn-add jwa-btn" id="jwaSaveMeta">${ikon('save')}Simpan identitas</button></div>`}</div>
+  <div class="jwa-card jwa-law"><h3>${ikon('gavel')}Dasar acuan aturan yang diterapkan</h3>
+   <ol>
+    <li><b>Perpres No. 21 Tahun 2023</b> tentang Hari Kerja dan Jam Kerja Instansi Pemerintah dan Pegawai ASN (berlaku juga bagi PPPK): jam kerja ASN 37 jam 30 menit per minggu di luar jam istirahat; unit pelayanan yang beroperasi terus-menerus 24 jam, termasuk hari libur, diatur secara bergilir (shift); rincian ditetapkan pimpinan instansi. → dipakai sebagai <i>target jam efektif</i> (${R.targetJamMinggu} jam) dan dasar sistem shift. Pola ${esc(S.cycle.join('-'))} menghasilkan ±${fmtH(cs.wk)} jam bruto atau ±${fmtH(cs.net)} jam efektif per minggu (istirahat ${R.istirahatShiftMenit} menit/shift).</li>
+    <li><b>Kemensos — persyaratan PPPK Tenaga Kependidikan Sekolah Rakyat</b>: wali asuh bersedia bekerja secara sif dan tinggal di sekitar/di asrama; arahan Mensos agar peserta didik sekolah berasrama terawasi 24 jam. → dasar aturan <i>setiap shift P/S/M wajib terisi</i> dan komposisi putri–putra.</li>
+    <li><b>UU No. 13 Tahun 2003 Pasal 76 jo. Kepmenakertrans No. 224 Tahun 2003</b> (perlindungan pekerja perempuan pukul 23.00–07.00: makanan-minuman bergizi, keamanan & kesusilaan, angkutan antar-jemput 23.00–05.00; perempuan hamil yang berisiko dilarang bekerja malam). Norma ini secara formal mengikat pengusaha swasta, namun dipakai sebagai <i>standar perlindungan</i> bagi wali asuh putri yang bertugas shift M → fitur “Tidak boleh malam” & catatan fasilitas.</li>
+    <li><b>PP No. 35 Tahun 2021</b> (waktu kerja 40 jam/minggu, lembur maks. 4 jam/hari & 18 jam/minggu, istirahat mingguan) dipakai sebagai <i>pembanding</i> batas beban 7 hari (${R.maksJam7}/${R.maksJam7Keras} jam) dan istirahat mingguan ≥ ${R.istirahatMingguan} jam.</li>
+    <li>Praktik baik keselamatan kerja shift (rotasi maju pagi→siang→malam, maks. 2 malam berturut-turut, jeda antar-shift ≥ 11 jam) → parameter “ideal” yang memberi peringatan, bukan penolakan.</li>
+   </ol>
+   <div class="jwa-banner info" style="margin:14px 0 0">${ikon('info')}<div>Catatan pelaksanaan shift malam bagi wali asuh putri: pastikan tersedia konsumsi bergizi, pengamanan asrama (CCTV/satpam), dan pengaturan perjalanan aman bila petugas tidak tinggal di asrama.</div></div>
+  </div>`;
+  if(bolehAkses)$('#jwaSaveAkses',v).onclick=()=>{const lama=S.akses.koordinator.slice();const baru=[...new Set($('#jwaKoord',v).value.split(',').map(s=>s.trim()).filter(Boolean))];
+    if(JSON.stringify(lama)===JSON.stringify(baru)){toast('Tidak ada perubahan.','info');return}S.akses.koordinator=baru;
+    commit('Daftar koordinator disimpan.',{aksi:'UBAH AKSES KOORDINATOR',detail:`${lama.join(', ')||'(kosong)'} → ${baru.join(', ')||'(kosong)'}`})};
+  if(ro)return;
+  $('#jwaSaveRules',v).onclick=()=>{const ub=[];$$('[data-r]',v).forEach(i=>{const x=parseFloat(i.value);const k=i.dataset.r;if(!isNaN(x)&&x!==R[k]){ub.push(`${k}: ${R[k]} → ${x}`);R[k]=x}});
+    if(!ub.length){toast('Tidak ada perubahan parameter.','info');return}commit('Parameter aturan disimpan.',{aksi:'UBAH PARAMETER ATURAN',detail:ub.join('; ')})};
+  $('#jwaSaveCyc',v).onclick=async()=>{const arr=$('#jwaCyc',v).value.split(',').map(s=>s.trim()).filter(Boolean);const bad=arr.filter(c=>!C(c));if(bad.length){toast('Kode tidak dikenal: '+bad.join(', '),'error');return}if(!arr.length)return;
+    const anc=$('#jwaAnc',v).value;if(!anc)return;if(arr.join(',')===S.cycle.join(',')&&anc===S.anchor){toast('Tidak ada perubahan siklus.','info');return}
+    if(!(await ask('Ubah siklus?','Jadwal dasar semua kelompok akan dihitung ulang sejak tanggal acuan.','Simpan')))return;
+    const lama=`${S.cycle.join('-')} mulai ${S.anchor}`;
+    S.cycle=arr;S.anchor=anc;S.groups.forEach(g=>g.offset=g.offset%arr.length);S.staff.forEach(st=>st.riwayat.forEach(h=>{if(h.mulai<anc&&st.riwayat.length===1)h.mulai=anc}));
+    commit('Siklus disimpan.',{aksi:'UBAH SIKLUS',detail:`${lama} → ${arr.join('-')} mulai ${anc}`})};
+  $('#jwaSaveCodes',v).onclick=()=>{const re=/^([01]\d|2[0-3]):[0-5]\d$/;let ok=true;$$('[data-cm],[data-cs]',v).forEach(i=>{if(!re.test(i.value))ok=false});if(!ok){toast('Format jam harus HH:MM, contoh 07:00.','error');return}
+    const ub=[];$$('[data-cm]',v).forEach(i=>{const d=C(i.dataset.cm);if(d.mulai!==i.value){ub.push(`${i.dataset.cm} mulai ${d.mulai} → ${i.value}`);d.mulai=i.value}});$$('[data-cs]',v).forEach(i=>{const d=C(i.dataset.cs);if(d.selesai!==i.value){ub.push(`${i.dataset.cs} selesai ${d.selesai} → ${i.value}`);d.selesai=i.value}});
+    if(!ub.length){toast('Tidak ada perubahan jam shift.','info');return}commit('Jam shift disimpan.',{aksi:'UBAH JAM SHIFT',detail:ub.join('; ')})};
+  $$('[data-dl]',v).forEach(b=>b.onclick=()=>{const l=S.libur.splice(+b.dataset.dl,1)[0];commit('Hari libur dihapus.',{aksi:'HAPUS HARI LIBUR',detail:`${l.tanggal} ${l.nama}`})});
+  $('#jwaAddL',v).onclick=()=>{const d=$('#jwaLd',v).value,nm=$('#jwaLn',v).value.trim();if(!d||!nm){toast('Isi tanggal dan nama hari libur.','warn');return}S.libur.push({tanggal:d,nama:nm});S.libur.sort((a,b)=>a.tanggal<b.tanggal?-1:1);commit('Hari libur ditambahkan.',{aksi:'TAMBAH HARI LIBUR',detail:`${d} ${nm}`})};
+  $('#jwaSaveMeta',v).onclick=()=>{const ub=[];$$('[data-mt]',v).forEach(i=>{const k=i.dataset.mt,x=i.value.trim();if((S.meta[k]||'')!==x){ub.push(`${k}: ${S.meta[k]||'-'} → ${x||'-'}`);S.meta[k]=x}});
+    $$('[data-mk]',v).forEach(i=>{const [a,b]=i.dataset.mk.split('.');const x=i.value.trim();S.meta[a]=S.meta[a]||{};if((S.meta[a][b]||'')!==x){ub.push(`${a}.${b}: ${S.meta[a][b]||'-'} → ${x||'-'}`);S.meta[a][b]=x}});
+    if(!ub.length){toast('Tidak ada perubahan identitas.','info');return}commit('Identitas disimpan.',{aksi:'UBAH IDENTITAS DOKUMEN',detail:ub.join('; ')})};
+}
+
+/* ====================== export ====================== */
+function saveFile(name,data){
+  try{const blob=data instanceof Blob?data:new Blob([data],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);toast('File siap: '+name,'ok')}
+  catch(e){toast('Unduhan tidak didukung di browser ini.','error')}
+}
+let excelJsJanji=null;
+function muatExcelJS(){if(window.ExcelJS)return Promise.resolve();if(!excelJsJanji)excelJsJanji=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js';s.onload=()=>res();s.onerror=()=>{excelJsJanji=null;s.remove();rej(new Error('Pustaka Excel gagal dimuat. Periksa koneksi internet.'))};document.head.appendChild(s)});return excelJsJanji}
+function monthStaffOrdered(a,b){const list=S.staff.filter(st=>activeIn(st,a,b));const out=[];
+  for(const g of S.groups)for(const st of list)if(groupOf(st,b)===g.id&&!out.includes(st))out.push(st);
+  for(const st of list)if(!out.includes(st))out.push(st);return out}
+async function exportXlsx(){
+  toast('Menyiapkan file Excel…','info');
+  try{await muatExcelJS()}catch(e){toast(e.message,'error');return}
+  const [a,b]=monthRange(curMonth);const days=[];for(let n=a;n<=b;n++)days.push(n);
+  const wb=new ExcelJS.Workbook();wb.creator='SISRI — Jadwal Wali Asuh';
+  const ws=wb.addWorksheet('Jadwal '+monthLabel(curMonth),{pageSetup:{orientation:'landscape',paperSize:9,fitToPage:true,fitToWidth:1,fitToHeight:0},views:[{state:'frozen',xSplit:4,ySplit:7}]});
+  const lastCol=4+days.length+2;const hex=c=>'FF'+String(c||'#FFFFFF').replace('#','').toUpperCase();
+  const thin={style:'thin',color:{argb:'FFBFC5D2'}};const border={top:thin,left:thin,bottom:thin,right:thin};
+  const title=(r,t,sz)=>{ws.mergeCells(r,1,r,lastCol);const c=ws.getCell(r,1);c.value=t;c.font={bold:true,size:sz||12};c.alignment={horizontal:'center'}};
+  title(1,String(S.meta.kementerian||'').toUpperCase(),11);title(2,'JADWAL PEMBAGIAN SHIFT WALI ASUH',14);title(3,String(S.meta.sekolah||'').toUpperCase(),12);title(4,'BULAN '+monthLabel(curMonth).toUpperCase()+' — '+S.meta.periode,11);
+  const h1=ws.getRow(6),h2=ws.getRow(7);
+  ['No','Nama Wali Asuh','Kelompok','L/P'].forEach((t,i)=>{ws.mergeCells(6,i+1,7,i+1);ws.getCell(6,i+1).value=t});
+  days.forEach((n,i)=>{h1.getCell(5+i).value=DAY[wd(n)];h2.getCell(5+i).value=dOf(n).getUTCDate();if(wd(n)===0||wd(n)===6||isHoliday(n)){[h1,h2].forEach(r=>r.getCell(5+i).font={bold:true,color:{argb:'FFB42330'}})}});
+  ws.mergeCells(6,5+days.length,7,5+days.length);ws.getCell(6,5+days.length).value='Jam';ws.mergeCells(6,6+days.length,7,6+days.length);ws.getCell(6,6+days.length).value='Malam';
+  [h1,h2].forEach(r=>{for(let c=1;c<=lastCol;c++){const x=r.getCell(c);x.border=border;x.alignment={horizontal:'center',vertical:'middle'};if(!x.font||!x.font.color)x.font={bold:true};x.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFCE8E8'}}}});
+  const staff=monthStaffOrdered(a,b);let r=8;
+  staff.forEach((st,i)=>{const row=ws.getRow(r);row.getCell(1).value=i+1;row.getCell(2).value=st.nama;row.getCell(3).value=groupName(groupOf(st,b))!=='—'?groupName(groupOf(st,b)):'Non-shift';row.getCell(4).value=st.jk;let h=0,m=0;
+    days.forEach((n,j)=>{const c=code(st,n),d=C(c)||{};const cell=row.getCell(5+j);cell.value=c||'';h+=jam(c);if(isNight(c))m++;if(c)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:hex(d.warna)}};cell.font={bold:true,color:{argb:hex(d.teks||'#000000')},size:10};if(S.overrides[K(st.id,n)])cell.note=S.overrides[K(st.id,n)].note||'Diubah'});
+    row.getCell(5+days.length).value=h;row.getCell(6+days.length).value=m;
+    for(let c=1;c<=lastCol;c++){const x=row.getCell(c);x.border=border;x.alignment={horizontal:c===2?'left':'center',vertical:'middle'}}r++});
+  r++;
+  for(const c of jagaCodes()){const row=ws.getRow(r);ws.mergeCells(r,1,r,4);row.getCell(1).value=`Jumlah ${c} (${C(c).nama}) — putri`;row.getCell(1).font={bold:true};
+    days.forEach((n,j)=>{let t=0,p=0;for(const st of S.staff){if(code(st,n)===c){t++;if(st.jk==='P')p++}}const x=row.getCell(5+j);x.value=`${t}(${p})`;x.alignment={horizontal:'center'};x.border=border;x.font={size:9}});r++}
+  r++;ws.getCell(r,2).value='Keterangan:';ws.getCell(r,2).font={bold:true};r++;
+  S.codeOrder.forEach(c=>{const d=C(c);const x=ws.getCell(r,1);x.value=c;x.fill={type:'pattern',pattern:'solid',fgColor:{argb:hex(d.warna)}};x.font={bold:true,color:{argb:hex(d.teks)}};x.alignment={horizontal:'center'};ws.getCell(r,2).value=d.nama+(d.mulai?` (${d.mulai}–${d.selesai} WIB)`:'');r++});
+  r+=1;const sc=Math.max(5,lastCol-10);
+  ws.getCell(r,2).value='Diajukan oleh,';ws.getCell(r,sc).value=S.meta.kota+', ............................';r++;
+  ws.getCell(r,2).value='Koordinator Wali Asuh';ws.getCell(r,sc).value='Mengetahui dan Mengesahkan,';r++;ws.getCell(r,sc).value='Kepala '+S.meta.sekolah;r+=4;
+  ws.getCell(r,2).value=S.meta.koordinator.nama;ws.getCell(r,2).font={bold:true,underline:true};ws.getCell(r,sc).value=S.meta.kepala.nama;ws.getCell(r,sc).font={bold:true,underline:true};r++;
+  ws.getCell(r,2).value='NIP. '+S.meta.koordinator.nip;ws.getCell(r,sc).value='NIP. '+S.meta.kepala.nip;
+  ws.getColumn(1).width=5;ws.getColumn(2).width=40;ws.getColumn(3).width=12;ws.getColumn(4).width=5;days.forEach((n,j)=>ws.getColumn(5+j).width=5.2);ws.getColumn(5+days.length).width=7;ws.getColumn(6+days.length).width=7;
+  const w2=wb.addWorksheet('Rekap');const rows=rekapData(a,b);w2.addRow(['Nama','Kelompok',...S.codeOrder,'Total jam','Jumlah diubah']);
+  rows.forEach(x=>w2.addRow([x.st.nama,groupName(groupOf(x.st,b)),...S.codeOrder.map(c=>x.cnt[c]||0),x.h,x.ovr]));w2.getRow(1).font={bold:true};w2.getColumn(1).width=42;w2.getColumn(2).width=14;
+  const w3=wb.addWorksheet('Riwayat Tukar');w3.addRow(['Dibuat','Jenis','Pemohon','Rekan','Perubahan','Alasan','Status','Diajukan oleh','Diproses oleh']);
+  (S.log||[]).filter(x=>(x.changes||[]).some(c=>{const n=dn(c.tanggal);return n>=a&&n<=b})).forEach(x=>w3.addRow([fmtWaktu(x.dibuat),labelJenis(x.jenis),nick(staffById(x.pemohon)),x.rekan?nick(staffById(x.rekan)):'',x.changes.map(c=>`${nick(staffById(c.sid))} ${c.tanggal}: ${c.dari}→${c.ke}`).join('; '),x.alasan,x.status,x.diajukanOleh||'',x.penyetuju||x.ditolakOleh||x.dibatalkanOleh||'']));
+  w3.getRow(1).font={bold:true};[20,16,12,12,60,40,12,16,16].forEach((w,i)=>w3.getColumn(i+1).width=w);
+  const w4=wb.addWorksheet('Validasi');w4.addRow(['Tanggal','Tingkat','Temuan']);validateRange(a,b).sort((x,y)=>x.n-y.n).forEach(i=>w4.addRow([ds(i.n),i.sev==='error'?'Pelanggaran':'Peringatan',i.msg]));w4.getRow(1).font={bold:true};w4.getColumn(3).width=110;w4.getColumn(1).width=12;
+  const buf=await wb.xlsx.writeBuffer();
+  saveFile(`Jadwal_Shift_Wali_Asuh_SRT6_${curMonth}.xlsx`,new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+}
+function exportPrint(){
+  const [a,b]=monthRange(curMonth);const days=[];for(let n=a;n<=b;n++)days.push(n);const staff=monthStaffOrdered(a,b);
+  const html=`<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>Jadwal Shift Wali Asuh ${monthLabel(curMonth)}</title><style>@page{size:A4 landscape;margin:10mm}body{font-family:Arial,sans-serif;font-size:9px;color:#000}h1,h2,h3{text-align:center;margin:2px 0}h1{font-size:14px}h2{font-size:12px}h3{font-size:11px;font-weight:normal}table{border-collapse:collapse;width:100%;margin-top:8px}th,td{border:1px solid #888;padding:2px;text-align:center}td.l{text-align:left;white-space:nowrap}th.we{color:#b42330}.sig{display:flex;justify-content:space-between;margin-top:18px;font-size:11px}.sig div{width:40%;text-align:center}.sig b{display:block;margin-top:52px;text-decoration:underline}.leg span{display:inline-block;padding:1px 5px;margin:2px;border:1px solid #aaa}</style></head><body>
+  <h3>${esc(String(S.meta.kementerian||'').toUpperCase())}</h3><h1>JADWAL PEMBAGIAN SHIFT WALI ASUH</h1><h2>${esc(String(S.meta.sekolah||'').toUpperCase())}</h2><h3>Bulan ${monthLabel(curMonth)} — ${esc(S.meta.periode)}</h3>
+  <table><tr><th rowspan="2">No</th><th rowspan="2">Nama</th><th rowspan="2">Kel.</th><th rowspan="2">L/P</th>${days.map(n=>`<th class="${wd(n)===0||wd(n)===6?'we':''}">${DAY[wd(n)]}</th>`).join('')}<th rowspan="2">Jam</th></tr><tr>${days.map(n=>`<th class="${wd(n)===0||wd(n)===6?'we':''}">${dOf(n).getUTCDate()}</th>`).join('')}</tr>
+  ${staff.map((st,i)=>{let h=0;return `<tr><td>${i+1}</td><td class="l">${esc(st.nama)}</td><td>${groupOf(st,b)||'-'}</td><td>${st.jk}</td>${days.map(n=>{const c=code(st,n),d=C(c)||{};h+=jam(c);return `<td style="background:${d.warna||'#fff'};color:${d.teks||'#000'};font-weight:bold;-webkit-print-color-adjust:exact;print-color-adjust:exact">${esc(c)}</td>`}).join('')}<td>${fmtH(h)}</td></tr>`}).join('')}</table>
+  <p class="leg">${S.codeOrder.map(c=>{const d=C(c);return `<span style="background:${d.warna};-webkit-print-color-adjust:exact;print-color-adjust:exact"><b>${esc(c)}</b> ${esc(d.nama)}${d.mulai?` ${d.mulai}–${d.selesai}`:''}</span>`}).join('')}</p>
+  <div class="sig"><div>Diajukan oleh,<br>Koordinator Wali Asuh<b>${esc(S.meta.koordinator.nama)}</b>NIP. ${esc(S.meta.koordinator.nip)}</div><div>${esc(S.meta.kota)}, ....................<br>Mengetahui dan Mengesahkan,<br>Kepala ${esc(S.meta.sekolah)}<b>${esc(S.meta.kepala.nama)}</b>NIP. ${esc(S.meta.kepala.nip)}</div></div>
+  <script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script></body></html>`;
+  const w=window.open('','_blank');
+  if(w){w.document.open();w.document.write(html);w.document.close()}
+  else{saveFile(`Cetak_Jadwal_Wali_Asuh_${curMonth}.html`,html);toast('Pop-up diblokir browser; file cetak diunduh. Buka file tersebut lalu pilih Cetak / Simpan sebagai PDF.','warn')}
+}
+function backupModal(){
+  if(!HAK.kelola)return;
+  modal({judul:'Cadangan & pemulihan data',sub:'Seluruh data jadwal (pegawai, kelompok, aturan, perubahan, riwayat) dalam satu file JSON.',lebar:600,
+   isi:`<div class="jwa-flex"><button class="btn-add jwa-btn" id="jwaBk">${ikon('download')}Unduh cadangan JSON</button><label class="btn-outline jwa-btn" style="cursor:pointer;margin:0;text-transform:none;font-size:13px">${ikon('upload')}Pulihkan dari file<input type="file" id="jwaRf" accept=".json,application/json" style="display:none"></label></div>
+   <div class="jwa-banner info" style="margin:14px 0 0">${ikon('info')}<div>File cadangan dari program Jadwal Shift versi lama (HTML mandiri) juga bisa dipulihkan di sini. Pemulihan menimpa data di spreadsheet dan tercatat di Log_Aktivitas.</div></div>
+   <p class="jwa-small jwa-muted" style="margin:12px 0 0">Revisi data: ${S.rev} · terakhir diubah ${esc(fmtWaktu(S.updatedAt))} oleh ${esc(S.updatedBy||'-')}</p>`,
+   kaki:'<button class="btn-outline jwa-btn" data-a>Tutup</button>'},
+  m=>{$('[data-a]',m).onclick=closeModal;
+    $('#jwaBk',m).onclick=()=>{const c=JSON.parse(JSON.stringify(S));saveFile(`cadangan_jadwal_wali_asuh_${ds(todayDn())}.json`,JSON.stringify(c,null,1))};
+    $('#jwaRf',m).onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=async()=>{let d;try{d=JSON.parse(rd.result);if(!d||!Array.isArray(d.staff)||!Array.isArray(d.cycle)||!Array.isArray(d.groups)||!d.codes||!d.rules)throw new Error('format')}catch(err){toast('File cadangan tidak valid.','error');return}
+      closeModal();
+      if(!(await ask('Pulihkan data?',`Seluruh data jadwal saat ini akan diganti dengan isi file <b>${esc(f.name)}</b> (${d.staff.length} pegawai, ${(d.log||[]).length} riwayat).`,'Pulihkan',true)))return;
+      const aksesLama=S.akses;d.akses=HAK.sumber==='level'&&d.akses?d.akses:aksesLama;d.overrides=d.overrides||{};d.meta=d.meta||S.meta;d.codeOrder=d.codeOrder||S.codeOrder;d.anchor=d.anchor||S.anchor;
+      S=d;normalisasi(S);
+      commit('Data dipulihkan dari cadangan.',{aksi:'PULIHKAN CADANGAN',detail:`${f.name} · ${S.staff.length} pegawai · ${S.log.length} riwayat`},{gantiSemua:true})};rd.readAsText(f)}});
+}
+
+/* ====================== integrasi dengan web SISRI ====================== */
+function resetSemua(){
+  SESI++;closeModal();S=null;HAK=hakKosong();USER={username:'',level:''};BASE_REV=0;VERSI=0;
+  loadState='idle';loadMsg='';saveState='saved';saving=false;perluMuatUlang=false;pending=pendingBaru();
+  swapUI=swapBaru();filterGroup='all';filterStatus='all';
+  const el=root();if(el)el.innerHTML='';
+}
+function bukaModul(){
+  const u=sessionStorage.getItem('username')||'',lv=sessionStorage.getItem('level')||'';
+  if(USER.username&&USER.username!==u)resetSemua();
+  if(!LEVEL_AKSES.includes(lv)){loadState='denied';loadMsg='Menu Jadwal Wali Asuh hanya dapat dibuka oleh Kepala Sekolah, Operator Sekolah, dan Wali Asuh.';render();return}
+  if(loadState==='ready'&&S){render();cekVersi()}
+  else if(loadState!=='loading')muat();
+  if(!pollTimer)pollTimer=setInterval(cekVersi,60000);
+}
+window.jwaBukaModul=bukaModul;
+window.bukaJadwalWaliAsuh=function(tab,event){if(tab)setTab(tab,true);openModule('jadwal_wali_asuh',event)};
+window.jwaReset=function(){const w=wadah();const tampil=!!w&&!w.classList.contains('hidden');resetSemua();
+  if(tampil){w.classList.add('hidden');const dc=document.getElementById('defaultContent');if(dc)dc.classList.remove('hidden')}};
+window.addEventListener('beforeunload',e=>{if(pending.dirty||saving){e.preventDefault();e.returnValue=''}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modalEl)closeModal()});
+})();
 </script>
 </body>
 </html>
