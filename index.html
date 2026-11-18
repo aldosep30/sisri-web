@@ -582,7 +582,7 @@
             </li>
 
             <!-- PENAMBAHAN MENU JADWAL WALI ASUH (khusus Kepala Sekolah, Operator Sekolah, Wali Asuh) -->
-            <li class="menu-item" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh" onclick="toggleMenu(this, event)">
+            <li class="menu-item" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh" data-jwa-menu onclick="toggleMenu(this, event)">
                 <div class="menu-label">
                     <div class="menu-label-left"><span class="material-symbols-outlined icon">calendar_month</span><span class="menu-text">Jadwal Wali Asuh</span></div>
                     <span class="material-symbols-outlined chevron-icon">expand_more</span>
@@ -799,7 +799,7 @@
                         </div>
 
                         <!-- 6. KARTU JADWAL WALI ASUH (PENAMBAHAN) -->
-                        <div class="service-card dash-card border-teal" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh">
+                        <div class="service-card dash-card border-teal" data-role="Kepala Sekolah,Operator Sekolah,Wali Asuh" data-jwa-menu>
                             <div class="sc-header">
                                 <div class="sc-icon text-teal bg-light-teal"><span class="material-symbols-outlined">calendar_month</span></div>
                                 <h4 class="sc-title text-teal">Jadwal Wali Asuh</h4>
@@ -1838,6 +1838,7 @@
     function logout() {
         if (typeof jwaReset === 'function') jwaReset(); // PENAMBAHAN: bersihkan data modul Jadwal Wali Asuh
         sessionStorage.clear(); // Hapus sesi login dari browser
+        document.documentElement.classList.remove('user-logged-in'); // PERBAIKAN: tanpa ini, setelah halaman di-refresh, Log Out tidak memunculkan form login
         document.body.style.backgroundColor = "var(--primary)";
         document.getElementById('authArea').classList.remove('hidden');
         document.getElementById('dashboardArea').classList.add('hidden');
@@ -3784,6 +3785,8 @@ const ikon=(n,st)=>`<span class="material-symbols-outlined"${st?` style="${st}"`
 
 /* ====================== state ====================== */
 const LEVEL_AKSES=['Kepala Sekolah','Operator Sekolah','Wali Asuh'];
+// Level dibandingkan longgar (spasi berlebih, huruf besar/kecil, "Wali Asuh Putri", dll.); keputusan akhir tetap di server
+function peranLokal(lv){const n=String(lv||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim().toLowerCase();if(n==='kepala sekolah')return 'Kepala Sekolah';if(n==='operator sekolah')return 'Operator Sekolah';if(n.indexOf('wali asuh')!==-1)return 'Wali Asuh';return ''}
 const hakKosong=()=>({lihat:false,ajukan:false,setujui:false,kelola:false,sumber:''});
 const pendingBaru=()=>({catatan:[],log:new Set(),gantiSemua:false,dirty:false});
 const swapBaru=(jenis,date)=>({jenis:jenis||'tukar',a:null,date:date==null?null:date,b:null,date2:null,absen:'I',alasan:'',ack:false,sending:false});
@@ -4025,8 +4028,11 @@ function render(){
   const el=root();if(!el)return;
   if(!TABS.some(x=>x[0]===jwaTab))jwaTab='jadwal';
   if(loadState==='idle'||loadState==='loading'){el.innerHTML=panel('','Mengambil data jadwal dari server…','','',true);return}
-  if(loadState==='denied'){el.innerHTML=panel('lock','Akses Terbatas',esc(loadMsg),`<button class="btn-outline jwa-btn" id="jwaKembali">${ikon('arrow_back')}Kembali ke Dashboard</button>`);
-    $('#jwaKembali',el).onclick=e=>openModule('dashboard',e);return}
+  if(loadState==='sesi'){el.innerHTML=panel('login','Sesi login sudah berakhir','Halaman ini masih terbuka, tetapi data login di browser sudah tidak ada (misalnya setelah Log Out atau sesi dibersihkan browser). Silakan login ulang dengan akun Anda.',`<button class="btn-add jwa-btn" id="jwaLoginUlang">${ikon('login')}Login ulang</button>`);
+    $('#jwaLoginUlang',el).onclick=()=>{if(typeof logout==='function')logout()};return}
+  if(loadState==='denied'){const su=sessionStorage.getItem('username'),sl=sessionStorage.getItem('level');
+    el.innerHTML=panel('lock','Akses Terbatas',esc(loadMsg)+(su?`<br><span style="font-size:12.5px">Masuk sebagai <b>${esc(su)}</b> · level di browser: <b>${esc(sl||'(kosong)')}</b></span>`:''),`<div class="jwa-flex" style="justify-content:center"><button class="btn-outline jwa-btn" id="jwaKembali">${ikon('arrow_back')}Kembali ke Dashboard</button><button class="btn-add jwa-btn" id="jwaCobaLagi">${ikon('refresh')}Periksa ulang akses</button></div>`);
+    $('#jwaKembali',el).onclick=e=>openModule('dashboard',e);$('#jwaCobaLagi',el).onclick=()=>muat();return}
   if(loadState==='error'){el.innerHTML=panel('cloud_off','Gagal memuat jadwal',esc(loadMsg)+'<br><span style="font-size:12.5px">Bila Code.gs baru saja diperbarui, pastikan sudah di-deploy ulang: Deploy → Kelola deployment → Edit → Versi baru.</span>',`<button class="btn-add jwa-btn" id="jwaUlang">${ikon('refresh')}Coba lagi</button>`);
     $('#jwaUlang',el).onclick=()=>muat();return}
   if(loadState==='empty'){
@@ -4498,10 +4504,13 @@ function vAturan(v){
     if(!ub.length){toast('Tidak ada perubahan parameter.','info');return}commit('Parameter aturan disimpan.',{aksi:'UBAH PARAMETER ATURAN',detail:ub.join('; ')})};
   $('#jwaSaveCyc',v).onclick=async()=>{const arr=$('#jwaCyc',v).value.split(',').map(s=>s.trim()).filter(Boolean);const bad=arr.filter(c=>!C(c));if(bad.length){toast('Kode tidak dikenal: '+bad.join(', '),'error');return}if(!arr.length)return;
     const anc=$('#jwaAnc',v).value;if(!anc)return;if(arr.join(',')===S.cycle.join(',')&&anc===S.anchor){toast('Tidak ada perubahan siklus.','info');return}
-    if(!(await ask('Ubah siklus?','Jadwal dasar semua kelompok akan dihitung ulang sejak tanggal acuan.','Simpan')))return;
-    const lama=`${S.cycle.join('-')} mulai ${S.anchor}`;
+    const a1=dn(S.anchor),a2=dn(anc),mundur=a2>a1;
+    const info=mundur?`<br><br>Formasi baru diundur dari <b>${fmt(a1)}</b> ke <b>${fmt(a2)}</b>. Tanggal ${fmt(a1)} s.d. ${fmt(a2-1)} otomatis <b>melanjutkan jadwal lama</b> (pola ${S.cycle.length} hari terakhir tiap pegawai). Setelah disimpan, periksa tab Rekap & Validasi untuk masa peralihan.`:'';
+    if(!(await ask('Ubah siklus?','Jadwal dasar semua kelompok akan dihitung ulang sejak tanggal acuan.'+info,'Simpan')))return;
+    const lama=`${S.cycle.join('-')} mulai ${S.anchor}`,Lama=S.cycle.length;let isi=0;
+    if(mundur)S.staff.forEach(st=>{const lg=S.legacy[st.id];if(!lg)return;for(let d=a1;d<a2;d++){const k=ds(d);if(!lg[k]){const src=lg[ds(d-Lama)];if(src){lg[k]=src;isi++}}}});
     S.cycle=arr;S.anchor=anc;S.groups.forEach(g=>g.offset=g.offset%arr.length);S.staff.forEach(st=>st.riwayat.forEach(h=>{if(h.mulai<anc&&st.riwayat.length===1)h.mulai=anc}));
-    commit('Siklus disimpan.',{aksi:'UBAH SIKLUS',detail:`${lama} → ${arr.join('-')} mulai ${anc}`})};
+    commit('Siklus disimpan.',{aksi:'UBAH SIKLUS',detail:`${lama} → ${arr.join('-')} mulai ${anc}`+(isi?` · jadwal lama dilanjutkan ${fmt(a1)}–${fmt(a2-1)} (${isi} sel)`:'')})};
   $('#jwaSaveCodes',v).onclick=()=>{const re=/^([01]\d|2[0-3]):[0-5]\d$/;let ok=true;$$('[data-cm],[data-cs]',v).forEach(i=>{if(!re.test(i.value))ok=false});if(!ok){toast('Format jam harus HH:MM, contoh 07:00.','error');return}
     const ub=[];$$('[data-cm]',v).forEach(i=>{const d=C(i.dataset.cm);if(d.mulai!==i.value){ub.push(`${i.dataset.cm} mulai ${d.mulai} → ${i.value}`);d.mulai=i.value}});$$('[data-cs]',v).forEach(i=>{const d=C(i.dataset.cs);if(d.selesai!==i.value){ub.push(`${i.dataset.cs} selesai ${d.selesai} → ${i.value}`);d.selesai=i.value}});
     if(!ub.length){toast('Tidak ada perubahan jam shift.','info');return}commit('Jam shift disimpan.',{aksi:'UBAH JAM SHIFT',detail:ub.join('; ')})};
@@ -4600,14 +4609,18 @@ function resetSemua(){
   const el=root();if(el)el.innerHTML='';
 }
 function bukaModul(){
-  const u=sessionStorage.getItem('username')||'',lv=sessionStorage.getItem('level')||'';
+  const u=sessionStorage.getItem('username')||'';
   if(USER.username&&USER.username!==u)resetSemua();
-  if(!LEVEL_AKSES.includes(lv)){loadState='denied';loadMsg='Menu Jadwal Wali Asuh hanya dapat dibuka oleh Kepala Sekolah, Operator Sekolah, dan Wali Asuh.';render();return}
+  if(!u||sessionStorage.getItem('isLoggedIn')!=='true'){loadState='sesi';render();return}
+  // Hak akses diputuskan server dari sheet Users (level terbaru), bukan dari level yang tersimpan di browser
   if(loadState==='ready'&&S){render();cekVersi()}
   else if(loadState!=='loading')muat();
   if(!pollTimer)pollTimer=setInterval(cekVersi,60000);
 }
 window.jwaBukaModul=bukaModul;
+function aturMenuJadwal(level){const ok=!!peranLokal(level);$$('[data-jwa-menu]').forEach(el=>{el.style.display=ok?'':'none'})}
+if(typeof window.aturHakAksesMenu==='function'){const aturAsli=window.aturHakAksesMenu;
+  window.aturHakAksesMenu=function(level){const hasil=aturAsli.apply(this,arguments);try{aturMenuJadwal(level)}catch(e){}return hasil}}
 window.bukaJadwalWaliAsuh=function(tab,event){if(tab)setTab(tab,true);openModule('jadwal_wali_asuh',event)};
 window.jwaReset=function(){const w=wadah();const tampil=!!w&&!w.classList.contains('hidden');resetSemua();
   if(tampil){w.classList.add('hidden');const dc=document.getElementById('defaultContent');if(dc)dc.classList.remove('hidden')}};
